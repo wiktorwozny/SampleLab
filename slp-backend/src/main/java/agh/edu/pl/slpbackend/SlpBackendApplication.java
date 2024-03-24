@@ -1,4 +1,4 @@
-package com.example.slpbackend;
+package agh.edu.pl.slpbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
