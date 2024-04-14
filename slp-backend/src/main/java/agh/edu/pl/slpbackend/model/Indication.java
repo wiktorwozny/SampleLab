@@ -4,10 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
 public class Indication {
     @Id
     @GeneratedValue
@@ -17,5 +19,5 @@ public class Indication {
     private String unit;
     private String laboratory;
     @ManyToMany
-    private List<Group> groups;
+    private List<ProductGroup> groups;
 }

@@ -1,10 +1,12 @@
 package agh.edu.pl.slpbackend.model;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
+@NoArgsConstructor
 public class Sample {
 
     @Id
@@ -37,7 +39,7 @@ public class Sample {
     private  Inspection inspection;
 
     @ManyToOne
-    private Group group;
+    private ProductGroup group;
 
     @ManyToOne
     private SamplingStandard samplingStandard;
