@@ -20,6 +20,6 @@ public class SampleController extends AbstractController {
 
     @PostMapping("/save")
     public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
-        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); // nie wiem, trzeba przetestować
+        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 }
