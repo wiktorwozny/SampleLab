@@ -1,13 +1,25 @@
 package agh.edu.pl.slpbackend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
-public class Sample {
+@AllArgsConstructor
+@Data
+@Builder(toBuilder = true)
+public class Sample implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -41275705394682306L;
+
 
     @Id
     @GeneratedValue
@@ -36,7 +48,7 @@ public class Sample {
     private boolean analysis;
 
     @ManyToOne
-    private  Inspection inspection;
+    private Inspection inspection;
 
     @ManyToOne
     private ProductGroup group;
