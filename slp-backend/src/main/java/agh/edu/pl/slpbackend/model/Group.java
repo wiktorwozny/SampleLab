@@ -1,22 +1,29 @@
 package agh.edu.pl.slpbackend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
-public class ProductGroup {
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
+@Table(name = "product_group")
+public class Group {
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
     @ManyToMany
+    @JoinTable(name = "group_indication")
     private List<Indication> indications;
+
     @ManyToMany
+    @JoinTable(name = "group_sampling_standard")
     private  List<SamplingStandard> samplingStandards;
 }

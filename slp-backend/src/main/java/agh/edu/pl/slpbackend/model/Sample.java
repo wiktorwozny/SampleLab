@@ -37,7 +37,7 @@ public class Sample implements Serializable {
 
     private LocalDate expirationDate;
 
-    private String expirationDateComment;
+    private String expirationComment;
 
     private LocalDate examinationEndDate;
 
@@ -51,7 +51,7 @@ public class Sample implements Serializable {
     private Inspection inspection;
 
     @ManyToOne
-    private ProductGroup group;
+    private Group group;
 
     @ManyToOne
     private SamplingStandard samplingStandard;
