@@ -7,13 +7,12 @@ import agh.edu.pl.slpbackend.repository.SampleRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
+//@Slf4j
 @AllArgsConstructor
 public class SampleService extends AbstractService implements SampleMapper {
 
@@ -23,12 +22,12 @@ public class SampleService extends AbstractService implements SampleMapper {
     public ResponseEntity<Sample> insert(IModel model) {
 
         final SampleDto sampleDto = (SampleDto) model;
-//        final Sample sample = toModel(sampleDto);
-//        final Sample saveResult = sampleRepository.save(sample);
-//
-//        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
+        final Sample sample = toModel(sampleDto);
+        final Sample saveResult = sampleRepository.save(sample);
 
-        return new ResponseEntity<>(sampleRepository.save(toModel(sampleDto)), HttpStatus.CREATED);
+        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
+
+//        return new ResponseEntity<>(sampleRepository.save(toModel(sampleDto)), HttpStatus.CREATED);
     }
 
     @Override
