@@ -64,7 +64,7 @@ public class SampleDto implements IModel, Serializable {
     private Inspection inspection;
 
     @ModelFieldName("group")
-    private Group group;
+    private ProductGroup group;
 
     @ModelFieldName("samplingStandard")
     private SamplingStandard samplingStandard;

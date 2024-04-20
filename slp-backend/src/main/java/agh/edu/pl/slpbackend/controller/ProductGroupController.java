@@ -1,9 +1,9 @@
 package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.model.Sample;
-import agh.edu.pl.slpbackend.service.SampleService;
+import agh.edu.pl.slpbackend.dto.ProductGroupDto;
+import agh.edu.pl.slpbackend.model.ProductGroup;
+import agh.edu.pl.slpbackend.service.ProductGroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +13,15 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/sample") //TODO odpowiedni rooting jeszcze nie wiem XDD
-public class SampleController extends AbstractController {
+@RequestMapping("/product-group") //TODO odpowiedni rooting jeszcze nie wiem XDD
+public class ProductGroupController extends AbstractController {
 
-    private final SampleService sampleService;
+    private final ProductGroupService productGroupService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<SampleDto>> list() {
+    public ResponseEntity<List<ProductGroupDto>> list() {
         try {
-            List<SampleDto> list = sampleService.selectAll();
+            List<ProductGroupDto> list = productGroupService.selectAll();
 
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -33,7 +33,7 @@ public class SampleController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
-        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<ProductGroup> add(@RequestBody ProductGroupDto productGroupDto) {
+        return new ResponseEntity<>(add(productGroupDto, productGroupService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 }

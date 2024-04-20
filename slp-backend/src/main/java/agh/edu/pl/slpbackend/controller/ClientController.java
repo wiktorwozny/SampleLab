@@ -1,9 +1,9 @@
 package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.model.Sample;
-import agh.edu.pl.slpbackend.service.SampleService;
+import agh.edu.pl.slpbackend.dto.ClientDto;
+import agh.edu.pl.slpbackend.model.Client;
+import agh.edu.pl.slpbackend.service.ClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +13,15 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/sample") //TODO odpowiedni rooting jeszcze nie wiem XDD
-public class SampleController extends AbstractController {
+@RequestMapping("/client") //TODO odpowiedni rooting jeszcze nie wiem XDD
+public class ClientController extends AbstractController {
 
-    private final SampleService sampleService;
+    private final ClientService clientService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<SampleDto>> list() {
+    public ResponseEntity<List<ClientDto>> list() {
         try {
-            List<SampleDto> list = sampleService.selectAll();
+            List<ClientDto> list = clientService.selectAll();
 
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -33,7 +33,7 @@ public class SampleController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
-        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Client> add(@RequestBody ClientDto clientDto) {
+        return new ResponseEntity<>(add(clientDto, clientService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 }

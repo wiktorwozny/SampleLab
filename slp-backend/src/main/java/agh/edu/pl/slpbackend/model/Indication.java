@@ -2,18 +2,26 @@ package agh.edu.pl.slpbackend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder(toBuilder = true)
-public class Indication {
+@Data
+@Builder(toBuilder = true)
+public class Indication implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6438980277477269399L;
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
@@ -25,5 +33,5 @@ public class Indication {
     private String laboratory;
 
     @ManyToMany(mappedBy = "indications")
-    private List<Group> groups;
+    private List<ProductGroup> groups;
 }

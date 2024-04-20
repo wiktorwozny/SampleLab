@@ -2,19 +2,26 @@ package agh.edu.pl.slpbackend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder(toBuilder = true)
+@Data
+@Builder(toBuilder = true)
 @Table(name = "product_group")
-public class Group {
+public class ProductGroup implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -6720720397053849550L;
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
@@ -25,5 +32,5 @@ public class Group {
 
     @ManyToMany
     @JoinTable(name = "group_sampling_standard")
-    private  List<SamplingStandard> samplingStandards;
+    private List<SamplingStandard> samplingStandards;
 }

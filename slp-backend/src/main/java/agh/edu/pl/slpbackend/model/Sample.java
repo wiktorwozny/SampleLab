@@ -51,7 +51,7 @@ public class Sample implements Serializable {
     private Inspection inspection;
 
     @ManyToOne
-    private Group group;
+    private ProductGroup group;
 
     @ManyToOne
     private SamplingStandard samplingStandard;

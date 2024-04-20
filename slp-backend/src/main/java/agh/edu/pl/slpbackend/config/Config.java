@@ -13,13 +13,15 @@ import java.util.List;
 public class Config {
     @Bean
     CommandLineRunner commandLineRunner(
+            final AddressRepository addressRepository,
+            final ReportDataRepository raportDataRepository,
             final SampleRepository sampleRepository,
             final CodeRepository codeRepository,
             final ClientRepository clientRepository,
             final InspectionRepository inspectionRepository,
             final SamplingStandardRepository samplingStandardRepository,
             final IndicationRepository indicationRepository,
-            final GroupRepository groupRepository) {
+            final ProductGroupRepository groupRepository) {
         return args -> {
             if (sampleRepository.count() == 0) {
                 Code code = Code.builder()
@@ -57,7 +59,7 @@ public class Config {
                         .build();
                 indicationRepository.save(indication);
 
-                Group group = Group.builder()
+                ProductGroup group = ProductGroup.builder()
                         .name("Przetwory zbożowe")
                         .samplingStandards(List.of(samplingStandard))
                         .indications(List.of(indication))
@@ -82,6 +84,32 @@ public class Config {
                         .build();
                 sampleRepository.save(sample);
             }
+            if (raportDataRepository.count() == 0) {
+                Address address = Address.builder()
+                        .street("Sezam Street")
+                        .zipCode("39-120")
+                        .city("Dziuralala")
+                        .build();
+                addressRepository.save(address);
+
+                ReportData reportData = ReportData.builder()
+                        .manufacturerName("manufacture")
+                        .manufacturerAddress(address)
+                        .supplierName("supplier")
+                        .supplierAddress(address)
+                        .sellerName("seller")
+                        .sellerAddress(address)
+                        .recipientName("recipient")
+                        .recipientAddress(address)
+                        .jobNumber(11)
+                        .mechanism("mechanism")
+                        .deliveryMethod("deliveryMethod")
+                        .build();
+
+                raportDataRepository.save(reportData);
+
+            }
+
         };
     }
 }

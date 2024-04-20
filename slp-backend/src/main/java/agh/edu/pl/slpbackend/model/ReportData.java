@@ -3,13 +3,22 @@ package agh.edu.pl.slpbackend.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor
-public class ReportData {
+@AllArgsConstructor
+@Data
+@Builder(toBuilder = true)
+public class ReportData implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 854868781531586203L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
