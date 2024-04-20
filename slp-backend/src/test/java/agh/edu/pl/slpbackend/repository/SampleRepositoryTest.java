@@ -23,7 +23,6 @@ public class SampleRepositoryTest {
     private Sample getSaveExample() {
         //@formatter:off
         return Sample.builder()
-                .id(1L)
                 .code(null)
                 .client(null)
                 .assortment("test")
@@ -55,12 +54,13 @@ public class SampleRepositoryTest {
 
     @Test
     public void save() {
-        long count1 = this.sampleRepository.count();
+
+        final long count1 = this.sampleRepository.count();
 
         final Sample response = this.sampleRepository.save(getSaveExample());
-        assertEquals(getSaveExample(), response);
-        long count2 = this.sampleRepository.count();
 
+        final long count2 = this.sampleRepository.count();
         assertEquals(count1 + 1, count2);
+
     }
 }

@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Transactional
 @SpringBootTest
@@ -27,7 +29,6 @@ public class SampleServiceTest {
     private SampleDto getSaveExample() {
         //@formatter:off
         return SampleDto.builder()
-                .id(1L)
                 .code(null)
                 .client(null)
                 .assortment("test")
@@ -55,5 +56,11 @@ public class SampleServiceTest {
         long count2 = this.sampleRepository.count();
 
         assertEquals(count1 + 1, count2);
+    }
+
+    @Test
+    public void findAll() {
+        final List<SampleDto> list = sampleService.selectAll();
+        assertFalse(list.isEmpty());
     }
 }

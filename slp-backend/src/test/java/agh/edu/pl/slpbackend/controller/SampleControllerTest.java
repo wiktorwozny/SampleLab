@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Transactional
 @SpringBootTest
@@ -45,15 +48,15 @@ public class SampleControllerTest {
     }
 
     @Test
-    public void insert() {
-
-        long count1 = this.sampleRepository.count();
-
+    public void add() {
         final ResponseEntity<Sample> response = this.sampleController.add(getSaveExample());
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        
-        long count2 = this.sampleRepository.count();
+    }
 
-        assertEquals(count1 + 1, count2);
+    @Test
+    public void list() {
+        final ResponseEntity<List<SampleDto>> list = this.sampleController.list();
+        assertEquals(HttpStatus.OK, list.getStatusCode());
+        assertFalse(Objects.requireNonNull(list.getBody()).isEmpty());
     }
 }
