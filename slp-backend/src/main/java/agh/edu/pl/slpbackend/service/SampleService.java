@@ -11,12 +11,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 //@Slf4j
 @AllArgsConstructor
 public class SampleService extends AbstractService implements SampleMapper {
 
     private final SampleRepository sampleRepository;
+
+
+    public List<SampleDto> selectAll() {
+        List<Sample> sampleList = sampleRepository.findAll();
+        return sampleList.stream().map(this::toDto).collect(Collectors.toList());
+    }
 
     @Override
     public ResponseEntity<Sample> insert(IModel model) {
@@ -27,7 +36,6 @@ public class SampleService extends AbstractService implements SampleMapper {
 
         return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
 
-//        return new ResponseEntity<>(sampleRepository.save(toModel(sampleDto)), HttpStatus.CREATED);
     }
 
     @Override

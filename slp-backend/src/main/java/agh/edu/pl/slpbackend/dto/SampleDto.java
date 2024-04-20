@@ -45,8 +45,8 @@ public class SampleDto implements IModel, Serializable {
     @ModelFieldName("expirationDate")
     private LocalDate expirationDate;
 
-    @ModelFieldName("expirationDateComment")
-    private String expirationDateComment;
+    @ModelFieldName("expirationComment")
+    private String expirationComment;
 
     @ModelFieldName("examinationEndDate")
     private LocalDate examinationEndDate;

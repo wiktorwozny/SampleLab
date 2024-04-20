@@ -1,32 +1,28 @@
-package agh.edu.pl.slpbackend.service;
+package agh.edu.pl.slpbackend.repository;
 
-import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.model.Sample;
-import agh.edu.pl.slpbackend.repository.SampleRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Transactional
 @SpringBootTest
-public class SampleServiceTest {
-
-    @Autowired
-    private SampleService sampleService;
+public class SampleRepositoryTest {
 
     @Autowired
     private SampleRepository sampleRepository;
 
-    private SampleDto getSaveExample() {
+
+    private Sample getSaveExample() {
         //@formatter:off
-        return SampleDto.builder()
+        return Sample.builder()
                 .id(1L)
                 .code(null)
                 .client(null)
@@ -48,10 +44,21 @@ public class SampleServiceTest {
     @Test
     public void insert() {
 
+
+    }
+
+    @Test
+    public void findAll() {
+        final List<Sample> list = sampleRepository.findAll();
+        assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void save() {
         long count1 = this.sampleRepository.count();
 
-        final ResponseEntity<Sample> response = this.sampleService.insert(getSaveExample());
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        final Sample response = this.sampleRepository.save(getSaveExample());
+        assertEquals(getSaveExample(), response);
         long count2 = this.sampleRepository.count();
 
         assertEquals(count1 + 1, count2);

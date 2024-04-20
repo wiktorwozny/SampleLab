@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.service;
+package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.model.Sample;
@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Transactional
 @SpringBootTest
-public class SampleServiceTest {
+public class SampleControllerTest {
 
     @Autowired
-    private SampleService sampleService;
+    private SampleController sampleController;
 
     @Autowired
     private SampleRepository sampleRepository;
@@ -27,7 +27,6 @@ public class SampleServiceTest {
     private SampleDto getSaveExample() {
         //@formatter:off
         return SampleDto.builder()
-                .id(1L)
                 .code(null)
                 .client(null)
                 .assortment("test")
@@ -50,8 +49,9 @@ public class SampleServiceTest {
 
         long count1 = this.sampleRepository.count();
 
-        final ResponseEntity<Sample> response = this.sampleService.insert(getSaveExample());
+        final ResponseEntity<Sample> response = this.sampleController.add(getSaveExample());
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        
         long count2 = this.sampleRepository.count();
 
         assertEquals(count1 + 1, count2);
