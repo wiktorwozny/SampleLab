@@ -20,27 +20,27 @@ public class ReportData implements Serializable {
     private static final long serialVersionUID = 854868781531586203L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
     private String manufacturerName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address manufacturerAddress;
 
     private String supplierName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address supplierAddress;
 
     private String sellerName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address sellerAddress;
 
     private String recipientName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address recipientAddress;
 
     private Integer jobNumber;

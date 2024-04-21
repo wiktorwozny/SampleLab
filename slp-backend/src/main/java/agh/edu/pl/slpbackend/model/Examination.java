@@ -42,7 +42,7 @@ public class Examination {
 
     private String methodStatus;
 
-    @Size(max = 2)
+    //@Size(max = 2)
     private float uncertainty;
 
     private float lod;

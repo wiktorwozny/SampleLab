@@ -56,7 +56,7 @@ public class Sample implements Serializable {
     @ManyToOne
     private SamplingStandard samplingStandard;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private ReportData reportData;
 
 }
