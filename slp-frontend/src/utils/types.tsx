@@ -1,0 +1,77 @@
+export type Code = {
+    id: string,
+    name: string
+}
+
+export type Address = {
+    id: number,
+    street: string,
+    zipCode: string,
+    city: string
+}
+
+export type Client = {
+    id: number,
+    wijharsCode: string,
+    name: string,
+    address: Address
+}
+
+export type Inspection = {
+    id: number,
+    name: string
+}
+
+export type SamplingStandards = {
+    id: number,
+    name: string,
+    groups: ProductGroup []
+}
+export type Indication = {
+    id: number,
+    name: string,
+    norm: string,
+    unit: string,
+    laboratory: string,
+    groups: ProductGroup []
+}
+
+export type ProductGroup = {
+    id: number,
+    name: string,
+    // indications: Indication [],
+    // samplingStandards: SamplingStandards []
+}
+
+export type ReportData = {
+    id: number,
+    manufacturerName: string,
+    manufacturerAddress: Address,
+    supplierName: string,
+    supplierAddress: Address,
+    sellerName: string,
+    sellerAddress: Address,
+    recipientName: string,
+    recipientAddress: Address,
+    jobNumber: number,
+    mechanism: string,
+    deliveryMethod: string
+}
+
+export type Sample = {
+    id: number,
+    code: Code,
+    client: Client,
+    assortment: string,
+    admissionDate: Date,
+    expirationDate: Date,
+    expirationComment: string,
+    examinationEndDate: Date,
+    size: string,
+    state: string,
+    analysis: boolean,
+    inspection: Inspection,
+    group: ProductGroup,
+    samplingStandard: SamplingStandards,
+    reportData: ReportData
+}

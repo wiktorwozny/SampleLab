@@ -36,6 +36,7 @@ public interface SampleMapper {
                 .assortment(dto.getAssortment())
                 .admissionDate(dto.getAdmissionDate())
                 .expirationComment(dto.getExpirationComment())
+                .expirationDate(dto.getExpirationDate())
                 .examinationEndDate(dto.getExaminationEndDate())
                 .size(dto.getSize())
                 .state(dto.getState())
