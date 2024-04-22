@@ -146,7 +146,7 @@ public class Config {
 
                 ProductGroup group2 = ProductGroup.builder()
                         .name("Świeże owoce i warzywa")
-                        .samplingStandards(List.of(samplingStandard1))
+                        .samplingStandards(List.of(samplingStandard1, samplingStandard2))
                         .indications(List.of(indication1, indication3))
                         .build();
 
@@ -211,8 +211,25 @@ public class Config {
                         .build();
 
                 Sample sample2 = Sample.builder()
-                        .code(code1)
-                        .client(client1)
+                        .code(code2)
+                        .client(client2)
+                        .assortment("Winogrona")
+                        .admissionDate(LocalDate.now())
+                        .expirationDate(LocalDate.now().plusDays(10))
+                        .expirationComment(null)
+                        .examinationEndDate(LocalDate.now().plusMonths(2))
+                        .size("700g")
+                        .state("Bez zastrzeżeń")
+                        .analysis(true)
+                        .inspection(inspection2)
+                        .group(group2)
+                        .samplingStandard(samplingStandard1)
+                        .reportData(reportData2)
+                        .build();
+
+                Sample sample3 = Sample.builder()
+                        .code(code3)
+                        .client(client2)
                         .assortment("Pomidory")
                         .admissionDate(LocalDate.now())
                         .expirationDate(LocalDate.now().plusDays(7))
@@ -221,13 +238,13 @@ public class Config {
                         .size("1kg")
                         .state("Bez zastrzeżeń")
                         .analysis(false)
-                        .inspection(inspection2)
+                        .inspection(inspection3)
                         .group(group2)
-                        .samplingStandard(samplingStandard1)
-                        .reportData(reportData2)
+                        .samplingStandard(samplingStandard2)
+                        .reportData(null)
                         .build();
 
-                sampleRepository.saveAll(List.of(sample1, sample2));
+                sampleRepository.saveAll(List.of(sample1, sample2, sample3));
 
                 //examination
                 Examination examination = Examination.builder()

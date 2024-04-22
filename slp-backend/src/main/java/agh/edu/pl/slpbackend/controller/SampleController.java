@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,11 @@ public class SampleController extends AbstractController {
     @PostMapping("/save")
     public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
         return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    }
+
+    @PostMapping("{sampleId}/report-data")
+    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody ReportData reportData) {
+        sampleService.addReportData(sampleId, reportData);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

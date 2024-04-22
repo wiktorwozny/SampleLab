@@ -1,7 +1,9 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.SampleMapper;
+import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
@@ -50,4 +52,11 @@ public class SampleService extends AbstractService implements SampleMapper {
     }
 
 
+    public void addReportData(long sampleId, ReportData reportData) {
+        Sample sample = sampleRepository.findById(sampleId)
+                .orElseThrow(SampleNotFoundException::new);
+
+        sample.setReportData(reportData);
+        sampleRepository.save(sample);
+    }
 }
