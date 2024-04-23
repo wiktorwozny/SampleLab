@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +29,11 @@ public class ProductGroup implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "group_indication")
+    @JsonIgnore
     private List<Indication> indications;
 
     @ManyToMany
     @JoinTable(name = "group_sampling_standard")
+    @JsonIgnore
     private List<SamplingStandard> samplingStandards;
 }

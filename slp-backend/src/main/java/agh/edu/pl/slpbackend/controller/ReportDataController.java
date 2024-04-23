@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/report-data") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@CrossOrigin(origins = "http://localhost:3000")
 public class ReportDataController extends AbstractController {
 
     private final ReportDataService reportDataService;
