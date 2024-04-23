@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/inspection") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@CrossOrigin(origins = "http://localhost:3000")
 public class InspectionController extends AbstractController {
 
     private final InspectionService inspectionService;

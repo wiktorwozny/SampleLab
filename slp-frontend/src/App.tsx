@@ -1,24 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import SampleForm from './components/SampleForm';
+import ReportDataForm from './components/ReportDataForm';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import SingleSamplePage from './pages/SingleSamplePage';
+import SampleListPage from './pages/SampleListPage';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<SampleListPage/>}/>
+          <Route path='/addSample' element={<SampleForm/>}/>
+          <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
+          <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
+        </Routes>
+      </BrowserRouter>
+      {/* <ReportDataForm/> */}
     </div>
   );
 }

@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
 import agh.edu.pl.slpbackend.dto.IndicationDto;
+import agh.edu.pl.slpbackend.dto.ReportDataDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.model.Indication;
 import agh.edu.pl.slpbackend.model.Sample;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/sample") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@CrossOrigin(origins = "http://localhost:3000")
 public class SampleController extends AbstractController {
 
     private final SampleService sampleService;
@@ -45,10 +47,27 @@ public class SampleController extends AbstractController {
     public ResponseEntity<List<ExaminationDto>> getExaminationsForSample(@PathVariable Long sampleId) {
         List<ExaminationDto> examinationDtos = sampleService.selectExaminationsForSample(sampleId);
         return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
+    @GetMapping("/get-sample/{sampleId}")
+    public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
+        try {
+            SampleDto sampleDto = sampleService.selectOne(sampleId);
+            if (sampleDto == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(sampleDto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/save")
     public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
         return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    }
+
+    @PostMapping("{sampleId}/report-data")
+    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) {
+        sampleService.addReportData(sampleId, reportData);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -9,6 +9,12 @@ import agh.edu.pl.slpbackend.mapper.SampleMapper;
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.model.Indication;
 import agh.edu.pl.slpbackend.model.ProductGroup;
+import agh.edu.pl.slpbackend.dto.ReportDataDto;
+import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
+import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
+import agh.edu.pl.slpbackend.mapper.SampleMapper;
+import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import agh.edu.pl.slpbackend.repository.ProductGroupRepository;
@@ -57,6 +63,11 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return examinations.stream().map(this::toDto).collect(Collectors.toList());
     }
 
+    public SampleDto selectOne(Long id) {
+        Sample sample = sampleRepository.getOne(id);
+        return toDto(sample);
+    }
+
     @Override
     public ResponseEntity<Sample> insert(IModel model) {
 
@@ -79,4 +90,14 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
 
+    public void addReportData(long sampleId, final ReportDataDto reportDataDto) {
+
+        final ReportData reportData = toModel(reportDataDto);
+
+        Sample sample = sampleRepository.findById(sampleId)
+                .orElseThrow(SampleNotFoundException::new);
+
+        sample.setReportData(reportData);
+        sampleRepository.save(sample);
+    }
 }

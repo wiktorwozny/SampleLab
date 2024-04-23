@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/report-data") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@CrossOrigin(origins = "http://localhost:3000")
 public class ReportDataController extends AbstractController {
 
     private final ReportDataService reportDataService;
@@ -30,10 +31,5 @@ public class ReportDataController extends AbstractController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @PostMapping("/save")
-    public ResponseEntity<ReportData> add(@RequestBody ReportDataDto reportDataDto) {
-        return new ResponseEntity<>(add(reportDataDto, reportDataService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 }
