@@ -1,7 +1,9 @@
 package agh.edu.pl.slpbackend.service;
 
+import agh.edu.pl.slpbackend.dto.ReportDataDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
+import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.mapper.SampleMapper;
 import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.Sample;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class SampleService extends AbstractService implements SampleMapper {
+public class SampleService extends AbstractService implements SampleMapper, ReportDataMapper {
 
     private final SampleRepository sampleRepository;
 
@@ -57,7 +59,10 @@ public class SampleService extends AbstractService implements SampleMapper {
     }
 
 
-    public void addReportData(long sampleId, ReportData reportData) {
+    public void addReportData(long sampleId, final ReportDataDto reportDataDto) {
+
+        final ReportData reportData = toModel(reportDataDto);
+
         Sample sample = sampleRepository.findById(sampleId)
                 .orElseThrow(SampleNotFoundException::new);
 

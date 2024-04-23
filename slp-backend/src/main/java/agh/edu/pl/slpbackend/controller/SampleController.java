@@ -1,8 +1,8 @@
 package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
+import agh.edu.pl.slpbackend.dto.ReportDataDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
@@ -36,9 +36,9 @@ public class SampleController extends AbstractController {
 
     @GetMapping("/get-sample/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
-        try{
+        try {
             SampleDto sampleDto = sampleService.selectOne(sampleId);
-            if(sampleDto == null) {
+            if (sampleDto == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(sampleDto, HttpStatus.OK);
@@ -49,11 +49,11 @@ public class SampleController extends AbstractController {
 
     @PostMapping("/save")
     public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
-            return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 
     @PostMapping("{sampleId}/report-data")
-    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody ReportData reportData) {
+    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) {
         sampleService.addReportData(sampleId, reportData);
         return new ResponseEntity<>(HttpStatus.OK);
     }
