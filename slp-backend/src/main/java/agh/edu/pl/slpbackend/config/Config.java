@@ -230,7 +230,7 @@ public class Config {
                 sampleRepository.saveAll(List.of(sample1, sample2));
 
                 //examination
-                Examination examination = Examination.builder()
+                Examination examination1 = Examination.builder()
                         .sample(sample1)
                         .indication(indication1)
                         .signage("oznakowanie")
@@ -247,7 +247,17 @@ public class Config {
                         .loq(0.5F)
                         .build();
 
-                examinationRepository.save(examination);
+                Examination examination2 = Examination.builder()
+                        .sample(sample1)
+                        .indication(indication2)
+                        .signage("oznakowanie")
+                        .nutritionalValue("wartość odżywcza")
+                        .specification("specyfikacja")
+                        .regulation("rozporządzenie")
+                        .samplesNumber(4)
+                        .build();
+
+                examinationRepository.saveAll(List.of(examination1, examination2));
             }
         };
     }
