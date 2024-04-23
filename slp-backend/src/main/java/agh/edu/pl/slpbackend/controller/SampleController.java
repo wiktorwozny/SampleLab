@@ -5,7 +5,6 @@ import agh.edu.pl.slpbackend.dto.ExaminationDto;
 import agh.edu.pl.slpbackend.dto.IndicationDto;
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.model.Indication;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
@@ -47,6 +46,8 @@ public class SampleController extends AbstractController {
     public ResponseEntity<List<ExaminationDto>> getExaminationsForSample(@PathVariable Long sampleId) {
         List<ExaminationDto> examinationDtos = sampleService.selectExaminationsForSample(sampleId);
         return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
+    }
+
     @GetMapping("/get-sample/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
         try {
