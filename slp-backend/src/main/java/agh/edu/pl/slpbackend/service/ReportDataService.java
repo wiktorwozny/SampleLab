@@ -1,13 +1,16 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
+import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.model.ReportData;
+import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ReportDataRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +32,11 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 
     @Override
     public ResponseEntity<?> insert(IModel model) {
-        return null;
+        final ReportDataDto reportDataDto = (ReportDataDto) model;
+        final ReportData reportData = toModel(reportDataDto);
+        final ReportData saveResult = reportDataRepository.save(reportData);
+
+        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
     }
 
     @Override

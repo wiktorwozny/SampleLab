@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { FormLabel } from './ui/Labels';
 import { Button } from './ui/Button';
 import { Address } from '../utils/types';
-import { addSample } from '../helpers/samplingApi';
 import { getAllAddresses } from '../helpers/addressApi';
+import { addReportDataToSample } from '../helpers/sampleApi';
 const ReportDataForm:FC<{}>=()=>{
 
     const { handleSubmit, register, formState: { errors } } = useForm();
@@ -29,10 +29,17 @@ const ReportDataForm:FC<{}>=()=>{
     },[])
 
     const submit = async(values:any) => {
+        values.recipientAddress = JSON.parse(values.recipientAddress)
+        values.manufacturerAddress = JSON.parse(values.manufacturerAddress)
+        values.sellerAddress = JSON.parse(values.sellerAddress)
+        values.supplierAddress = JSON.parse(values.supplierAddress)
+        delete values.recipientAddress['id']
+        delete values.manufacturerAddress['id']
+        delete values.sellerAddress['id']
+        delete values.supplierAddress['id']
         console.log(values)
-        
         try{
-            let response = await addSample(values)
+            let response = await addReportDataToSample(3,values)
             console.log(response)
         }catch(err){
             console.log(err)
@@ -56,7 +63,7 @@ const ReportDataForm:FC<{}>=()=>{
             <Select
                 className="my-custom-class"
                 options={addresses.map(address=>({value: JSON.stringify(address), label:`${address.street} ${address.city}`}))}
-                {...register("manufacturerName",{
+                {...register("manufacturerAddress",{
                     required:{
                     value:true,
                     message:"Pole wymagane"

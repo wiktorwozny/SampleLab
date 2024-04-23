@@ -7,8 +7,8 @@ import ReportDataForm from './components/ReportDataForm';
 function App() {
   return (
     <div className="App">
-      {/* <SampleForm/> */}
-      <ReportDataForm/>
+      <SampleForm/>
+      {/* <ReportDataForm/> */}
     </div>
   );
 }

@@ -112,7 +112,7 @@ const SampleForm:FC<{}>=()=>{
         values.inspection = JSON.parse(values.inspection)
         values.group = JSON.parse(values.group)
         values.samplingStandard = JSON.parse(values.samplingStandard)
-        values.reportData = JSON.parse(values.reportData)
+        // values.reportData = JSON.parse(values.reportData)
         console.log(values)
         
         try{
@@ -249,7 +249,7 @@ const SampleForm:FC<{}>=()=>{
                 }})}
             />
 
-            <FormLabel>Dane do raportu</FormLabel>
+            {/* <FormLabel>Dane do raportu</FormLabel>
             <Select
                 className="my-custom-class"
                 options={reportData.map(data=>({value: JSON.stringify(data), label:data.deliveryMethod}))}
@@ -258,7 +258,7 @@ const SampleForm:FC<{}>=()=>{
                     value:true,
                     message:"Pole wymagane"
                 }})}
-            />
+            /> */}
 
             <Button type="submit" className='mt-3'>Utwórz próbke</Button>
         </form>

@@ -32,9 +32,4 @@ public class AddressController extends AbstractController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/save")
-    public ResponseEntity<Address> save(@RequestBody AddressDto addressDto) {
-        return new ResponseEntity<>(add(addressDto, addressService).getStatusCode());
-    }
 }

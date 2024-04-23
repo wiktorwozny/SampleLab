@@ -32,9 +32,4 @@ public class ReportDataController extends AbstractController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/save")
-    public ResponseEntity<ReportData> add(@RequestBody ReportDataDto reportDataDto) {
-        return new ResponseEntity<>(add(reportDataDto, reportDataService).getStatusCode()); //TODO nie wiem, trzeba przetestować
-    }
 }
