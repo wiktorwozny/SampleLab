@@ -7,11 +7,21 @@ const getAllSamples = () => {
     return axios.get(backendUrl + url + `list`)
 }
 
-const addReportDataToSample = (sampleId:number, reportData:ReportData) => {
-    return axios.post(backendUrl + url + `${sampleId}/report-data`, reportData)
+const addReportDataToSample = (sampleId:string | undefined, reportData:ReportData) => {
+    if(sampleId !== undefined){
+        return axios.post(backendUrl + url + `${sampleId}/report-data`, reportData)
+    }
+    return null;
 }
 
+const getSampleById = (sampleId:string | undefined) => {
+    if(sampleId !== undefined){
+        return axios.get(backendUrl + url + `get-sample/${sampleId}`)
+    }
+    return null;
+}
 export {
     getAllSamples,
-    addReportDataToSample
+    addReportDataToSample,
+    getSampleById
 }

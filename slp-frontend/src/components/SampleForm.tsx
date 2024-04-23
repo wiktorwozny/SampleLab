@@ -13,6 +13,7 @@ import { getAllReportData } from '../helpers/reportDataApi';
 import { ListFormat } from 'typescript';
 import { Code, Client, Inspection, ProductGroup, SamplingStandards, ReportData, Sample } from '../utils/types';
 import { addSample } from '../helpers/samplingApi';
+import { useNavigate } from 'react-router-dom';
 const SampleForm:FC<{}>=()=>{
 
     const { handleSubmit, register, formState: { errors } } = useForm();
@@ -23,7 +24,8 @@ const SampleForm:FC<{}>=()=>{
     const [productGroup, setProductGroup] = useState<ProductGroup []>([])
     const [samplingStandard, setSamplingStandard] = useState<SamplingStandards []>([])
     const [reportData, setReportData] = useState<ReportData []>([])
-
+    const navigate = useNavigate()
+    
     useEffect(() => {
         const getCodes = async() => {
             try{
@@ -118,6 +120,9 @@ const SampleForm:FC<{}>=()=>{
         try{
             let response = await addSample(values)
             console.log(response)
+            if(response.status === 201){
+                navigate("/")
+            }
         }catch(err){
             console.log(err)
         }
