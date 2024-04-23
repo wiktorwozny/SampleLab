@@ -7,12 +7,13 @@ import { Button } from './ui/Button';
 import { Address } from '../utils/types';
 import { getAllAddresses } from '../helpers/addressApi';
 import { addReportDataToSample } from '../helpers/sampleApi';
+import { useParams } from 'react-router-dom';
 const ReportDataForm:FC<{}>=()=>{
 
     const { handleSubmit, register, formState: { errors } } = useForm();
     const [message, setMessage] = useState<String>("")
     const [addresses, setAddresses] = useState<Address []>([])
-
+    const {sampleId} = useParams()
     useEffect(() => {
         const getAddresses = async() => {
             try {
@@ -39,7 +40,7 @@ const ReportDataForm:FC<{}>=()=>{
         delete values.supplierAddress['id']
         console.log(values)
         try{
-            let response = await addReportDataToSample(3,values)
+            let response = await addReportDataToSample(sampleId ,values)
             console.log(response)
         }catch(err){
             console.log(err)

@@ -30,6 +30,11 @@ public class SampleService extends AbstractService implements SampleMapper {
         return sampleList.stream().map(this::toDto).collect(Collectors.toList());
     }
 
+    public SampleDto selectOne(Long id) {
+        Sample sample = sampleRepository.getOne(id);
+        return toDto(sample);
+    }
+
     @Override
     public ResponseEntity<Sample> insert(IModel model) {
 
