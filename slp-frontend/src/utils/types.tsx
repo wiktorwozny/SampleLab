@@ -39,8 +39,8 @@ export type Indication = {
 export type ProductGroup = {
     id: number,
     name: string,
-    // indications: Indication [],
-    // samplingStandards: SamplingStandards []
+    indications?: Indication [],
+    samplingStandards?: SamplingStandards []
 }
 
 export type ReportData = {
