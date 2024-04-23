@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/code") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@CrossOrigin(origins = "http://localhost:3000")
 public class CodeController extends AbstractController {
 
     private final CodeService codeService;

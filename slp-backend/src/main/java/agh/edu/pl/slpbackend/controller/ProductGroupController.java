@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/product-group") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductGroupController extends AbstractController {
 
     private final ProductGroupService productGroupService;
