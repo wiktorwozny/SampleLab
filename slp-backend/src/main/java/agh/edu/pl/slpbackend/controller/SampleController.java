@@ -3,7 +3,6 @@ package agh.edu.pl.slpbackend.controller;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
 import agh.edu.pl.slpbackend.dto.IndicationDto;
-import agh.edu.pl.slpbackend.dto.ReportDataDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
@@ -66,9 +65,9 @@ public class SampleController extends AbstractController {
         return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 
-    @PostMapping("{sampleId}/report-data")
-    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) {
-        sampleService.addReportData(sampleId, reportData);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping("{sampleId}/report-data")
+//    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
+//        sampleService.addReportData(sampleId, reportData);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

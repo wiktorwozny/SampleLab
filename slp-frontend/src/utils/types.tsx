@@ -55,7 +55,8 @@ export type ReportData = {
     recipientAddress: Address,
     jobNumber: number,
     mechanism: string,
-    deliveryMethod: string
+    deliveryMethod: string,
+    sampleId: number
 }
 
 export type Sample = {
