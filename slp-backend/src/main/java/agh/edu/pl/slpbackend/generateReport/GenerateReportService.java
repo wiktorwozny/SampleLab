@@ -16,11 +16,13 @@ import java.util.Optional;
 public class GenerateReportService {
 
     private final SampleRepository sampleRepository;
+    private final GenerateReport generateReport;
 
-    public ResponseEntity<HttpStatus> generateReport(final long reportId) {
+    public ResponseEntity<HttpStatus> generateReport(final long reportId) throws Exception {
 
         final Optional<Sample> sample = sampleRepository.findById(reportId);
         if (sample.isPresent()) {
+            generateReport.generateReport(sample.get());
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

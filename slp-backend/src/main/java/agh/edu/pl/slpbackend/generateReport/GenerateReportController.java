@@ -13,7 +13,7 @@ public class GenerateReportController {
 
     private final GenerateReportService generateReportService;
 
-    @GetMapping("/generete/{reportId}")
+    @GetMapping("/generate/{reportId}")
     public ResponseEntity<HttpStatus> list(@PathVariable long reportId) {
         try {
             return generateReportService.generateReport(reportId);
