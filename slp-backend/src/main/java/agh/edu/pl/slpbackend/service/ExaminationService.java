@@ -42,6 +42,11 @@ public class ExaminationService extends AbstractService implements ExaminationMa
         examinationRepository.save(existingExamination);
     }
 
+    public List<ExaminationDto> selectExaminationsForSample(final Long sampleId) {
+        List<Examination> examinations = examinationRepository.findBySampleId(sampleId);
+        return examinations.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
     public void deleteById(Long examinationId) {
         examinationRepository.deleteById(examinationId);
     }
