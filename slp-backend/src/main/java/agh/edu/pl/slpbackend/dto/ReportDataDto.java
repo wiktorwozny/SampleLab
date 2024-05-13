@@ -62,4 +62,6 @@ public class ReportDataDto implements IModel, Serializable {
 
     @ModelFieldName("deliveryMethod")
     private String deliveryMethod;
+
+    private long sampleId;
 }
