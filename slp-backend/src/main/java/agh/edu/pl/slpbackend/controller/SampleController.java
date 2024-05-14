@@ -35,18 +35,6 @@ public class SampleController extends AbstractController {
         }
     }
 
-    @GetMapping("/{sampleId}/indications")
-    public ResponseEntity<List<IndicationDto>> getIndicationsForSample(@PathVariable Long sampleId) {
-        List<IndicationDto> indicationDtos = sampleService.selectIndicationsForSample(sampleId);
-        return new ResponseEntity<>(indicationDtos, HttpStatus.OK);
-    }
-
-    @GetMapping("/{sampleId}/examinations")
-    public ResponseEntity<List<ExaminationDto>> getExaminationsForSample(@PathVariable Long sampleId) {
-        List<ExaminationDto> examinationDtos = sampleService.selectExaminationsForSample(sampleId);
-        return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
-    }
-
     @GetMapping("/get-sample/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
         try {

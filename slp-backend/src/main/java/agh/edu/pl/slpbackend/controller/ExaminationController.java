@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/examination")
@@ -19,6 +21,12 @@ public class ExaminationController extends AbstractController {
     @PostMapping("/save")
     public ResponseEntity<Examination> add(@RequestBody ExaminationDto examinationDto) {
         return new ResponseEntity<>(add(examinationDto, examinationService).getStatusCode());
+    }
+
+    @GetMapping("/{sampleId}")
+    public ResponseEntity<List<ExaminationDto>> getExaminationForSample(@PathVariable Long sampleId) {
+        List<ExaminationDto> examinationDtos = examinationService.selectExaminationsForSample(sampleId);
+        return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
     }
 
     @PutMapping("/{examinationId}")
