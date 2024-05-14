@@ -66,12 +66,12 @@ const SingleSamplePage = () => {
 
         <Div className="text-start">
             <span className="font-bold">Inspekcja: </span> 
-            {`${sample?.inspection.name}`}
+            {`${sample?.inspection?.name}`}
         </Div>
 
         <Div className="text-start">
             <span className="font-bold">Norma: </span> 
-            {`${sample?.samplingStandard.name}`}
+            {`${sample?.samplingStandard?.name}`}
         </Div>
 
         <Div className="text-start">

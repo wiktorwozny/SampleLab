@@ -13,8 +13,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
                 ref={ref}
                 {...props}
             >
-                {options.map(option => (
-                    <option key={option.value} value={option.value} className='py-2 px-4 border-0 leading-tight rounded shadow appearance-none'>
+                {options.map((option, index) => (
+                    <option 
+                        key={option.value} 
+                        value={option.value} 
+                        className='py-2 px-4 border-0 leading-tight rounded shadow appearance-none'
+                        {...(index === 0 ? { defaultValue: option.value } : {})}
+                    >
                         {option.label}
                     </option>
                 ))}
