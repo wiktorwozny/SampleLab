@@ -25,14 +25,27 @@ const SampleList = () => {
     },[])
     return(<div className="RoomListPage flex flex-col items-center h-fit justify-center">
         {!isLoading&&samples.map(sample=>(<Div key={sample.id} className="flex justify-between hover:bg-slate-100 cursor-default" onClick={()=>{navigate(`/sample/${sample.id}`)}}>
-            <div>
-                <span className="font-bold">Nazwa:&nbsp;</span> 
-                {sample.client.name}
-            </div>
-            <div>
+            <div className="w-10">
                 <span className="font-bold">id: </span> 
                 {sample.id}
             </div>
+            <div className="w-1/6 text-start">
+                <span className="font-bold">kod próbki: </span> 
+                {sample.code.name}
+            </div>
+            <div className="w-1/6">
+                <span className="font-bold">Data przyjęcia: </span> 
+                {sample.admissionDate.toString()}
+            </div>
+            <div className="w-1/6">
+                <span className="font-bold">Data przydatność: </span> 
+                {sample.examinationEndDate.toString()}
+            </div>
+            <div className="w-1/6 text-start">
+                <span className="font-bold">Nazwa Klienta:&nbsp;</span> 
+                {sample.client.name}
+            </div>
+            <Button type="button" onClick={(e)=>e.stopPropagation()}>Generuj raport</Button>
         </Div>))}
         {isLoading&&<div className="text-2xl">Loading...</div>}
         <Button className="mt-2" type="button" onClick={()=>{navigate('/addSample')}}>Dodaj nową próbkę</Button>
