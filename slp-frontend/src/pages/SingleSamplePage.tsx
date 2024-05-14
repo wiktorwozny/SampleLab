@@ -22,7 +22,7 @@ const SingleSamplePage = () => {
             }
         }
         getSample()
-    },[])
+    },[sampleId])
     return(<div className="flex flex-col justify-center items-center">
         <h2 className="text-2xl text-center font-bold my-3">Widok szczegółowy próbki</h2>
         <Div className="text-start">
@@ -86,7 +86,7 @@ const SingleSamplePage = () => {
 
         <div className="flex justify-between w-3/4">
             <Button type="button" onClick={()=>{navigate(`/sample/addReportData/${sampleId}`)}}>Dodaj dodatkowe informacje</Button>
-            <Button type="button">Dodaj badanie</Button>
+            <Button type="button" onClick={() => {navigate(`/sample/manageExaminations/${sampleId}`)}}>Zarządzaj badaniami</Button>
         </div>
     </div>)
 }

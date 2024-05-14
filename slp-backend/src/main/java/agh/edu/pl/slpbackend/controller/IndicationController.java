@@ -6,10 +6,7 @@ import agh.edu.pl.slpbackend.service.IndicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/indication")
+@CrossOrigin(origins = "http://localhost:3000")
 public class IndicationController extends AbstractController {
 
     private final IndicationService indicationService;
@@ -35,7 +33,7 @@ public class IndicationController extends AbstractController {
         }
     }
 
-    @GetMapping("/{sampleId}")
+    @GetMapping("/sample/{sampleId}")
     public ResponseEntity<List<IndicationDto>> getIndicationsForSample(@PathVariable Long sampleId) {
         List<IndicationDto> indicationDtos = indicationService.selectIndicationsForSample(sampleId);
         return new ResponseEntity<>(indicationDtos, HttpStatus.OK);

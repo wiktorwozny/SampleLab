@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/examination")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExaminationController extends AbstractController {
 
     private final ExaminationService examinationService;
@@ -23,7 +24,13 @@ public class ExaminationController extends AbstractController {
         return new ResponseEntity<>(add(examinationDto, examinationService).getStatusCode());
     }
 
-    @GetMapping("/{sampleId}")
+    @GetMapping("/{examinationId}")
+    public ResponseEntity<ExaminationDto> getExaminationById(@PathVariable Long examinationId) {
+        ExaminationDto examinationDto = examinationService.selectById(examinationId);
+        return new ResponseEntity<>(examinationDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/sample/{sampleId}")
     public ResponseEntity<List<ExaminationDto>> getExaminationForSample(@PathVariable Long sampleId) {
         List<ExaminationDto> examinationDtos = examinationService.selectExaminationsForSample(sampleId);
         return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
