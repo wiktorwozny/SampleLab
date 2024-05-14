@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.service;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.model.Examination;
+import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
@@ -45,6 +46,11 @@ public class ExaminationService extends AbstractService implements ExaminationMa
     public List<ExaminationDto> selectExaminationsForSample(final Long sampleId) {
         List<Examination> examinations = examinationRepository.findBySampleId(sampleId);
         return examinations.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public ExaminationDto selectById(final Long id) {
+        final Examination examination = examinationRepository.findById(id).orElseThrow();
+        return toDto(examination);
     }
 
     public void deleteById(Long examinationId) {
