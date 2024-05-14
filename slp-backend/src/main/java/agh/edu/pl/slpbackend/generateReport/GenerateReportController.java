@@ -13,10 +13,10 @@ public class GenerateReportController {
 
     private final GenerateReportService generateReportService;
 
-    @GetMapping("/generate/{reportId}")
-    public ResponseEntity<HttpStatus> list(@PathVariable long reportId) {
+    @PostMapping("/generate/{sampleId}")
+    public ResponseEntity<HttpStatus> generate(@PathVariable final Long sampleId) {
         try {
-            return generateReportService.generateReport(reportId);
+            return generateReportService.generateReport(sampleId);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

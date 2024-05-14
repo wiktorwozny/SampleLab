@@ -23,7 +23,7 @@ public class GenerateReport {
     private HashMap<String, String> fieldsMap;
 
     public void generateReport(final Sample sample) throws Exception {
-        try (FileInputStream filePath = new FileInputStream("report_templates/test.docx")) {
+        try (FileInputStream filePath = new FileInputStream("D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\report_templates\\test.docx")) {
             fieldsMap = getStringStringHashMap(sample);
             XWPFDocument documentFile = new XWPFDocument(filePath);
             XWPFHeaderFooterPolicy headerFooterPolicy = documentFile.getHeaderFooterPolicy();
@@ -32,7 +32,7 @@ public class GenerateReport {
             changeFooter(headerFooterPolicy);
             changeTables(documentFile);
 
-            FileOutputStream fos = new FileOutputStream("report_output/report.docx");
+            FileOutputStream fos = new FileOutputStream("D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\report_output\\report.docx");
             documentFile.write(fos);
             fos.close();
             documentFile.close();

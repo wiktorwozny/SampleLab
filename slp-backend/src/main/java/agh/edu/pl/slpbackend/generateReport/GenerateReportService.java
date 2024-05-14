@@ -18,9 +18,9 @@ public class GenerateReportService {
     private final SampleRepository sampleRepository;
     private final GenerateReport generateReport;
 
-    public ResponseEntity<HttpStatus> generateReport(final long reportId) throws Exception {
+    public ResponseEntity<HttpStatus> generateReport(final Long sampleId) throws Exception {
 
-        final Optional<Sample> sample = sampleRepository.findById(reportId);
+        final Optional<Sample> sample = sampleRepository.findById(sampleId);
         if (sample.isPresent()) {
             generateReport.generateReport(sample.get());
             return new ResponseEntity<>(HttpStatus.OK);
