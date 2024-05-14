@@ -111,22 +111,22 @@ const SampleForm:FC<{}>=()=>{
     const submit = async(values:any) => {
         values.code = JSON.parse(values.code)
         values.client = JSON.parse(values.client)
-        values.inspection = JSON.parse(values.inspection)
+        // values.inspection = JSON.parse(values.inspection)
         values.group = JSON.parse(values.group)
         values.samplingStandard = JSON.parse(values.samplingStandard)
         // values.reportData = JSON.parse(values.reportData)
         console.log(errors)
         console.log(values)
         
-        // try{
-        //     let response = await addSample(values)
-        //     console.log(response)
-        //     if(response.status === 201){
-        //         navigate("/")
-        //     }
-        // }catch(err){
-        //     console.log(err)
-        // }
+        try{
+            let response = await addSample(values)
+            console.log(response)
+            if(response.status === 201){
+                navigate("/")
+            }
+        }catch(err){
+            console.log(err)
+        }
     }
 
     return(<div className='flex flex-col justify-center items-center'>

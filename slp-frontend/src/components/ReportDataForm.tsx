@@ -6,8 +6,9 @@ import {FormLabel} from './ui/Labels';
 import {Button} from './ui/Button';
 import {Address} from '../utils/types';
 import {getAllAddresses} from '../helpers/addressApi';
-import { addReportDataToSample } from '../helpers/sampleApi';
+// import { addReportDataToSample } from '../helpers/sampleApi';
 // import {addReportDataToSample} from '../helpers/reportDataApi';
+import { addReportData } from '../helpers/reportDataApi';
 import {useParams} from 'react-router-dom';
 
 const ReportDataForm: FC<{}> = () => {
@@ -35,16 +36,19 @@ const ReportDataForm: FC<{}> = () => {
     const submit = async (values: any) => {
         values.recipientAddress = JSON.parse(values.recipientAddress)
         values.manufacturerAddress = JSON.parse(values.manufacturerAddress)
-        values.sellerAddress = JSON.parse(values.sellerAddress)
-        values.supplierAddress = JSON.parse(values.supplierAddress)
+        if(isSeller){
+            values.sellerAddress = JSON.parse(values.sellerAddress)
+            delete values.sellerAddress['id']
+        }else{
+            values.supplierAddress = JSON.parse(values.supplierAddress)
+            delete values.supplierAddress['id']
+        }    
         values.sampleId = sampleId
         delete values.recipientAddress['id']
         delete values.manufacturerAddress['id']
-        delete values.sellerAddress['id']
-        delete values.supplierAddress['id']
         console.log(values)
         try {
-            let response = await addReportDataToSample(sampleId, values)
+            let response = await addReportData(values)
             console.log(response)
         } catch (err) {
             console.log(err)
@@ -53,8 +57,7 @@ const ReportDataForm: FC<{}> = () => {
 
     return (<div className='flex flex-col justify-center items-center'>
         <h2 className="text-center font-bold my-10 text-2xl">Formularz dodawnia dodatkowych informacji</h2>
-        <form className="w-3/5 flex justify-between p-5 bg-white rounded text-left"
-              onSubmit={handleSubmit(submit)}>
+        <form className="w-3/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
             <div className='w-1/3'>
                 {/* <h2 className='text-2xl font-bold'></h2> */}
                 <FormLabel>Nazwa manofaktury</FormLabel>
