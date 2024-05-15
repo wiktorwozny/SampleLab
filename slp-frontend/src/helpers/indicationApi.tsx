@@ -10,6 +10,14 @@ const getIndicationsForSample = (sampleId: string | undefined) => {
     return null;
 }
 
+const getIndicationById = (indicationId: string | undefined) => {
+    if (indicationId !== undefined) {
+        return axios.get(backendUrl + url + `${indicationId}`);
+    }
+    return null;
+}
+
 export {
-    getIndicationsForSample
+    getIndicationsForSample,
+    getIndicationById
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { backendUrl } from "../utils/urls";
+import {Examination} from "../utils/types";
 
 const url = 'examination/'
 
@@ -17,7 +18,25 @@ const getExaminationById = (examinationId: string | undefined) => {
     return null;
 }
 
+const updateExamination = (examinationId: number | undefined, updatedExamination: Examination) => {
+    if (examinationId !== undefined) {
+        return axios.put(backendUrl + url + `${examinationId}`, updatedExamination);
+    }
+    return null;
+}
+
+const addExamination = (examination: Examination) => {
+    return axios.post(backendUrl + url + "save", examination);
+}
+
+const deleteExamination = (examinationId: number) => {
+    return axios.delete(backendUrl + url + `${examinationId}`);
+}
+
 export {
     getExaminationsForSample,
-    getExaminationById
+    getExaminationById,
+    updateExamination,
+    addExamination,
+    deleteExamination,
 }

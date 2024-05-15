@@ -33,6 +33,12 @@ public class IndicationController extends AbstractController {
         }
     }
 
+    @GetMapping("/{indicationId}")
+    public ResponseEntity<IndicationDto> getIndicationById(@PathVariable Long indicationId) {
+        IndicationDto indicationDto = indicationService.selectById(indicationId);
+        return new ResponseEntity<>(indicationDto, HttpStatus.OK);
+    }
+
     @GetMapping("/sample/{sampleId}")
     public ResponseEntity<List<IndicationDto>> getIndicationsForSample(@PathVariable Long sampleId) {
         List<IndicationDto> indicationDtos = indicationService.selectIndicationsForSample(sampleId);

@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 import {Indication, Examination} from "../utils/types";
 import {getIndicationsForSample} from "../helpers/indicationApi";
 import { useNavigate } from "react-router-dom"
-import {getExaminationsForSample} from "../helpers/examinationApi";
+import {deleteExamination, getExaminationsForSample} from "../helpers/examinationApi";
 import {Button} from "./ui/Button";
 
 const ExaminationsList: FC<{}> = () => {
@@ -28,12 +28,10 @@ const ExaminationsList: FC<{}> = () => {
                 ]);
 
                 if (indicationsResponse?.status === 200) {
-                    console.log(indicationsResponse.data);
                     setIndications(indicationsResponse.data ?? []);
                 }
 
                 if (examinationsResponse?.status === 200) {
-                    console.log(examinationsResponse.data);
                     setExaminations(examinationsResponse.data ?? []);
                 }
 
@@ -60,22 +58,35 @@ const ExaminationsList: FC<{}> = () => {
         setCheckedStates(initialStates);
     }
 
-    const handleCheckboxChange = (indicationId: number) => {
-        console.log("jd");
+    const handleNavigation = (sampleId: any, examinationId: number | null, indicationId: number) => {
+        if (examinationId === null) {
+            navigate(`/sample/manageExaminations/${sampleId}/newExamination`, { state: { indicationId: indicationId } });
+        } else {
+            navigate(`/sample/manageExaminations/${sampleId}/newExamination/${examinationId}`, {
+                state: { indicationId },
+            });
+        }
+    }
+
+    const handleCheckboxChange = async (indicationId: number, examinationId: number) => {
         setCheckedStates(prevState => {
             const newState = { ...prevState };
             if (newState[indicationId]) {
-                const confirmed = window.confirm("Are you sure you want to uncheck?");
+                const confirmed = window.confirm("Czy na pewno? Badanie zostanie usunięte!");
                 if (!confirmed) {
                     return prevState;
                 }
+
+                try {
+                    let response = deleteExamination(examinationId);
+                    console.log(response);
+                } catch (err) {
+                    console.log(err);
+                }
+
                 delete newState[indicationId];
             } else {
-                navigate(`/sample/manageExaminations/${sampleId}/newExamination`);
-                const examination = examinations.find(exam => exam.indication.id === indicationId);
-                if (examination) {
-                    newState[indicationId] = examination;
-                }
+                handleNavigation(sampleId, null, indicationId);
             }
             return newState;
         });
@@ -83,6 +94,10 @@ const ExaminationsList: FC<{}> = () => {
 
     return (
         <div className="indications-list flex flex-col items-center h-fit justify-center">
+            <div>
+                <h1 className="text-center font-bold text-3xl w-full my-2">Oznaczenia</h1>
+                <h1 className="text-center font-bold text-2xl w-full my-2">dla próbki nr: {sampleId}</h1>
+            </div>
             {!isLoading && indications.map(indication => (
                 <Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
                     <div>
@@ -90,15 +105,15 @@ const ExaminationsList: FC<{}> = () => {
                             id="link-checkbox"
                             type="checkbox"
                             checked={checkedStates[indication.id] !== undefined}
-                            onChange={() => handleCheckboxChange(indication.id)}
+                            onChange={() => handleCheckboxChange(indication.id, checkedStates[indication.id]?.id)}
                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
                         <span className="font-bold ml-2">{indication.name}</span>
                     </div>
                     {checkedStates[indication.id] && (
                         <Button type="button" onClick={() => {
                             const examination = checkedStates[indication.id];
-                            navigate(`/sample/manageExaminations/${sampleId}/newExamination/${examination.id}`)}
-                        }>Wprowadź wyniki badań</Button>
+                            handleNavigation(sampleId, examination.id, indication.id);
+                        }}>Wprowadź wyniki badań</Button>
                     )}
                 </Div>
             ))}

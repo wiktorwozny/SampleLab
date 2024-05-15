@@ -56,11 +56,11 @@ const ReportDataForm: FC<{}> = () => {
     }
 
     return (<div className='flex flex-col justify-center items-center'>
-        <h2 className="text-center font-bold my-10 text-2xl">Formularz dodawnia dodatkowych informacji</h2>
+        <h2 className="text-center font-bold my-10 text-2xl">Dodawanie dodatkowych informacji</h2>
         <form className="w-3/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
             <div className='w-1/3'>
                 {/* <h2 className='text-2xl font-bold'></h2> */}
-                <FormLabel>Nazwa manofaktury</FormLabel>
+                <FormLabel>Nazwa manufaktury</FormLabel>
                 <Input {...register("manufacturerName", {
                     required: {
                         value: true,
@@ -71,7 +71,7 @@ const ReportDataForm: FC<{}> = () => {
                 {errors.manufacturerName && errors.manufacturerName.message &&
                     <p className="text-red-600">{`${errors.manufacturerName.message}`}</p>}
 
-                <FormLabel>Adres manofaktury</FormLabel>
+                <FormLabel>Adres manufaktury</FormLabel>
                 <Select
                     className="my-custom-class"
                     options={addresses.map(address => ({
@@ -199,7 +199,7 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
-                <Button type="submit" className='mt-3 w-full justify-self-end'>Dodaj dodatkowe informacje do raportu</Button>
+                <Button type="submit" className='mt-3 w-full justify-self-end'>Dodaj</Button>
             </div>
         </form>
     </div>)

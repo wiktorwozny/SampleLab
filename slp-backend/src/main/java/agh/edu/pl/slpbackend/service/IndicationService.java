@@ -40,7 +40,11 @@ public class IndicationService extends AbstractService implements IndicationMapp
         final Indication saveResult = indicationRepository.save(indication);
 
         return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
+    }
 
+    public IndicationDto selectById(final Long indicationId) {
+        final Indication indication = indicationRepository.findById(indicationId).orElseThrow();
+        return toDto(indication);
     }
 
     public List<IndicationDto> selectIndicationsForSample(final Long SampleId) {
