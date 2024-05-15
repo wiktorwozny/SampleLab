@@ -23,7 +23,7 @@ public class GenerateReport {
     private HashMap<String, String> fieldsMap;
 
     public void generateReport(final Sample sample) throws Exception {
-        try (FileInputStream filePath = new FileInputStream("D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\report_templates\\test.docx")) {
+        try (FileInputStream filePath = new FileInputStream("report_templates/test.docx")) {
             fieldsMap = getStringStringHashMap(sample);
             XWPFDocument documentFile = new XWPFDocument(filePath);
             XWPFHeaderFooterPolicy headerFooterPolicy = documentFile.getHeaderFooterPolicy();
@@ -32,7 +32,9 @@ public class GenerateReport {
             changeFooter(headerFooterPolicy);
             changeTables(documentFile);
 
-            FileOutputStream fos = new FileOutputStream("D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\report_output\\report.docx");
+            String home = System.getProperty("user.home");
+            FileOutputStream fos = new FileOutputStream(home + "/Downloads/" + "report.docx");
+
             documentFile.write(fos);
             fos.close();
             documentFile.close();
@@ -54,7 +56,12 @@ public class GenerateReport {
         fieldsMap.put("${newDate}", getCurrentTime());
         fieldsMap.put("${counter}", Integer.toString(1));
         fieldsMap.put("${country}", "POLSKA GUROM");
-        fieldsMap.put("${supplierName}", sample.getReportData().getSupplierName());
+
+        String supplierOrSellerName = sample.getReportData().getSupplierName() != null
+                ? sample.getReportData().getSupplierName()
+                : sample.getReportData().getSellerName();
+
+        fieldsMap.put("${supplierName}", supplierOrSellerName);
         fieldsMap.put("${recipientName}", sample.getReportData().getRecipientName());
         fieldsMap.put("${jobNumber}", String.valueOf(sample.getReportData().getJobNumber()));
         fieldsMap.put("${samplingStandard}", sample.getSamplingStandard().getName());

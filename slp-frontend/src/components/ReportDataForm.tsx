@@ -60,7 +60,7 @@ const ReportDataForm: FC<{}> = () => {
         <form className="w-3/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
             <div className='w-1/3'>
                 {/* <h2 className='text-2xl font-bold'></h2> */}
-                <FormLabel>Nazwa manufaktury</FormLabel>
+                <FormLabel>Nazwa producenta</FormLabel>
                 <Input {...register("manufacturerName", {
                     required: {
                         value: true,
@@ -71,7 +71,7 @@ const ReportDataForm: FC<{}> = () => {
                 {errors.manufacturerName && errors.manufacturerName.message &&
                     <p className="text-red-600">{`${errors.manufacturerName.message}`}</p>}
 
-                <FormLabel>Adres manufaktury</FormLabel>
+                <FormLabel>Adres producenta</FormLabel>
                 <Select
                     className="my-custom-class"
                     options={addresses.map(address => ({
