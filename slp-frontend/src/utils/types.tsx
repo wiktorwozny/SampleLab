@@ -33,7 +33,25 @@ export type Indication = {
     norm: string,
     unit: string,
     laboratory: string,
-    groups: ProductGroup []
+    // groups: ProductGroup []
+}
+
+export type Examination = {
+    id: number;
+    indication: Indication,
+    sample: Sample,
+    signage: string,
+    nutritionalValue: string,
+    specification: string,
+    regulation: string,
+    samplesNumber: number,
+    result: string,
+    startDate: Date,
+    endDate: Date,
+    methodStatus: string,
+    uncertainty: number,
+    lod: number,
+    loq: number
 }
 
 export type ProductGroup = {

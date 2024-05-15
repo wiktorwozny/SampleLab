@@ -25,7 +25,7 @@ const SampleList = () => {
     },[])
     return(<div className="RoomListPage flex flex-col items-center h-fit justify-center">
         {!isLoading&&samples.map(sample=>(<Div key={sample.id} className="flex justify-between hover:bg-slate-100 cursor-default" onClick={()=>{navigate(`/sample/${sample.id}`)}}>
-            <div className="w-10">
+            <div className="w-15">
                 <span className="font-bold">id: </span> 
                 {sample.id}
             </div>
