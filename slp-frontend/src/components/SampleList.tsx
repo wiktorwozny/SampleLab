@@ -4,6 +4,7 @@ import { Sample } from "../utils/types"
 import { Button } from "./ui/Button"
 import { getAllSamples } from "../helpers/samplingApi"
 import { useNavigate } from "react-router-dom"
+import {generateReportForSample} from "../helpers/generateReportApi";
 const SampleList = () => {
 
     const [samples, setSamples] = useState<Sample []>([])
@@ -23,6 +24,16 @@ const SampleList = () => {
         }
         getSamples()
     },[])
+
+    const generateReport = async (sampleId: number) => {
+        try {
+            let response = await generateReportForSample(sampleId);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return(<div className="RoomListPage flex flex-col items-center h-fit justify-center">
         {!isLoading&&samples.map(sample=>(<Div key={sample.id} className="flex justify-between hover:bg-slate-100 cursor-default" onClick={()=>{navigate(`/sample/${sample.id}`)}}>
             <div className="w-15">
@@ -45,7 +56,10 @@ const SampleList = () => {
                 <span className="font-bold">Nazwa Klienta:&nbsp;</span> 
                 {sample.client.name}
             </div>
-            <Button type="button" onClick={(e)=>e.stopPropagation()}>Generuj raport</Button>
+            <Button type="button" onClick={(e)=>{
+                e.stopPropagation();
+                generateReport(sample.id);
+            }}>Generuj raport</Button>
         </Div>))}
         {isLoading&&<div className="text-2xl">Loading...</div>}
         <Button className="mt-2" type="button" onClick={()=>{navigate('/addSample')}}>Dodaj nową próbkę</Button>
