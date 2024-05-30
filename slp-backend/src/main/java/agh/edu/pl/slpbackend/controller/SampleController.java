@@ -33,17 +33,10 @@ public class SampleController extends AbstractController {
         }
     }
 
-    @GetMapping("/get-sample/{sampleId}")
+    @GetMapping("/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
-        try {
-            SampleDto sampleDto = sampleService.selectOne(sampleId);
-            if (sampleDto == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(sampleDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        SampleDto sampleDto = sampleService.selectOne(sampleId);
+        return new ResponseEntity<>(sampleDto, HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -59,10 +52,4 @@ public class SampleController extends AbstractController {
         sampleService.delete(sampleDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-//    @PostMapping("{sampleId}/report-data")
-//    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
-//        sampleService.addReportData(sampleId, reportData);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
 }

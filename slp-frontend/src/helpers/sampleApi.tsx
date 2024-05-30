@@ -16,7 +16,7 @@ const addReportDataToSample = (sampleId:string | undefined, reportData:ReportDat
 
 const getSampleById = (sampleId:string | undefined) => {
     if(sampleId !== undefined){
-        return axios.get(backendUrl + url + `get-sample/${sampleId}`)
+        return axios.get(backendUrl + url + sampleId)
     }
     return null;
 }
