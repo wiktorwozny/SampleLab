@@ -2,6 +2,8 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
+import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.ReportDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,14 @@ public class ReportDataController extends AbstractController {
     @PostMapping("/save")
     public ResponseEntity<HttpStatus> add(@RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
         return new ResponseEntity<>(add(reportData, reportDataService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    }
 
+    @DeleteMapping("/{reportDataId}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable final Long reportDataId) {
+        ReportDataDto reportDataDto = ReportDataDto.builder()
+                .id(reportDataId)
+                .build();
+        reportDataService.delete(reportDataDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

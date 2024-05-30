@@ -52,7 +52,7 @@ public class SampleController extends AbstractController {
     }
 
     @DeleteMapping("/{sampleId}")
-    public ResponseEntity<Sample> delete(@PathVariable final Long sampleId) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable final Long sampleId) {
         SampleDto sampleDto = SampleDto.builder()
                 .id(sampleId)
                 .build();

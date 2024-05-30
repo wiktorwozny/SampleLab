@@ -62,5 +62,12 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 
     @Override
     public void delete(IModel model) {
+        final ReportDataDto reportDataDto = (ReportDataDto) model;
+        final Long id = reportDataDto.getId();
+        Sample sample = sampleRepository.findByReportDataId(id)
+                        .orElseThrow(SampleNotFoundException::new);
+        System.out.println(sample.getId());
+        sample.setReportData(null);
+        reportDataRepository.deleteById(id);
     }
 }
