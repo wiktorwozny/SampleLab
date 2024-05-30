@@ -74,8 +74,7 @@ public class ExaminationService extends AbstractService implements ExaminationMa
     }
 
     @Override
-    public ResponseEntity<Examination> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 
 }

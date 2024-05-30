@@ -37,7 +37,6 @@ public class SamplingStandardService extends AbstractService implements Sampling
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 }

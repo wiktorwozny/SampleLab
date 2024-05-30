@@ -37,7 +37,6 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 }

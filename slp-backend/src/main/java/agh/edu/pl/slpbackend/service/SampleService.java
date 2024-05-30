@@ -58,7 +58,6 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         final Sample saveResult = sampleRepository.save(sample);
 
         return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
-
     }
 
     @Override
@@ -67,8 +66,10 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
     @Override
-    public ResponseEntity<Sample> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
+        final SampleDto sampleDto = (SampleDto) model;
+        final Long id = sampleDto.getId();
+        sampleRepository.deleteById(id);
     }
 
 

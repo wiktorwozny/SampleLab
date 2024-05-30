@@ -1,8 +1,6 @@
 package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.ExaminationDto;
-import agh.edu.pl.slpbackend.dto.IndicationDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
@@ -51,6 +49,15 @@ public class SampleController extends AbstractController {
     @PostMapping("/save")
     public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
         return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    }
+
+    @DeleteMapping("/{sampleId}")
+    public ResponseEntity<Sample> delete(@PathVariable final Long sampleId) {
+        SampleDto sampleDto = SampleDto.builder()
+                .id(sampleId)
+                .build();
+        sampleService.delete(sampleDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 //    @PostMapping("{sampleId}/report-data")

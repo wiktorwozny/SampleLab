@@ -61,7 +61,6 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 }

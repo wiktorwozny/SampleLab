@@ -37,7 +37,6 @@ public class InspectionService extends AbstractService implements InspectionMapp
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 }

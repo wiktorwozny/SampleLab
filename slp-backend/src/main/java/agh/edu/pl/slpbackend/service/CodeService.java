@@ -37,7 +37,6 @@ public class CodeService extends AbstractService implements CodeMapper {
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 }

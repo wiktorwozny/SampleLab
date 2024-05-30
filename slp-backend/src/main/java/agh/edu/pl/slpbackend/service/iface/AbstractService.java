@@ -8,5 +8,5 @@ public abstract class AbstractService {
 
     public abstract ResponseEntity<?> update(final IModel model);
 
-    public abstract ResponseEntity<?> delete(final IModel model);
+    public abstract void delete(final IModel model);
 }

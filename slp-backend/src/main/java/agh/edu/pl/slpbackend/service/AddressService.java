@@ -40,8 +40,7 @@ public class AddressService extends AbstractService implements AddressMapper {
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 
     public List<AddressDto> selectAll() {

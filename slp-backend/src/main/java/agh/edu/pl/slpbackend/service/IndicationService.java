@@ -63,8 +63,7 @@ public class IndicationService extends AbstractService implements IndicationMapp
     }
 
     @Override
-    public ResponseEntity<Indication> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 
 }
