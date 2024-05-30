@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -59,4 +61,7 @@ public class Sample implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private ReportData reportData;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sample")
+    @JsonIgnoreProperties("sample")
+    private List<Examination> examinations;
 }

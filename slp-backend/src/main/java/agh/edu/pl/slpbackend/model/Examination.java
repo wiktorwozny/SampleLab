@@ -1,7 +1,7 @@
 package agh.edu.pl.slpbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +24,7 @@ public class Examination {
     private Indication indication;
 
     @ManyToOne
+    @JsonIgnoreProperties("examinations")
     private Sample sample;
 
     private String signage;
