@@ -20,8 +20,8 @@ public class ExaminationController extends AbstractController {
     private final ExaminationService examinationService;
 
     @PostMapping("/save")
-    public ResponseEntity<Examination> add(@RequestBody ExaminationDto examinationDto) {
-        return new ResponseEntity<>(add(examinationDto, examinationService).getStatusCode());
+    public ResponseEntity<Void> add(@RequestBody ExaminationDto examinationDto) throws Exception {
+        return add(examinationDto, examinationService);
     }
 
     @GetMapping("/{examinationId}")
@@ -43,9 +43,8 @@ public class ExaminationController extends AbstractController {
     }
 
     @DeleteMapping("/{examinationId}")
-    public ResponseEntity<Examination> deleteExamination(@PathVariable Long examinationId) {
-        examinationService.deleteById(examinationId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> deleteExamination(@PathVariable final Long examinationId) throws Exception {
+        return delete(ExaminationDto.builder().id(examinationId).build(), examinationService);
     }
 
 }

@@ -5,13 +5,6 @@ import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
 import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.mapper.SampleMapper;
-import agh.edu.pl.slpbackend.dto.ReportDataDto;
-import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
-import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
-import agh.edu.pl.slpbackend.model.ReportData;
-import agh.edu.pl.slpbackend.model.Examination;
-import agh.edu.pl.slpbackend.model.Indication;
-import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
@@ -19,8 +12,6 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,35 +42,23 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
     @Override
-    public ResponseEntity<Sample> insert(IModel model) {
+    public Object insert(IModel model) {
 
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
-        final Sample saveResult = sampleRepository.save(sample);
-
-        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
+        return sampleRepository.save(sample);
 
     }
 
     @Override
-    public ResponseEntity<Sample> update(IModel model) {
+    public Object update(IModel model) {
         return null;
     }
 
     @Override
-    public ResponseEntity<Sample> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
+        final SampleDto sampleDto = (SampleDto) model;
+        final Long id = sampleDto.getId();
+        sampleRepository.deleteById(id);
     }
-
-
-//    public void addReportData(long sampleId, final ReportDataDto reportDataDto) {
-//
-//        final ReportData reportData = toModel(reportDataDto);
-//
-//        Sample sample = sampleRepository.findById(sampleId)
-//                .orElseThrow(SampleNotFoundException::new);
-//
-//        sample.setReportData(reportData);
-//        sampleRepository.save(sample);
-//    }
 }

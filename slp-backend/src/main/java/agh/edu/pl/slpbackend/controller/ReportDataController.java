@@ -33,8 +33,12 @@ public class ReportDataController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<HttpStatus> add(@RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
-        return new ResponseEntity<>(add(reportData, reportDataService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody final ReportDataDto reportData) throws Exception {
+        return add(reportData, reportDataService);
+    }
 
+    @DeleteMapping("/{reportDataId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long reportDataId) throws Exception {
+        return delete(ReportDataDto.builder().id(reportDataId).build(), reportDataService);
     }
 }

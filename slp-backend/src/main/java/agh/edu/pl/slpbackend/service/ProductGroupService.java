@@ -8,7 +8,6 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,17 +26,16 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     }
 
     @Override
-    public ResponseEntity<?> insert(IModel model) {
+    public Object insert(IModel model) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> update(IModel model) {
+    public Object update(IModel model) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
     }
 }

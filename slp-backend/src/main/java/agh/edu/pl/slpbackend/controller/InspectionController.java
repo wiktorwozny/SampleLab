@@ -34,7 +34,7 @@ public class InspectionController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Inspection> add(@RequestBody InspectionDto inspectionDto) {
+    public ResponseEntity<Inspection> add(@RequestBody InspectionDto inspectionDto) throws Exception {
         return new ResponseEntity<>(add(inspectionDto, inspectionService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 }

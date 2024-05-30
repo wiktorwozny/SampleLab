@@ -1,10 +1,7 @@
 package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.ExaminationDto;
-import agh.edu.pl.slpbackend.dto.IndicationDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,13 +46,14 @@ public class SampleController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
-        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody SampleDto sampleDto) throws Exception {
+        return add(sampleDto, sampleService);
     }
 
-//    @PostMapping("{sampleId}/report-data")
-//    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
-//        sampleService.addReportData(sampleId, reportData);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @DeleteMapping("/{sampleId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long sampleId) throws Exception {
+        return delete(SampleDto.builder().id(sampleId).build(), sampleService);
+    }
+
+
 }

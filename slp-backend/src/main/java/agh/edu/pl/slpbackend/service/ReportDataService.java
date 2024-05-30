@@ -11,8 +11,6 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +40,7 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 //    }
 
     @Override
-    public ResponseEntity<?> insert(IModel model) {
+    public Object insert(IModel model) {
 
         final ReportDataDto reportDataDto = (ReportDataDto) model;
         Sample sample = sampleRepository.findById(reportDataDto.getSampleId())
@@ -51,17 +49,22 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
         final ReportData reportData = toModel(reportDataDto);
 
         sample.setReportData(reportData);
-        final Sample saveResult = sampleRepository.save(sample);
-        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
+        return sampleRepository.save(sample);
     }
 
     @Override
-    public ResponseEntity<?> update(IModel model) {
+    public Object update(IModel model) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> delete(IModel model) {
-        return null;
+    public void delete(IModel model) {
+        final ReportDataDto reportDataDto = (ReportDataDto) model;
+        final Long id = reportDataDto.getId();
+        Sample sample = sampleRepository.findByReportDataId(id)
+                .orElseThrow(SampleNotFoundException::new);
+        System.out.println(sample.getId());
+        sample.setReportData(null);
+        reportDataRepository.deleteById(id);
     }
 }

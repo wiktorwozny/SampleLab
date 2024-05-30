@@ -7,11 +7,30 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractController {
 
-    protected ResponseEntity<?> add(final IModel model, final AbstractService service) {
+    protected ResponseEntity<Void> add(final IModel model, final AbstractService service) throws Exception {
         try {
-            return service.insert(model);
+            service.insert(model);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new Exception(e);
+        }
+    }
+
+    protected ResponseEntity<Void> edit(final IModel model, final AbstractService service) throws Exception {
+        try {
+            service.update(model);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+    }
+
+    protected ResponseEntity<Void> delete(final IModel model, final AbstractService service) throws Exception {
+        try {
+            service.delete(model);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            throw new Exception(e);
         }
     }
 }
