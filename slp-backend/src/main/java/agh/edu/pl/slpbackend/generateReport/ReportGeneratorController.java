@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/generate-report") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@RequestMapping("/generate-report")
 @CrossOrigin(origins = "http://localhost:3000")
-public class GenerateReportController {
+public class ReportGeneratorController {
 
-    private final GenerateReportService generateReportService;
+    private final ReportGeneratorService generateReportService;
 
     @PostMapping("/generate/{sampleId}")
     public ResponseEntity<HttpStatus> generate(@PathVariable final Long sampleId) {
