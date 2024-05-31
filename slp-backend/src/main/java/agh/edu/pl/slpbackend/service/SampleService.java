@@ -1,6 +1,8 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationRequest;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationResponse;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
@@ -12,6 +14,8 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -60,5 +64,17 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         final SampleDto sampleDto = (SampleDto) model;
         final Long id = sampleDto.getId();
         sampleRepository.deleteById(id);
+    }
+
+    public List<SortingAndPaginationResponse> sortAndPaginate(SortingAndPaginationRequest request) {
+        Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
+        return sampleRepository.findAll(PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()))).stream()
+                .map(sample -> new SortingAndPaginationResponse(
+                        sample.getId(),
+                        sample.getCode().getName(),
+                        sample.getAdmissionDate(),
+                        sample.getExpirationDate(),
+                        sample.getClient().getName()))
+                .toList();
     }
 }

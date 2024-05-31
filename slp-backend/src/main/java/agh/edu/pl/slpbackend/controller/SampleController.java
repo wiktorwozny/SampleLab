@@ -2,6 +2,8 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationRequest;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationResponse;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
@@ -58,5 +60,10 @@ public class SampleController extends AbstractController {
                 .build();
         sampleService.delete(sampleDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("list/sorted-and-paginated")
+    public ResponseEntity<List<SortingAndPaginationResponse>> sortAndPaginate(@RequestBody SortingAndPaginationRequest request) {
+        return new ResponseEntity<>(sampleService.sortAndPaginate(request), HttpStatus.OK);
     }
 }
