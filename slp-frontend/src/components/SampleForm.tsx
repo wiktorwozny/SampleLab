@@ -144,6 +144,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.code && errors.code.message &&
+                    <p className="text-red-600">{`${errors.code.message}`}</p>}
 
                 <FormLabel>Data przyjęcia próbki</FormLabel>
                 <Input type="date" {...register("admissionDate",{
@@ -152,6 +154,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.admissionDate && errors.admissionDate.message &&
+                    <p className="text-red-600">{`${errors.admissionDate.message}`}</p>}
 
                 <FormLabel>Data przydatność</FormLabel>
                 <Input type="date" {...register("expirationDate",{
@@ -160,6 +164,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.expirationDate && errors.expirationDate.message &&
+                    <p className="text-red-600">{`${errors.expirationDate.message}`}</p>}
 
                 <FormLabel>Planowana data zakończenia badań</FormLabel>
                 <Input type="date" {...register("examinationEndDate",{
@@ -168,6 +174,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.examinationEndDate && errors.examinationEndDate.message &&
+                    <p className="text-red-600">{`${errors.examinationEndDate.message}`}</p>}
 
                 
                 <FormLabel>Analiza odwoławcza</FormLabel>
@@ -180,6 +188,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.analysis && errors.analysis.message &&
+                    <p className="text-red-600">{`${errors.analysis.message}`}</p>}
 
                 <FormLabel>Stan próbki</FormLabel>
                 <Input {...register("state",{
@@ -188,7 +198,9 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
-
+                {errors.state && errors.state.message &&
+                    <p className="text-red-600">{`${errors.state.message}`}</p>}
+                
                 <FormLabel>Grupa</FormLabel>
                 <Select
                     className="my-custom-class"
@@ -199,6 +211,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.group && errors.group.message &&
+                    <p className="text-red-600">{`${errors.group.message}`}</p>}
 
                 <FormLabel>Expiration Comment</FormLabel>
                 <Input {...register("expirationComment",{
@@ -207,6 +221,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.expirationComment && errors.expirationComment.message &&
+                    <p className="text-red-600">{`${errors.expirationComment.message}`}</p>}
 
                 <FormLabel>Wybierz normę pobrania próbki</FormLabel>
                 <Select
@@ -218,6 +234,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
+                {errors.samplingStandard && errors.samplingStandard.message &&
+                    <p className="text-red-600">{`${errors.samplingStandard.message}`}</p>}
             </div>
             <div className='w-1/3'>
                 <h2 className='font-bold text-2xl'>Dane Klienta</h2>
@@ -231,7 +249,8 @@ const SampleForm:FC<{}>=()=>{
                         message:"Pole wymagane"
                     }})}
                 />
-                
+                {errors.client && errors.client.message &&
+                    <p className="text-red-600">{`${errors.client.message}`}</p>}
                 {/* <FormLabel>Asortyment</FormLabel>
                 <Input {...register("assortment",{
                         required:{
@@ -260,18 +279,6 @@ const SampleForm:FC<{}>=()=>{
                 /> */}
                 <Button type="submit" className='mt-3'>Utwórz próbke</Button>
             </div>
-            {/* {errors.code && errors.code.message&&<p className="text-red-600">{errors.code.message}</p>} */}
-
-            {/* <FormLabel>Dane do raportu</FormLabel>
-            <Select
-                className="my-custom-class"
-                options={reportData.map(data=>({value: JSON.stringify(data), label:data.deliveryMethod}))}
-                {...register("reportData",{
-                    required:{
-                    value:true,
-                    message:"Pole wymagane"
-                }})}
-            /> */}
         </form>
     </div>)
 }

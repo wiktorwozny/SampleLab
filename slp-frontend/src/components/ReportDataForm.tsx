@@ -85,6 +85,8 @@ const ReportDataForm: FC<{}> = () => {
                         }
                     })}
                 />
+                {errors.manufacturerAddress && errors.manufacturerAddress.message &&
+                    <p className="text-red-600">{`${errors.manufacturerAddress.message}`}</p>}
 
                 <div className='flex'>
                     <div className='flex mr-7'>
@@ -106,6 +108,8 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
+                {errors.supplierName && errors.supplierName.message &&
+                    <p className="text-red-600">{`${errors.supplierName.message}`}</p>}
 
                 <FormLabel>Adres dostawcy</FormLabel>
                 <Select
@@ -120,7 +124,11 @@ const ReportDataForm: FC<{}> = () => {
                             message: "Pole wymagane"
                         }
                     })}
-                /></>}
+                />
+                {errors.supplierAddress && errors.supplierAddress.message &&
+                    <p className="text-red-600">{`${errors.supplierAddress.message}`}</p>}
+                </>}
+                
 
                 {isSeller&&<><FormLabel>Nazwa sprzedawcy</FormLabel>
                 <Input {...register("sellerName", {
@@ -130,6 +138,8 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
+                {errors.sellerName && errors.sellerName.message &&
+                    <p className="text-red-600">{`${errors.sellerName.message}`}</p>}
 
                 <FormLabel>Adres sprzedawcy</FormLabel>
                 <Select
@@ -144,7 +154,10 @@ const ReportDataForm: FC<{}> = () => {
                             message: "Pole wymagane"
                         }
                     })}
-                /></>}
+                />
+                {errors.sellerAddress && errors.sellerAddress.message &&
+                    <p className="text-red-600">{`${errors.sellerAddress.message}`}</p>}
+                </>}
 
                 <FormLabel>Nazwa odbiorcy</FormLabel>
                 <Input {...register("recipientName", {
@@ -154,6 +167,8 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
+                {errors.recipientName && errors.recipientName.message &&
+                    <p className="text-red-600">{`${errors.recipientName.message}`}</p>}
 
                 <FormLabel>Adres odbiorcy</FormLabel>
                 <Select
@@ -169,6 +184,8 @@ const ReportDataForm: FC<{}> = () => {
                         }
                     })}
                 />
+                {errors.recipientAddress && errors.recipientAddress.message &&
+                    <p className="text-red-600">{`${errors.recipientAddress.message}`}</p>}
             </div>
 
             <div className='w-1/3 flex flex-col'>
@@ -181,7 +198,8 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
-
+                {errors.jobNumber && errors.jobNumber.message &&
+                    <p className="text-red-600">{`${errors.jobNumber.message}`}</p>}
                 <FormLabel>Mechanizm</FormLabel>
                 <Input {...register("mechanism", {
                     required: {
@@ -190,6 +208,8 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
+                {errors.mechanism && errors.mechanism.message &&
+                    <p className="text-red-600">{`${errors.mechanism.message}`}</p>}
 
                 <FormLabel>Metoda dostawcy</FormLabel>
                 <Input {...register("deliveryMethod", {
@@ -199,6 +219,9 @@ const ReportDataForm: FC<{}> = () => {
                     }
                 })}
                 />
+                {errors.deliveryMethod && errors.deliveryMethod.message &&
+                    <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
+
                 <Button type="submit" className='mt-3 w-full justify-self-end'>Dodaj</Button>
             </div>
         </form>
