@@ -48,8 +48,11 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
     @Override
-    public ResponseEntity<Sample> update(IModel model) {
-        return null;
+    public SampleDto update(IModel model) {
+        final SampleDto sampleDto = (SampleDto) model;
+        final Sample sample = toModel(sampleDto);
+        final Sample saveResult = sampleRepository.save(sample);
+        return toDto(saveResult);
     }
 
     @Override

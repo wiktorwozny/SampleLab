@@ -44,6 +44,13 @@ public class SampleController extends AbstractController {
         return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
 
+    @PutMapping("/{sampleId}")
+    public ResponseEntity<SampleDto> update(@PathVariable final Long sampleId, @RequestBody SampleDto sampleDto) {
+        sampleDto.setId(sampleId);
+        SampleDto response = sampleService.update(sampleDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{sampleId}")
     public ResponseEntity<HttpStatus> delete(@PathVariable final Long sampleId) {
         SampleDto sampleDto = SampleDto.builder()
