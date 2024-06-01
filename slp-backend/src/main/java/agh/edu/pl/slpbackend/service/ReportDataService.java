@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
+import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.model.ReportData;
@@ -54,7 +55,9 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final ReportDataDto reportDataDto = (ReportDataDto) model;
+        final ReportData reportData = toModel(reportDataDto);
+        return reportDataRepository.save(reportData);
     }
 
     @Override
@@ -62,8 +65,7 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
         final ReportDataDto reportDataDto = (ReportDataDto) model;
         final Long id = reportDataDto.getId();
         Sample sample = sampleRepository.findByReportDataId(id)
-                .orElseThrow(SampleNotFoundException::new);
-        System.out.println(sample.getId());
+                        .orElseThrow(SampleNotFoundException::new);
         sample.setReportData(null);
         reportDataRepository.deleteById(id);
     }

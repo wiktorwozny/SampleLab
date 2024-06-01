@@ -2,6 +2,9 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
+import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.model.ReportData;
+import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.ReportDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,4 +44,10 @@ public class ReportDataController extends AbstractController {
     public ResponseEntity<Void> delete(@PathVariable final Long reportDataId) throws Exception {
         return delete(ReportDataDto.builder().id(reportDataId).build(), reportDataService);
     }
+
+    @PutMapping("/{reportDataId}")
+    public ResponseEntity<Void> update(@PathVariable final Long reportDataId, @RequestBody ReportDataDto reportDataDto) throws Exception {
+        return edit(reportDataDto, reportDataService);
+    }
+
 }

@@ -38,14 +38,14 @@ const ReportDataForm: FC<{}> = () => {
         values.manufacturerAddress = JSON.parse(values.manufacturerAddress)
         if(isSeller){
             values.sellerAddress = JSON.parse(values.sellerAddress)
-            delete values.sellerAddress['id']
+            // delete values.sellerAddress['id']
         }else{
             values.supplierAddress = JSON.parse(values.supplierAddress)
-            delete values.supplierAddress['id']
+            // delete values.supplierAddress['id']
         }    
         values.sampleId = sampleId
-        delete values.recipientAddress['id']
-        delete values.manufacturerAddress['id']
+        // delete values.recipientAddress['id']
+        // delete values.manufacturerAddress['id']
         console.log(values)
         try {
             let response = await addReportData(values)

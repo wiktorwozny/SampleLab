@@ -40,6 +40,4 @@ public class AddressService extends AbstractService implements AddressMapper {
     @Override
     public void delete(IModel model) {
     }
-
-
 }

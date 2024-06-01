@@ -25,22 +25,22 @@ public class ReportData implements Serializable {
 
     private String manufacturerName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address manufacturerAddress;
 
     private String supplierName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address supplierAddress;
 
     private String sellerName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address sellerAddress;
 
     private String recipientName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address recipientAddress;
 
     private Integer jobNumber;
