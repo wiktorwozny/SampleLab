@@ -4,7 +4,7 @@ import {addExamination, getExaminationById, updateExamination} from "../helpers/
 import {useForm} from "react-hook-form";
 import {FormLabel} from "./ui/Labels";
 import {Input} from "./ui/Input";
-import {Select} from "./ui/Select";
+import {FormSelect} from "./ui/Select";
 import {Button} from "./ui/Button";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
@@ -231,7 +231,7 @@ const ExaminationForm: FC<{}> = () => {
                 />
 
                 <FormLabel>Status metody</FormLabel>
-                <Select
+                <FormSelect
                     className="my-custom-class"
                     options={Object.values(MethodStatuses).map(methodStatus => ({
                         value: methodStatus,

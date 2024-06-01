@@ -1,6 +1,6 @@
 import {FC, useEffect, useState} from 'react'
 import {Input} from './ui/Input';
-import {Select} from './ui/Select';
+import {FormSelect} from './ui/Select';
 import {useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
 import {Button} from './ui/Button';
@@ -72,7 +72,7 @@ const ReportDataForm: FC<{}> = () => {
                     <p className="text-red-600">{`${errors.manufacturerName.message}`}</p>}
 
                 <FormLabel>Adres producenta</FormLabel>
-                <Select
+                <FormSelect
                     className="my-custom-class"
                     options={addresses.map(address => ({
                         value: JSON.stringify(address),
@@ -112,7 +112,7 @@ const ReportDataForm: FC<{}> = () => {
                     <p className="text-red-600">{`${errors.supplierName.message}`}</p>}
 
                 <FormLabel>Adres dostawcy</FormLabel>
-                <Select
+                <FormSelect
                     className="my-custom-class"
                     options={addresses.map(address => ({
                         value: JSON.stringify(address),
@@ -142,7 +142,7 @@ const ReportDataForm: FC<{}> = () => {
                     <p className="text-red-600">{`${errors.sellerName.message}`}</p>}
 
                 <FormLabel>Adres sprzedawcy</FormLabel>
-                <Select
+                <FormSelect
                     className="my-custom-class"
                     options={addresses.map(address => ({
                         value: JSON.stringify(address),
@@ -171,7 +171,7 @@ const ReportDataForm: FC<{}> = () => {
                     <p className="text-red-600">{`${errors.recipientName.message}`}</p>}
 
                 <FormLabel>Adres odbiorcy</FormLabel>
-                <Select
+                <FormSelect
                     className="my-custom-class"
                     options={addresses.map(address => ({
                         value: JSON.stringify(address),
