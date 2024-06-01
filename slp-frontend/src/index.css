@@ -13,52 +13,6 @@ code {
 }
 
 
-.container {
-    display: flex;
-}
-
-.sidebar-container {
-    position: relative;
-    width: 250px;
-}
-
-.sidebar {
-    height: 100vh;
-    background-color: #333;
-    color: white;
-    padding: 15px;
-    position: sticky;
-    top: 0;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin: 10px 0;
-}
-
-.sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer; /* Dodaje wskaźnik kursora */
-}
-
-.sidebar ul li a:hover {
-    background-color: #575757;
-}
-
-.content {
-    flex-grow: 1;
-    padding: 20px;
-    margin-right: 250px; /* Pozostawia miejsce na sidebar */
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
