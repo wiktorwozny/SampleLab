@@ -71,10 +71,14 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return sampleRepository.findAll(PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()))).stream()
                 .map(sample -> new SortingAndPaginationResponse(
                         sample.getId(),
-                        sample.getCode().getName(),
+                        sample.getCode().getId(),
                         sample.getAdmissionDate(),
                         sample.getExpirationDate(),
                         sample.getClient().getName()))
                 .toList();
+    }
+
+    public long count() {
+        return sampleRepository.count();
     }
 }
