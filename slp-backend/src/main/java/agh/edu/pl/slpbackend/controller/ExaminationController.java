@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
-import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.service.ExaminationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,13 +35,12 @@ public class ExaminationController extends AbstractController {
         return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
     }
 
-    @PutMapping("/{examinationId}")
-    public ResponseEntity<Examination> insertExaminationResults(@PathVariable Long examinationId, @RequestBody ExaminationDto updatedExaminationDto) {
-        examinationService.insertExaminationResults(examinationId, updatedExaminationDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/update")
+    public ResponseEntity<Void> insertExaminationResults(@RequestBody ExaminationDto updatedExaminationDto) throws Exception {
+        return edit(updatedExaminationDto, examinationService);
     }
 
-    @DeleteMapping("/{examinationId}")
+    @DeleteMapping("/delete/{examinationId}")
     public ResponseEntity<Void> deleteExamination(@PathVariable final Long examinationId) throws Exception {
         return delete(ExaminationDto.builder().id(examinationId).build(), examinationService);
     }

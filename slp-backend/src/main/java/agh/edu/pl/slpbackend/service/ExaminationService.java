@@ -61,7 +61,9 @@ public class ExaminationService extends AbstractService implements ExaminationMa
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final ExaminationDto examinationDto = (ExaminationDto) model;
+        final Examination examination = toModel(examinationDto);
+        return examinationRepository.save(examination);
     }
 
     @Override
