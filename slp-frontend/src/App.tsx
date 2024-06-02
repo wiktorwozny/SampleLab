@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SingleSamplePage from './pages/SingleSamplePage';
 import SampleListPage from './pages/SampleListPage';
 import ExaminationForm from "./components/ExaminationForm";
+import AddressForm from './components/AddressForm';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId' element={<ExaminationForm/>}/>
         </Routes>
       </BrowserRouter>
+      {/* <AddressForm></AddressForm> */}
       {/* <ReportDataForm/> */}
     </div>
   );
