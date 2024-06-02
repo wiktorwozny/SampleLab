@@ -1,10 +1,18 @@
 import axios from "axios"
 import { backendUrl } from "../utils/urls"
-import { Sample } from "../utils/types"
+import { Sample, SortingAndPaginationRequest } from "../utils/types"
 const url = "sample/"
 
 const getAllSamples = () => {
     return axios.get(backendUrl + url + "list")
+}
+
+const getSortedAndPaginatedSamples = (request: SortingAndPaginationRequest) => {
+    return axios.put(backendUrl + url + "list/sorted-and-paginated", request)
+}
+
+const getNumberOfSamples = () => {
+    return axios.get(backendUrl + url + "count")
 }
 
 const addSample = (sample: Sample) => {
@@ -13,5 +21,7 @@ const addSample = (sample: Sample) => {
 
 export{
     getAllSamples,
-    addSample
+    getSortedAndPaginatedSamples,
+    addSample,
+    getNumberOfSamples
 }

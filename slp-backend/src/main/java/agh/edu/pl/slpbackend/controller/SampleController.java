@@ -35,6 +35,11 @@ public class SampleController extends AbstractController {
         }
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> count() {
+        return new ResponseEntity<>(sampleService.count(), HttpStatus.OK);
+    }
+
     @GetMapping("/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
         SampleDto sampleDto = sampleService.selectOne(sampleId);
@@ -57,7 +62,7 @@ public class SampleController extends AbstractController {
     }
 
 
-    @GetMapping("list/sorted-and-paginated")
+    @PutMapping("list/sorted-and-paginated")
     public ResponseEntity<List<SortingAndPaginationResponse>> sortAndPaginate(@RequestBody SortingAndPaginationRequest request) {
         return new ResponseEntity<>(sampleService.sortAndPaginate(request), HttpStatus.OK);
     }
