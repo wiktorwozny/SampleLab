@@ -132,7 +132,7 @@ const SampleForm:FC<{}>=()=>{
         }
     }
 
-    return(<div className='flex flex-col justify-center items-center'>
+    return(<div className='flex flex-col justify-center items-center w-full'>
         <h2 className="text-center font-bold my-3 text-2xl">Formularz dodawnia próbki</h2>
         <FormProvider {...method}>
             <form className="w-3/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>

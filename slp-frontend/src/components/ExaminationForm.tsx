@@ -165,7 +165,7 @@ const ExaminationForm: FC<{}> = () => {
         navigate(`/sample/manageExaminations/${sampleId}`);
     };
 
-    return (<div className='flex flex-col justify-center items-center'>
+    return (<div className='flex flex-col justify-center items-center w-full'>
         <h1 className="text-center font-bold my-10 text-2xl">Dodawanie wyników badań</h1>
         {indication && <h3 className="text-center font-bold mb-5 text-2xl">{indication.name}</h3>}
         <FormProvider {...methods}>

@@ -28,7 +28,14 @@ export const AddressController = forwardRef<HTMLDivElement, AddressControllerPro
         render={({ field }) => (
           <>
             <div className={"flex mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight justify-between " + className} ref={ref}>
-              {field.value&&<div>ul. {field.value.street}, {field.value.zipCode} {field.value.city}</div>}
+              {field.value&&<div className='flex flex-col'>
+                <div>
+                  ul. {field.value.street}
+                </div> 
+                <div>
+                  {field.value.zipCode} {field.value.city}
+                </div>
+              </div>}
               {!field.value&&<div className='leading-9'>Wprowadź adres</div>}
               <button className="bg-slate-700 rounded text-white p-2 hover:bg-slate-600" onClick={(e) => {e.preventDefault();setIsOpen(true)}}>
                 zmień

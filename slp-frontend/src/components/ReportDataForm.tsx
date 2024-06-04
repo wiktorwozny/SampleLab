@@ -9,7 +9,7 @@ import {getAllAddresses} from '../helpers/addressApi';
 // import { addReportDataToSample } from '../helpers/sampleApi';
 // import {addReportDataToSample} from '../helpers/reportDataApi';
 import { addReportData } from '../helpers/reportDataApi';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import AddressForm from './AddressForm';
 import { AddressController } from './ui/AddressController';
 
@@ -21,6 +21,7 @@ const ReportDataForm: FC<{}> = () => {
     const [addresses, setAddresses] = useState<Address []>([])
     const [isSeller, setIsSeller] = useState<Boolean>(true)
     const {sampleId} = useParams()
+    const navigate = useNavigate()
     useEffect(() => {
         const getAddresses = async () => {
             try {
@@ -42,12 +43,13 @@ const ReportDataForm: FC<{}> = () => {
         try {
             let response = await addReportData(values)
             console.log(response)
+            navigate(`/sample/${sampleId}`);
         } catch (err) {
             console.log(err)
         }
     }
 
-    return (<div className='flex flex-col justify-center items-center'>
+    return (<div className='flex flex-col justify-center items-center w-full'>
         <h2 className="text-center font-bold my-10 text-2xl">Dodawanie dodatkowych informacji</h2>
         <FormProvider {...method}>
             <form className="w-3/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>

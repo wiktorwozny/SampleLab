@@ -93,7 +93,7 @@ const ExaminationsList: FC<{}> = () => {
     };
 
     return (
-        <div className="indications-list flex flex-col items-center h-fit justify-center">
+        <div className="indications-list flex flex-col items-center h-fit justify-center w-full">
             <div>
                 <h1 className="text-center font-bold text-3xl w-full my-2">Oznaczenia</h1>
                 <h1 className="text-center font-bold text-2xl w-full my-2">dla próbki nr: {sampleId}</h1>

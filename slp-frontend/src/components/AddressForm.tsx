@@ -47,6 +47,10 @@ const AddressForm: FC<{value: any, setIsOpen: (isOpen: boolean) => void, onBlur:
                         required:{
                         value:true,
                         message:"Pole wymagane"
+                    },
+                    pattern:{
+                        value:/^\d{2}-\d{3}$/,
+                        message:"Zły format kodu pocztowego"
                     }})}
                 />
                 {errors.zipCode && errors.zipCode.message &&
