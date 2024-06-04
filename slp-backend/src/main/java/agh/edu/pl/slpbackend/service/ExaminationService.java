@@ -3,14 +3,11 @@ package agh.edu.pl.slpbackend.service;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.model.Examination;
-import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,28 +50,27 @@ public class ExaminationService extends AbstractService implements ExaminationMa
         return toDto(examination);
     }
 
-    public void deleteById(Long examinationId) {
-        examinationRepository.deleteById(examinationId);
-    }
 
     @Override
-    public ResponseEntity<Examination> insert(IModel model) {
+    public Object insert(IModel model) {
 
         final ExaminationDto examinationDto = (ExaminationDto) model;
         final Examination examination = toModel(examinationDto);
-        final Examination saveResult = examinationRepository.save(examination);
-
-        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
-
+        return examinationRepository.save(examination);
     }
 
     @Override
-    public ResponseEntity<Examination> update(IModel model) {
-        return null;
+    public Object update(IModel model) {
+        final ExaminationDto examinationDto = (ExaminationDto) model;
+        final Examination examination = toModel(examinationDto);
+        return examinationRepository.save(examination);
     }
 
     @Override
     public void delete(IModel model) {
+        final ExaminationDto examinationDto = (ExaminationDto) model;
+        final Examination examination = toModel(examinationDto);
+        examinationRepository.deleteById(examination.getId());
     }
 
 }

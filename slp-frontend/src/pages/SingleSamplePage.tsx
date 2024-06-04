@@ -4,6 +4,7 @@ import { getSampleById } from "../helpers/sampleApi";
 import { Sample } from "../utils/types";
 import { Div } from "../components/ui/Div";
 import { Button } from "../components/ui/Button";
+import { generateReportForSample } from "../helpers/generateReportApi";
 const SingleSamplePage = () => {
     let { sampleId } = useParams();
     const [sample, setSample] = useState<Sample>();
@@ -23,6 +24,16 @@ const SingleSamplePage = () => {
         }
         getSample()
     },[sampleId])
+
+    const generateReport = async (sampleId: number) => {
+        try {
+            let response = await generateReportForSample(sampleId);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    
     return(<div className="flex flex-col justify-center items-center">
         <h2 className="text-2xl text-center font-bold my-3">Widok szczegółowy próbki</h2>
         <Div className="text-start">
@@ -87,6 +98,10 @@ const SingleSamplePage = () => {
         <div className="flex justify-between w-3/4">
             <Button type="button" onClick={()=>{navigate(`/sample/addReportData/${sampleId}`)}}>Dodaj dodatkowe informacje</Button>
             <Button type="button" onClick={() => {navigate(`/sample/manageExaminations/${sampleId}`)}}>Zarządzaj badaniami</Button>
+            <Button type="button" onClick={(e) => {
+                e.stopPropagation();
+                generateReport(Number(sampleId));
+            }}>Generuj raport</Button>
         </div>
     </div>)
 }

@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
-import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.service.ExaminationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,8 @@ public class ExaminationController extends AbstractController {
     private final ExaminationService examinationService;
 
     @PostMapping("/save")
-    public ResponseEntity<Examination> add(@RequestBody ExaminationDto examinationDto) {
-        return new ResponseEntity<>(add(examinationDto, examinationService).getStatusCode());
+    public ResponseEntity<Void> add(@RequestBody ExaminationDto examinationDto) throws Exception {
+        return add(examinationDto, examinationService);
     }
 
     @GetMapping("/{examinationId}")
@@ -36,16 +35,14 @@ public class ExaminationController extends AbstractController {
         return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
     }
 
-    @PutMapping("/{examinationId}")
-    public ResponseEntity<Examination> insertExaminationResults(@PathVariable Long examinationId, @RequestBody ExaminationDto updatedExaminationDto) {
-        examinationService.insertExaminationResults(examinationId, updatedExaminationDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/update")
+    public ResponseEntity<Void> insertExaminationResults(@RequestBody ExaminationDto updatedExaminationDto) throws Exception {
+        return edit(updatedExaminationDto, examinationService);
     }
 
-    @DeleteMapping("/{examinationId}")
-    public ResponseEntity<Examination> deleteExamination(@PathVariable Long examinationId) {
-        examinationService.deleteById(examinationId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @DeleteMapping("/delete/{examinationId}")
+    public ResponseEntity<Void> deleteExamination(@PathVariable final Long examinationId) throws Exception {
+        return delete(ExaminationDto.builder().id(examinationId).build(), examinationService);
     }
 
 }

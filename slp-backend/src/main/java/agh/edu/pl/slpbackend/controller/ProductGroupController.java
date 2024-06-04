@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ProductGroupDto;
-import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.service.ProductGroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class ProductGroupController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ProductGroup> add(@RequestBody ProductGroupDto productGroupDto) {
-        return new ResponseEntity<>(add(productGroupDto, productGroupService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody ProductGroupDto productGroupDto) throws Exception {
+        return add(productGroupDto, productGroupService);
     }
 }

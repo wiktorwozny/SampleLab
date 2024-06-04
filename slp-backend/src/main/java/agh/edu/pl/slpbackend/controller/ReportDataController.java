@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.ReportDataService;
 import lombok.AllArgsConstructor;
@@ -35,16 +36,18 @@ public class ReportDataController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<HttpStatus> add(@RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
-        return new ResponseEntity<>(add(reportData, reportDataService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody final ReportDataDto reportData) throws Exception {
+        return add(reportData, reportDataService);
     }
 
     @DeleteMapping("/{reportDataId}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable final Long reportDataId) {
-        ReportDataDto reportDataDto = ReportDataDto.builder()
-                .id(reportDataId)
-                .build();
-        reportDataService.delete(reportDataDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> delete(@PathVariable final Long reportDataId) throws Exception {
+        return delete(ReportDataDto.builder().id(reportDataId).build(), reportDataService);
     }
+
+    @PutMapping("/{reportDataId}")
+    public ResponseEntity<Void> update(@PathVariable final Long reportDataId, @RequestBody ReportDataDto reportDataDto) throws Exception {
+        return edit(reportDataDto, reportDataService);
+    }
+
 }

@@ -1,8 +1,6 @@
 package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.model.Sample;
-import agh.edu.pl.slpbackend.repository.SampleRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +21,6 @@ public class SampleControllerTest {
 
     @Autowired
     private SampleController sampleController;
-
-    @Autowired
-    private SampleRepository sampleRepository;
 
     private SampleDto getSaveExample() {
         //@formatter:off
@@ -48,8 +43,8 @@ public class SampleControllerTest {
     }
 
     @Test
-    public void add() {
-        final ResponseEntity<Sample> response = this.sampleController.add(getSaveExample());
+    public void add() throws Exception {
+        final ResponseEntity<Void> response = this.sampleController.add(getSaveExample());
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 

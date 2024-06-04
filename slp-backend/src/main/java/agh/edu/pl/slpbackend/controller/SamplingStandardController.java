@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SamplingStandardDto;
-import agh.edu.pl.slpbackend.model.SamplingStandard;
 import agh.edu.pl.slpbackend.service.SamplingStandardService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class SamplingStandardController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<SamplingStandard> add(@RequestBody SamplingStandardDto samplingStandardDto) {
-        return new ResponseEntity<>(add(samplingStandardDto, samplingStandardService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody SamplingStandardDto samplingStandardDto) throws Exception {
+        return add(samplingStandardDto, samplingStandardService);
     }
 }

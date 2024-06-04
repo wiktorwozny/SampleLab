@@ -12,8 +12,6 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,13 +31,11 @@ public class IndicationService extends AbstractService implements IndicationMapp
     }
 
     @Override
-    public ResponseEntity<Indication> insert(IModel model) {
+    public Object insert(IModel model) {
 
         final IndicationDto indicationDto = (IndicationDto) model;
         final Indication indication = toModel(indicationDto);
-        final Indication saveResult = indicationRepository.save(indication);
-
-        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
+        return indicationRepository.save(indication);
     }
 
     public IndicationDto selectById(final Long indicationId) {
@@ -58,7 +54,7 @@ public class IndicationService extends AbstractService implements IndicationMapp
     }
 
     @Override
-    public ResponseEntity<Indication> update(IModel model) {
+    public Object update(IModel model) {
         return null;
     }
 

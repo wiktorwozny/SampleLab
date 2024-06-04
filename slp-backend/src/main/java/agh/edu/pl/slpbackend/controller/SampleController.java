@@ -2,6 +2,8 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationRequest;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationResponse;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
@@ -33,36 +35,35 @@ public class SampleController extends AbstractController {
         }
     }
 
-    @GetMapping("/get-sample/{sampleId}")
+    @GetMapping("/count")
+    public ResponseEntity<Long> count() {
+        return new ResponseEntity<>(sampleService.count(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
-        try {
-            SampleDto sampleDto = sampleService.selectOne(sampleId);
-            if (sampleDto == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(sampleDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        SampleDto sampleDto = sampleService.selectOne(sampleId);
+        return new ResponseEntity<>(sampleDto, HttpStatus.OK);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Sample> add(@RequestBody SampleDto sampleDto) {
-        return new ResponseEntity<>(add(sampleDto, sampleService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody SampleDto sampleDto) throws Exception {
+        return add(sampleDto, sampleService);
     }
 
     @DeleteMapping("/{sampleId}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable final Long sampleId) {
-        SampleDto sampleDto = SampleDto.builder()
-                .id(sampleId)
-                .build();
-        sampleService.delete(sampleDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> delete(@PathVariable final Long sampleId) throws Exception {
+        return delete(SampleDto.builder().id(sampleId).build(), sampleService);
     }
 
-//    @PostMapping("{sampleId}/report-data")
-//    public ResponseEntity<HttpStatus> addReportData(@PathVariable long sampleId, @RequestBody final ReportDataDto reportData) { // TODO przenieśc do report service
-//        sampleService.addReportData(sampleId, reportData);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @PutMapping("/{sampleId}")
+    public ResponseEntity<Void> update(@PathVariable final Long sampleId, @RequestBody SampleDto sampleDto) throws Exception {
+        return edit(sampleDto,sampleService);
+    }
+
+
+    @PutMapping("list/sorted-and-paginated")
+    public ResponseEntity<List<SortingAndPaginationResponse>> sortAndPaginate(@RequestBody SortingAndPaginationRequest request) {
+        return new ResponseEntity<>(sampleService.sortAndPaginate(request), HttpStatus.OK);
+    }
 }

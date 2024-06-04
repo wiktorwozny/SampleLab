@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.CodeDto;
-import agh.edu.pl.slpbackend.model.Code;
 import agh.edu.pl.slpbackend.service.CodeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class CodeController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Code> add(@RequestBody CodeDto codeDto) {
-        return new ResponseEntity<>(add(codeDto, codeService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Void> add(@RequestBody CodeDto codeDto) throws Exception {
+        return add(codeDto, codeService);
     }
 }

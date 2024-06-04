@@ -94,3 +94,18 @@ export type Sample = {
     samplingStandard: SamplingStandards,
     reportData: ReportData
 }
+
+export type SortingAndPaginationRequest = {
+    fieldName: string,
+    ascending: boolean,
+    pageNumber: number,
+    pageSize: number
+}
+
+export type SortingAndPaginationResponse = {
+    id: number,
+    code: string,
+    clientName: string,
+    admissionDate: Date,
+    expirationDate: Date
+}

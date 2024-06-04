@@ -8,8 +8,6 @@ import {FormSelect} from "./ui/Select";
 import {Button} from "./ui/Button";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
-import {Simulate} from "react-dom/test-utils";
-import reset = Simulate.reset;
 import {getSampleById} from "../helpers/sampleApi";
 
 type ExaminationFormFields = {
@@ -144,7 +142,7 @@ const ExaminationForm: FC<{}> = () => {
             }
 
             try {
-                let response = await updateExamination(examination.id, values);
+                let response = await updateExamination(values);
                 console.log(response);
             } catch (err) {
                 console.log(err);

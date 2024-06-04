@@ -1,24 +1,21 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationRequest;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationResponse;
+import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
 import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.mapper.SampleMapper;
-import agh.edu.pl.slpbackend.dto.ReportDataDto;
-import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
-import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
-import agh.edu.pl.slpbackend.model.ReportData;
-import agh.edu.pl.slpbackend.model.Examination;
-import agh.edu.pl.slpbackend.model.Indication;
-import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.Sample;
-import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,6 @@ import java.util.stream.Collectors;
 public class SampleService extends AbstractService implements SampleMapper, IndicationMapper, ExaminationMapper, ReportDataMapper {
 
     private final SampleRepository sampleRepository;
-    private final ExaminationRepository examinationRepository;
 
 
     public List<SampleDto> selectAll() {
@@ -40,29 +36,26 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return sampleList.stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    public SampleDto selectSampleById(final Long id) {
-        Sample sample = sampleRepository.getReferenceById(id);
-        return toDto(sample);
-    }
-
     public SampleDto selectOne(Long id) {
-        final Sample sample = sampleRepository.findById(id).orElseThrow();
+        final Sample sample = sampleRepository.findById(id)
+                .orElseThrow(SampleNotFoundException::new);
         return toDto(sample);
     }
 
     @Override
-    public ResponseEntity<Sample> insert(IModel model) {
+    public Object insert(IModel model) {
 
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
-        final Sample saveResult = sampleRepository.save(sample);
+        return sampleRepository.save(sample);
 
-        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<Sample> update(IModel model) {
-        return null;
+    public Object update(IModel model) {
+        final SampleDto sampleDto = (SampleDto) model;
+        final Sample sample = toModel(sampleDto);
+        return sampleRepository.save(sample);
     }
 
     @Override
@@ -72,15 +65,19 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         sampleRepository.deleteById(id);
     }
 
+    public List<SortingAndPaginationResponse> sortAndPaginate(SortingAndPaginationRequest request) {
+        Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
+        return sampleRepository.findAll(PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()))).stream()
+                .map(sample -> new SortingAndPaginationResponse(
+                        sample.getId(),
+                        sample.getCode().getId(),
+                        sample.getAdmissionDate(),
+                        sample.getExpirationDate(),
+                        sample.getClient().getName()))
+                .toList();
+    }
 
-//    public void addReportData(long sampleId, final ReportDataDto reportDataDto) {
-//
-//        final ReportData reportData = toModel(reportDataDto);
-//
-//        Sample sample = sampleRepository.findById(sampleId)
-//                .orElseThrow(SampleNotFoundException::new);
-//
-//        sample.setReportData(reportData);
-//        sampleRepository.save(sample);
-//    }
+    public long count() {
+        return sampleRepository.count();
+    }
 }
