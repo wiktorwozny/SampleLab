@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.generateReport;
+package agh.edu.pl.slpbackend.reports;
 
 
 import agh.edu.pl.slpbackend.model.Address;
@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ReportGenerator {
+public class SampleReportGenerator {
 
     @NonNull
     private final ExaminationRepository examinationRepository;
@@ -46,7 +46,7 @@ public class ReportGenerator {
 
         try {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-                    .load(new java.io.File("report_templates/main_report_template.docx"));
+                    .load(new java.io.File("report_templates/sample_report_template.docx"));
 
             boolean uncertaintyExists = checkIfUncertaintyExists();
 

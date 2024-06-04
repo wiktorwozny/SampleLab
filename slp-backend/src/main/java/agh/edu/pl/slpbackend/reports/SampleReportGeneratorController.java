@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.generateReport;
+package agh.edu.pl.slpbackend.reports;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/generate-report")
 @CrossOrigin(origins = "http://localhost:3000")
-public class ReportGeneratorController {
+public class SampleReportGeneratorController {
 
-    private final ReportGeneratorService generateReportService;
+    private final SampleReportGeneratorService sampleReportGeneratorService;
 
-    @PostMapping("/generate/{sampleId}")
+    @PostMapping("/sample-report/{sampleId}")
     public ResponseEntity<HttpStatus> generate(@PathVariable final Long sampleId) {
         try {
-            return generateReportService.generateReport(sampleId);
+            return sampleReportGeneratorService.generateReport(sampleId);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
