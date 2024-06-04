@@ -5,7 +5,7 @@ const url = 'generate-report/'
 
 const generateReportForSample = (sampleId: number | undefined) => {
     if (sampleId !== undefined) {
-        return axios.post(backendUrl + url + `generate/${sampleId}`);
+        return axios.post(backendUrl + url + `sample-report/${sampleId}`);
     }
     return null;
 }
