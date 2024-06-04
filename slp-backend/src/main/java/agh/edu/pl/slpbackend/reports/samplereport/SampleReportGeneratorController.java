@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.reports;
+package agh.edu.pl.slpbackend.reports.samplereport;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

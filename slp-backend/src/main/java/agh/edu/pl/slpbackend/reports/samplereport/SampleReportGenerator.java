@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.reports;
+package agh.edu.pl.slpbackend.reports.samplereport;
 
 
 import agh.edu.pl.slpbackend.model.Address;
