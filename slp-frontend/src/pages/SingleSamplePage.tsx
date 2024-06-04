@@ -34,7 +34,7 @@ const SingleSamplePage = () => {
         }
     }
     
-    return(<div className="flex flex-col justify-center items-center">
+    return(<div className="flex flex-col justify-center items-center w-full">
         <h2 className="text-2xl text-center font-bold my-3">Widok szczegółowy próbki</h2>
         <Div className="text-start">
             <span className="font-bold">Data przyjęcia: </span> 

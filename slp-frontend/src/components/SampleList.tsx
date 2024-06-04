@@ -77,7 +77,7 @@ const SampleList = () => {
     return (
         <div className="w-full">
             {!isLoading && <div>
-                <table className="table table-hover table-bordered">
+                <table className="table table-hover table-bordered cursor-pointer">
                     <thead>
                     <tr>
                         <th scope="col" className={activeColumn === 'id' ? '!bg-gray-400' : '!bg-gray-300'}
