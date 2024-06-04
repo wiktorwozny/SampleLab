@@ -22,7 +22,8 @@ public class ReportGeneratorService {
 
         final Optional<Sample> sample = sampleRepository.findById(sampleId);
         if (sample.isPresent()) {
-            reportGenerator.generateReport(sample.get());
+            reportGenerator.setParameters(sample.get());
+            reportGenerator.generateReport();
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

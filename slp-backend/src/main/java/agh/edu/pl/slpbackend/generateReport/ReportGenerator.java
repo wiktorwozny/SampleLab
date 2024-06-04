@@ -5,7 +5,7 @@ import agh.edu.pl.slpbackend.model.Address;
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.docx4j.Docx4J;
 import org.docx4j.jaxb.Context;
@@ -14,6 +14,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.*;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBElement;
@@ -26,20 +27,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ReportGenerator {
 
+    @NonNull
     private final ExaminationRepository examinationRepository;
+    private Sample sample;
+    private List<Examination> examinationList;
 
-    public void generateReport(final Sample sample) throws Exception {
+    public void generateReport() throws Exception {
+        if (sample == null) {
+            throw new IllegalStateException("Sample not set");
+        }
+
         try {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
                     .load(new java.io.File("report_templates/main_report_template.docx"));
 
-            Map<String, String> fieldsMap = getStringStringHashMap(sample);
+            boolean uncertaintyExists = checkIfUncertaintyExists();
+
+            Map<String, String> fieldsMap = getStringStringHashMap(uncertaintyExists);
 
             HeaderPart headerPart = wordMLPackage.getHeaderFooterPolicy().getDefaultHeader();
             FooterPart footerPart = wordMLPackage.getHeaderFooterPolicy().getDefaultFooter();
@@ -50,7 +61,15 @@ public class ReportGenerator {
             Tbl examinationsTimesTable = findNthTable(tables, 2);
 
             if (examinationsTimesTable != null) {
-                fillExaminationsTimesTable(examinationsTimesTable, sample);
+                fillExaminationsTimesTable(examinationsTimesTable);
+            }
+
+            boolean[] pattern = getRequirementsPattern();
+            Tbl examinationsTable = findNthTable(tables, 3);
+
+            if (examinationsTable != null) {
+                deleteRequirementsColumns(examinationsTable, pattern);
+                fillExaminationsTable(examinationsTable, pattern, uncertaintyExists);
             }
 
             documentPart.variableReplace(fieldsMap);
@@ -65,7 +84,7 @@ public class ReportGenerator {
     }
 
 
-    private Map<String, String> getStringStringHashMap(final Sample sample) {
+    private Map<String, String> getStringStringHashMap(boolean uncertaintyExists) {
         Map<String, String> fieldsMap = new HashMap<>();
         fieldsMap.put("labName", "Moje Laboratorium");
         fieldsMap.put("city", "Moje Miasto");
@@ -99,6 +118,19 @@ public class ReportGenerator {
         fieldsMap.put("sampleSize", sample.getSize());
         fieldsMap.put("sampleState", sample.getState());
 
+        // uncertainty cases
+        if (uncertaintyExists) {
+            fieldsMap.put("uncertainty", "± niepewność pomiaru/ [niepewność pomiaru]");
+            fieldsMap.put("uncertaintyInfo", """
+                    Podana niepewność jest niepewnością rozszerzoną, uzyskaną przez pomnożenie niepewności standardowej\s
+                    i współczynnika rozszerzenia k=2, co w przybliżeniu zapewnia poziom ufności 95%.
+                    Podana niepewność pomiaru oszacowana została tylko i wyłącznie dla podanej metodyki badawczej.
+                    """);
+        } else {
+            fieldsMap.put("uncertainty", "");
+            fieldsMap.put("uncertaintyInfo", "");
+        }
+
 
         return fieldsMap;
     }
@@ -112,8 +144,10 @@ public class ReportGenerator {
         return null;
     }
 
-    private void fillExaminationsTimesTable(Tbl examinationsTimesTable, Sample sample) {
-        List<Examination> examinationList = examinationRepository.findBySampleId(sample.getId());
+    private void fillExaminationsTimesTable(Tbl examinationsTimesTable) {
+        if (examinationList == null) {
+            throw new IllegalStateException("ExaminationList not set");
+        }
 
         for (Examination examination: examinationList) {
             LocalDate startDate = examination.getStartDate();
@@ -129,10 +163,49 @@ public class ReportGenerator {
         }
     }
 
+    private void fillExaminationsTable(Tbl examinationsTable, boolean[] pattern, boolean uncertaintyExists) {
+        if (examinationList == null) {
+            throw new IllegalStateException("ExaminationList not set");
+        }
+
+        String lpCellText, indicationCellText, methodCellText, resultCellText, unitCellText, signageCellText = null, nutritionalValueCellText = null, specificationCellText = null;
+
+        for (int i = 0; i < examinationList.size(); i++) {
+            Examination examination = examinationList.get(i);
+            lpCellText = Integer.toString(i);
+            indicationCellText = examination.getIndication().getName();
+            methodCellText = "METODA POBRANIA";
+            resultCellText = "150";
+
+            if (uncertaintyExists) {
+                resultCellText += "±" + examination.getUncertainty();
+            }
+
+            unitCellText = "[giet]";
+
+            if (pattern[0]) {
+                signageCellText = examination.getSignage() != null ? examination.getSignage() : "-";
+            }
+            if (pattern[1]) {
+                nutritionalValueCellText = examination.getNutritionalValue() != null ? examination.getNutritionalValue() : "-";
+            }
+            if (pattern[2]) {
+                specificationCellText = examination.getSpecification() != null ? examination.getSpecification() : "-";
+            }
+
+            addRowToTable(examinationsTable, lpCellText, indicationCellText, methodCellText, resultCellText, unitCellText, signageCellText, nutritionalValueCellText, specificationCellText);
+        }
+
+    }
+
     private void addRowToTable(Tbl table, String... cellTexts) {
         Tr row = Context.getWmlObjectFactory().createTr();
 
         for (String cellText : cellTexts) {
+            if (cellText == null) {
+                continue;
+            }
+
             Tc cell = Context.getWmlObjectFactory().createTc();
             P paragraph = Context.getWmlObjectFactory().createP();
             R run = Context.getWmlObjectFactory().createR();
@@ -167,6 +240,103 @@ public class ReportGenerator {
         return border;
     }
 
+    private boolean[] getRequirementsPattern() {
+        if (examinationList == null) {
+            throw new IllegalStateException("ExaminationList not set");
+        }
+
+        boolean[] pattern = new boolean[]{false, false, false};
+
+        examinationList.forEach(examination -> {
+            if (examination.getSignage() != null) {
+                pattern[0] = true;
+            }
+            if (examination.getNutritionalValue() != null) {
+                pattern[1] = true;
+            }
+            if (examination.getSpecification() != null) {
+                pattern[2] = true;
+            }
+        });
+
+        return pattern;
+    }
+
+    private void deleteRequirementsColumns(Tbl table, boolean[] pattern) {
+
+        long requirementsColumnsNumber = IntStream.range(0, pattern.length)
+                .filter(i -> pattern[i])
+                .count();
+
+        if (requirementsColumnsNumber == 3) {
+            return;
+        }
+
+        List<Object> rowObjects = table.getContent();
+        Tr requirementsRow = (Tr) rowObjects.get(1);
+        Tc requirementsTitleCell = (Tc) ((JAXBElement) (((Tr) rowObjects.get(0)).getContent().get(5))).getValue();
+
+        List<Object> cellObjects = requirementsRow.getContent();
+        BigInteger totalWidth = new BigInteger("0");
+
+        for (int i = 0; i < pattern.length; i++) {
+            JAXBElement element = (JAXBElement) cellObjects.get(5 + i);
+            Tc tc = (Tc) element.getValue();
+            totalWidth = totalWidth.add(tc.getTcPr().getTcW().getW());
+        }
+
+        for (int i = pattern.length - 1; i >= 0; i--) {
+            if (!pattern[i]) {
+                cellObjects.remove(5 + i);
+            }
+        }
+
+        if (requirementsColumnsNumber == 2) {
+            Tc cell1 = (Tc) ((JAXBElement) cellObjects.get(5)).getValue();
+            Tc cell2 = (Tc) ((JAXBElement) cellObjects.get(6)).getValue();
+
+            if (pattern[2]) {
+                setCellWidth(cell2, totalWidth.multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(5)));
+                setCellWidth(cell1, totalWidth.multiply(BigInteger.valueOf(2)).divide(BigInteger.valueOf(5)));
+            } else {
+                setCellWidth(cell2, totalWidth.divide(BigInteger.valueOf(2)));
+                setCellWidth(cell1, totalWidth.divide(BigInteger.valueOf(2)));
+            }
+        } else if (requirementsColumnsNumber == 1) {
+            Tc cell1 = (Tc) ((JAXBElement) cellObjects.get(5)).getValue();
+            setCellWidth(cell1, totalWidth);
+        }
+
+        setCellWidth(requirementsTitleCell, totalWidth);
+    }
+
+    private static void setCellWidth(Tc cell, BigInteger width) {
+        TcPr tcPr = cell.getTcPr();
+        if (tcPr == null) {
+            tcPr = new TcPr();
+            cell.setTcPr(tcPr);
+        }
+
+        TblWidth tcW = new TblWidth();
+        tcW.setType("dxa");
+        tcW.setW(width);
+        tcPr.setTcW(tcW);
+    }
+
+    private boolean checkIfUncertaintyExists() {
+        if (examinationList == null) {
+            throw new IllegalStateException("ExaminationList not set");
+        }
+
+        for (Examination examination: examinationList) {
+            if (examination.getUncertainty() != 0f) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private String getCurrentTime() {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -184,6 +354,11 @@ public class ReportGenerator {
 
     private String formatAddress(Address address) {
         return "ul. " + address.getStreet() + "\n" + address.getZipCode() + ", " + address.getCity();
+    }
+
+    public void setParameters(Sample sample) {
+        this.sample = sample;
+        this.examinationList = examinationRepository.findBySampleId(sample.getId());
     }
 
 }
