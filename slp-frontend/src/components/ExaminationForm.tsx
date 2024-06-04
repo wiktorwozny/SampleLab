@@ -1,10 +1,10 @@
 import {FC, useEffect, useState} from "react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {addExamination, getExaminationById, updateExamination} from "../helpers/examinationApi";
-import {useForm} from "react-hook-form";
+import {FormProvider, useForm} from "react-hook-form";
 import {FormLabel} from "./ui/Labels";
 import {Input} from "./ui/Input";
-import {Select} from "./ui/Select";
+import {FormSelect} from "./ui/Select";
 import {Button} from "./ui/Button";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
@@ -42,7 +42,7 @@ const ExaminationForm: FC<{}> = () => {
     const [indication, setIndication] = useState<Indication | null>(null);
     const [sample, setSample] = useState<Sample | null>(null);
 
-    const {handleSubmit, register, formState: {errors}, setValue} = useForm({
+    const methods = useForm({
         defaultValues: {
             signage: examination?.signage || '',
             nutritionalValue: examination?.nutritionalValue || '',
@@ -58,6 +58,8 @@ const ExaminationForm: FC<{}> = () => {
             loq: examination?.loq || '',
         },
     });
+
+    const {handleSubmit, register, formState: {errors}, setValue} = methods
 
     useEffect(() => {
         if (examinationId) {
@@ -166,93 +168,96 @@ const ExaminationForm: FC<{}> = () => {
     return (<div className='flex flex-col justify-center items-center'>
         <h1 className="text-center font-bold my-10 text-2xl">Dodawanie wyników badań</h1>
         {indication && <h3 className="text-center font-bold mb-5 text-2xl">{indication.name}</h3>}
-        <form className="w-4/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
-            <div className='w-1/2'>
-                <FormLabel>Oznakowanie</FormLabel>
-                <Input {...register("signage", {
-                    required: {
-                        value: true,
-                        message: "Pole wymagane"
-                    }
-                })}
-                />
+        <FormProvider {...methods}>
+            <form className="w-4/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
+                <div className='w-1/2'>
+                    <FormLabel>Oznakowanie</FormLabel>
+                    <Input {...register("signage", {
+                        required: {
+                            value: true,
+                            message: "Pole wymagane"
+                        }
+                    })}
+                    />
 
-                <FormLabel>Wartość odżywcza</FormLabel>
-                <Input {...register("nutritionalValue", {
-                    required: {
-                        value: true,
-                        message: "Pole wymagane"
-                    }
-                })}
-                />
+                    <FormLabel>Wartość odżywcza</FormLabel>
+                    <Input {...register("nutritionalValue", {
+                        required: {
+                            value: true,
+                            message: "Pole wymagane"
+                        }
+                    })}
+                    />
 
-                <FormLabel>Specyfikacja</FormLabel>
-                <Input {...register("specification", {
-                    required: {
-                        value: true,
-                        message: "Pole wymagane"
-                    }
-                })}
-                />
+                    <FormLabel>Specyfikacja</FormLabel>
+                    <Input {...register("specification", {
+                        required: {
+                            value: true,
+                            message: "Pole wymagane"
+                        }
+                    })}
+                    />
 
-                <FormLabel>Rozporządzenie</FormLabel>
-                <Input {...register("regulation", {
-                    required: {
-                        value: true,
-                        message: "Pole wymagane"
-                    }
-                })}
-                />
+                    <FormLabel>Rozporządzenie</FormLabel>
+                    <Input {...register("regulation", {
+                        required: {
+                            value: true,
+                            message: "Pole wymagane"
+                        }
+                    })}
+                    />
 
-                <FormLabel>Liczba próbek do badania</FormLabel>
-                <Input type="number" {...register("samplesNumber", {
-                    required: {
-                        value: true,
-                        message: "Pole wymagane"
-                    }
-                })}
-                />
-            </div>
+                    <FormLabel>Liczba próbek do badania</FormLabel>
+                    <Input type="number" {...register("samplesNumber", {
+                        required: {
+                            value: true,
+                            message: "Pole wymagane"
+                        }
+                    })}
+                    />
+                </div>
 
-            <div className='w-1/4 flex flex-col'>
+                <div className='w-1/4 flex flex-col'>
 
-                <FormLabel>Wynik badania</FormLabel>
-                <Input {...register("result")}
-                />
+                    <FormLabel>Wynik badania</FormLabel>
+                    <Input {...register("result")}
+                    />
 
-                <FormLabel>Data rozp. badania</FormLabel>
-                <Input type="date" {...register("startDate")}
-                />
+                    <FormLabel>Data rozp. badania</FormLabel>
+                    <Input type="date" {...register("startDate")}
+                    />
 
-                <FormLabel>Data zakoń. badania</FormLabel>
-                <Input type="date" {...register("endDate")}
-                />
+                    <FormLabel>Data zakoń. badania</FormLabel>
+                    <Input type="date" {...register("endDate")}
+                    />
 
-                <FormLabel>Status metody</FormLabel>
-                <Select
-                    className="my-custom-class"
-                    options={Object.values(MethodStatuses).map(methodStatus => ({
-                        value: methodStatus,
-                        label: methodStatus,
-                    }))}
-                    {...register("methodStatus")}
-                />
+                    <FormLabel>Status metody</FormLabel>
+                    <FormSelect
+                        className="my-custom-class"
+                        options={Object.values(MethodStatuses).map(methodStatus => ({
+                            value: methodStatus,
+                            label: methodStatus,
+                        }))}
+                        {...register("methodStatus")}
+                    />
 
-                <FormLabel>Niepewność</FormLabel>
-                <Input {...register("uncertainty")}
-                />
+                    <FormLabel>Niepewność</FormLabel>
+                    <Input {...register("uncertainty")}
+                    />
 
-                <FormLabel>LOD</FormLabel>
-                <Input {...register("lod")}
-                />
+                    <FormLabel>LOD</FormLabel>
+                    <Input {...register("lod")}
+                    />
 
-                <FormLabel>LOQ</FormLabel>
-                <Input {...register("loq")}
-                />
+                    <FormLabel>LOQ</FormLabel>
+                    <Input {...register("loq")}
+                    />
 
-                <Button type="submit" className='mt-3 w-1/2 justify-self-end'>Zapisz</Button>
-            </div>
-        </form>
+                    <Button type="submit" className='mt-3 w-1/2 justify-self-end'>Zapisz</Button>
+                </div>
+            </form>
+        </FormProvider>
+        
     </div>)
 }
 
