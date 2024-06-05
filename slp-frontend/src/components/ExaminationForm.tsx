@@ -172,39 +172,19 @@ const ExaminationForm: FC<{}> = () => {
             <form className="w-4/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
                 <div className='w-1/2'>
                     <FormLabel>Oznakowanie</FormLabel>
-                    <Input {...register("signage", {
-                        required: {
-                            value: true,
-                            message: "Pole wymagane"
-                        }
-                    })}
+                    <Input {...register("signage")}
                     />
 
                     <FormLabel>Wartość odżywcza</FormLabel>
-                    <Input {...register("nutritionalValue", {
-                        required: {
-                            value: true,
-                            message: "Pole wymagane"
-                        }
-                    })}
+                    <Input {...register("nutritionalValue")}
                     />
 
                     <FormLabel>Specyfikacja</FormLabel>
-                    <Input {...register("specification", {
-                        required: {
-                            value: true,
-                            message: "Pole wymagane"
-                        }
-                    })}
+                    <Input {...register("specification")}
                     />
 
                     <FormLabel>Rozporządzenie</FormLabel>
-                    <Input {...register("regulation", {
-                        required: {
-                            value: true,
-                            message: "Pole wymagane"
-                        }
-                    })}
+                    <Input {...register("regulation")}
                     />
 
                     <FormLabel>Liczba próbek do badania</FormLabel>

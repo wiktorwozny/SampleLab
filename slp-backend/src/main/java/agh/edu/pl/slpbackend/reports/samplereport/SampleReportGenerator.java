@@ -184,16 +184,16 @@ public class SampleReportGenerator {
             unitCellText = "[giet]";
 
             if (pattern[0]) {
-                signageCellText = examination.getSignage() != null ? examination.getSignage() : "-";
+                signageCellText = !examination.getSignage().equals("") ? examination.getSignage() : "-";
             }
             if (pattern[1]) {
-                nutritionalValueCellText = examination.getNutritionalValue() != null ? examination.getNutritionalValue() : "-";
+                specificationCellText = !examination.getSpecification().equals("") ? examination.getSpecification() : "-";
             }
             if (pattern[2]) {
-                specificationCellText = examination.getSpecification() != null ? examination.getSpecification() : "-";
+                nutritionalValueCellText = !examination.getNutritionalValue().equals("") ? examination.getNutritionalValue() : "-";
             }
 
-            addRowToTable(examinationsTable, lpCellText, indicationCellText, methodCellText, resultCellText, unitCellText, signageCellText, nutritionalValueCellText, specificationCellText);
+            addRowToTable(examinationsTable, lpCellText, indicationCellText, methodCellText, resultCellText, unitCellText, signageCellText, specificationCellText, nutritionalValueCellText);
         }
 
     }
@@ -248,13 +248,13 @@ public class SampleReportGenerator {
         boolean[] pattern = new boolean[]{false, false, false};
 
         examinationList.forEach(examination -> {
-            if (examination.getSignage() != null) {
+            if (!examination.getSignage().equals("")) {
                 pattern[0] = true;
             }
-            if (examination.getNutritionalValue() != null) {
+            if (!examination.getSpecification().equals("")) {
                 pattern[1] = true;
             }
-            if (examination.getSpecification() != null) {
+            if (!examination.getNutritionalValue().equals("")) {
                 pattern[2] = true;
             }
         });
