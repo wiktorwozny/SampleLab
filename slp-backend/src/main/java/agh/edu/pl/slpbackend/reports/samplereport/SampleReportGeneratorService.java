@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.generateReport;
+package agh.edu.pl.slpbackend.reports.samplereport;
 
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
@@ -13,16 +13,17 @@ import java.util.Optional;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class GenerateReportService {
+public class SampleReportGeneratorService {
 
     private final SampleRepository sampleRepository;
-    private final GenerateReport generateReport;
+    private final SampleReportGenerator sampleReportGenerator;
 
     public ResponseEntity<HttpStatus> generateReport(final Long sampleId) throws Exception {
 
         final Optional<Sample> sample = sampleRepository.findById(sampleId);
         if (sample.isPresent()) {
-            generateReport.generateReport(sample.get());
+            sampleReportGenerator.setParameters(sample.get());
+            sampleReportGenerator.generateReport();
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
