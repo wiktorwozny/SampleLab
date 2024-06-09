@@ -161,7 +161,7 @@ const SampleForm:FC<{}>=()=>{
                     {errors.admissionDate && errors.admissionDate.message &&
                         <p className="text-red-600">{`${errors.admissionDate.message}`}</p>}
 
-                    <FormLabel>Data przydatność</FormLabel>
+                    <FormLabel>Data przydatności</FormLabel>
                     <Input type="date" {...register("expirationDate",{
                             required:{
                             value:true,

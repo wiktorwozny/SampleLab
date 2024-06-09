@@ -105,7 +105,8 @@ export type SortingAndPaginationRequest = {
 export type SortingAndPaginationResponse = {
     id: number,
     code: string,
+    group: string,
+    assortment: string,
     clientName: string,
-    admissionDate: Date,
-    expirationDate: Date
+    admissionDate: Date
 }

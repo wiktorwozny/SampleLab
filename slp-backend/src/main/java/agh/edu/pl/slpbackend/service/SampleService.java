@@ -71,9 +71,10 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
                 .map(sample -> new SortingAndPaginationResponse(
                         sample.getId(),
                         sample.getCode().getId(),
-                        sample.getAdmissionDate(),
-                        sample.getExpirationDate(),
-                        sample.getClient().getName()))
+                        sample.getGroup().getName(),
+                        sample.getAssortment(),
+                        sample.getClient().getName(),
+                        sample.getAdmissionDate()))
                 .toList();
     }
 

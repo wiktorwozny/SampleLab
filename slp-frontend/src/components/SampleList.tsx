@@ -86,14 +86,17 @@ const SampleList = () => {
                         <th scope="col" className={activeColumn === 'code' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("code")}>Kod próbki
                         </th>
+                        <th scope="col" className={activeColumn === 'group.name' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("group.name")}>Grupa
+                        </th>
+                        <th scope="col" className={activeColumn === 'assortment' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("assortment")}>Asortyment
+                        </th>
                         <th scope="col" className={activeColumn === 'client' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("client")}>Nazwa klienta
+                            onClick={() => updateSortParams("client.name")}>Nazwa klienta
                         </th>
                         <th scope="col" className={activeColumn === 'admissionDate' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("admissionDate")}>Data przyjęcia
-                        </th>
-                        <th scope="col" className={activeColumn === 'expirationDate' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("expirationDate")}>Data przydatności
                         </th>
                     </tr>
                     </thead>
@@ -104,9 +107,10 @@ const SampleList = () => {
                         }}>
                             <td>{sample.id}</td>
                             <td>{sample.code}</td>
+                            <td>{sample.group}</td>
+                            <td>{sample.assortment}</td>
                             <td>{sample.clientName}</td>
                             <td>{sample.admissionDate.toString()}</td>
-                            <td>{sample.expirationDate.toString()}</td>
                         </tr>))}
                     </tbody>
                 </table>
