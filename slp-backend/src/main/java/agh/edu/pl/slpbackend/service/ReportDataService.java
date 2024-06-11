@@ -30,7 +30,16 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
         final List<ReportData> reportDataList = this.reportDataRepository.findAll();
         return reportDataList.stream().map(this::toDto).collect(Collectors.toList());
     }
-
+    public ReportDataDto selectBySampleId(Long sampleId) {
+        final Sample sample = sampleRepository
+                .findById(sampleId)
+                .orElseThrow(SampleNotFoundException::new);
+        final ReportData reportData = sample.getReportData();
+        if(reportData == null){
+            return null;
+        }
+        return toDto(reportData);
+    }
 //    @Override
 //    public ResponseEntity<?> insert(IModel model) {
 //        final ReportDataDto reportDataDto = (ReportDataDto) model;

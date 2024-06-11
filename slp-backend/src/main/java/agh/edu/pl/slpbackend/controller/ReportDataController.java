@@ -45,9 +45,13 @@ public class ReportDataController extends AbstractController {
         return delete(ReportDataDto.builder().id(reportDataId).build(), reportDataService);
     }
 
-    @PutMapping("/{reportDataId}")
-    public ResponseEntity<Void> update(@PathVariable final Long reportDataId, @RequestBody ReportDataDto reportDataDto) throws Exception {
+    @PutMapping("/")
+    public ResponseEntity<Void> update(@RequestBody ReportDataDto reportDataDto) throws Exception {
         return edit(reportDataDto, reportDataService);
+    }
+    @GetMapping("/sample/{sampleId}")
+    public ResponseEntity<ReportDataDto> getReportBySampleId(@PathVariable final Long sampleId) throws Exception {
+        return new ResponseEntity<>(reportDataService.selectBySampleId(sampleId), HttpStatus.OK);
     }
 
 }

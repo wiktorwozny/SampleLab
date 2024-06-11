@@ -12,7 +12,12 @@ const addReportData = (reportData:ReportData) => {
     return axios.post(backendUrl + url + "save", reportData)
 }
 
+const getReportDataBySampleId = (sampleId:string | undefined) => {
+    return axios.get(backendUrl + url + `sample/${sampleId}`)
+}
+
 export {
     getAllReportData,
-    addReportData
+    addReportData,
+    getReportDataBySampleId
 }

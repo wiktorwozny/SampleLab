@@ -4,7 +4,7 @@ import {FormSelect} from './ui/Select';
 import {FormProvider, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
 import {Button} from './ui/Button';
-import {Address} from '../utils/types';
+import {Address, ReportData} from '../utils/types';
 import {getAllAddresses} from '../helpers/addressApi';
 // import { addReportDataToSample } from '../helpers/sampleApi';
 // import {addReportDataToSample} from '../helpers/reportDataApi';
@@ -12,11 +12,40 @@ import { addReportData } from '../helpers/reportDataApi';
 import {useNavigate, useParams} from 'react-router-dom';
 import AddressForm from './AddressForm';
 import { AddressController } from './ui/AddressController';
+import { getReportDataBySampleId } from '../helpers/reportDataApi';
 
-const ReportDataForm: FC<{}> = () => {
+type ReportDataFormFields = {
+    manufacturerName: string,
+    manufacturerAddress: Address,
+    supplierName: string,
+    supplierAddress: Address,
+    sellerName: string,
+    sellerAddress: Address,
+    recipientName: string,
+    recipientAddress: Address,
+    jobNumber: number,
+    mechanism: string,
+    deliveryMethod: string
+}
 
-    const method = useForm();
-    const {handleSubmit, register, formState: {errors}} = method;
+const ReportDataForm: FC<{}> = ({}) => {
+    const [reportData, setReportData] = useState<ReportData | null>(null);
+    const method = useForm({
+        defaultValues: {
+            manufacturerName: reportData?.manufacturerName || '',
+            manufacturerAddress: reportData?.manufacturerAddress || null,
+            supplierName: reportData?.supplierName || '',
+            supplierAddress: reportData?.supplierAddress || null,
+            sellerName: reportData?.sellerName || '',
+            sellerAddress: reportData?.sellerAddress || null,
+            recipientName: reportData?.recipientName || "",
+            recipientAddress: reportData?.recipientAddress || null,
+            jobNumber: reportData?.jobNumber || null,
+            mechanism: reportData?.mechanism || '',
+            deliveryMethod: reportData?.deliveryMethod || '',
+        },
+    });
+    const {handleSubmit, register, formState: {errors}, setValue} = method;
     const [message, setMessage] = useState<String>("")
     const [addresses, setAddresses] = useState<Address []>([])
     const [isSeller, setIsSeller] = useState<Boolean>(true)
@@ -33,12 +62,48 @@ const ReportDataForm: FC<{}> = () => {
                 console.log(err)
             }
         }
-
-        getAddresses()
+        const getReportData = async () => {
+            try {
+                let response = await getReportDataBySampleId(sampleId);
+                if (response.status === 200) {
+                    setReportData(response.data)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        if(sampleId){
+            getReportData();
+        }
     }, [])
 
+    const fieldsToSet: Array<keyof ReportDataFormFields> = [
+        'manufacturerName',
+        'manufacturerAddress',
+        'supplierName',
+        'supplierAddress',
+        'sellerName',
+        'sellerAddress',
+        'recipientName',
+        'recipientAddress',
+        'jobNumber',
+        'mechanism',
+        'deliveryMethod'
+    ]
+
+    useEffect(() => {
+        fieldsToSet.forEach(field => {
+            if (reportData && reportData[field]) {
+                setValue(field, reportData[field]);
+            }
+        });
+    }, [reportData, setValue]);
+
     const submit = async (values: any) => { 
-        values.sampleId = sampleId
+        values.sampleId = sampleId===undefined? null:parseInt(sampleId) 
+        if(reportData){
+            values.id = reportData.id;
+        }
         console.log(values)
         try {
             let response = await addReportData(values)
