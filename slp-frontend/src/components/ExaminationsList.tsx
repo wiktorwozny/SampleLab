@@ -117,6 +117,7 @@ const ExaminationsList: FC<{}> = () => {
                     )}
                 </Div>
             ))}
+            <Button type='button' className='mt-3' onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</Button>
         </div>
     );
 }

@@ -16,8 +16,8 @@ const Sidebar: React.FC = () => {
     };
 
     return (
-        <div className="sticky p-15 bg-gray-900 h-screen min-w-64 max-w-64">
-            <NavigationArrows onPrevious={handlePrevious} onNext={handleNext}/>
+        <div className="sticky p-15 bg-gray-900 min-h-screen h-100% min-w-64 max-w-64">
+        <NavigationArrows onPrevious={handlePrevious} onNext={handleNext}/>
             <div className="">
                 <h2 className="pt-12 pb-4 text-white">Menu</h2>
                 <ul className="list-none p-0">

@@ -5,7 +5,7 @@ import {FormProvider, useForm} from "react-hook-form";
 import {FormLabel} from "./ui/Labels";
 import {Input} from "./ui/Input";
 import {FormSelect} from "./ui/Select";
-import {Button} from "./ui/Button";
+import {Button, CancelButton} from "./ui/Button";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
 import {getSampleById} from "../helpers/sampleApi";
@@ -167,74 +167,81 @@ const ExaminationForm: FC<{}> = () => {
 
     return (<div className='flex flex-col justify-center items-center w-full'>
         <h1 className="text-center font-bold my-10 text-2xl">Dodawanie wyników badań</h1>
-        {indication && <h3 className="text-center font-bold mb-5 text-2xl">{indication.name}</h3>}
+        {indication && <h3 className="text-center font-bold text-2xl">{indication.name}</h3>}
         <FormProvider {...methods}>
-            <form className="w-4/5 flex justify-between p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
-                <div className='w-1/2'>
-                    <FormLabel>Oznakowanie</FormLabel>
-                    <Input {...register("signage")}
-                    />
+            <form className="w-4/5 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
+                <div className='flex-col'>
+                    <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
+                        <div className='w-1/2'>
+                            <FormLabel>Oznakowanie</FormLabel>
+                            <Input {...register("signage")}
+                            />
 
-                    <FormLabel>Wartość odżywcza</FormLabel>
-                    <Input {...register("nutritionalValue")}
-                    />
+                            <FormLabel>Wartość odżywcza</FormLabel>
+                            <Input {...register("nutritionalValue")}
+                            />
 
-                    <FormLabel>Specyfikacja</FormLabel>
-                    <Input {...register("specification")}
-                    />
+                            <FormLabel>Specyfikacja</FormLabel>
+                            <Input {...register("specification")}
+                            />
 
-                    <FormLabel>Rozporządzenie</FormLabel>
-                    <Input {...register("regulation")}
-                    />
+                            <FormLabel>Rozporządzenie</FormLabel>
+                            <Input {...register("regulation")}
+                            />
 
-                    <FormLabel>Liczba próbek do badania</FormLabel>
-                    <Input type="number" {...register("samplesNumber", {
-                        required: {
-                            value: true,
-                            message: "Pole wymagane"
-                        }
-                    })}
-                    />
+                            <FormLabel>Liczba próbek do badania</FormLabel>
+                            <Input type="number" {...register("samplesNumber", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                        </div>
+
+                        <div className='w-1/4 flex flex-col'>
+
+                            <FormLabel>Wynik badania</FormLabel>
+                            <Input {...register("result")}
+                            />
+
+                            <FormLabel>Data rozp. badania</FormLabel>
+                            <Input type="date" {...register("startDate")}
+                            />
+
+                            <FormLabel>Data zakoń. badania</FormLabel>
+                            <Input type="date" {...register("endDate")}
+                            />
+
+                            <FormLabel>Status metody</FormLabel>
+                            <FormSelect
+                                className="my-custom-class"
+                                options={Object.values(MethodStatuses).map(methodStatus => ({
+                                    value: methodStatus,
+                                    label: methodStatus,
+                                }))}
+                                {...register("methodStatus")}
+                            />
+
+                            <FormLabel>Niepewność</FormLabel>
+                            <Input {...register("uncertainty")}
+                            />
+
+                            <FormLabel>LOD</FormLabel>
+                            <Input {...register("lod")}
+                            />
+
+                            <FormLabel>LOQ</FormLabel>
+                            <Input {...register("loq")}
+                            />
+                        </div>
+                    </div>
+                    <div className='flex justify-center gap-5'>
+                        <CancelButton type='button' className='mt-3' onClick={() => navigate(`/sample/manageExaminations/${sampleId}`)}>Anuluj</CancelButton>
+                        <Button type="submit" className='mt-3 justify-self-end'>Zapisz</Button>
+                    </div>
                 </div>
 
-                <div className='w-1/4 flex flex-col'>
-
-                    <FormLabel>Wynik badania</FormLabel>
-                    <Input {...register("result")}
-                    />
-
-                    <FormLabel>Data rozp. badania</FormLabel>
-                    <Input type="date" {...register("startDate")}
-                    />
-
-                    <FormLabel>Data zakoń. badania</FormLabel>
-                    <Input type="date" {...register("endDate")}
-                    />
-
-                    <FormLabel>Status metody</FormLabel>
-                    <FormSelect
-                        className="my-custom-class"
-                        options={Object.values(MethodStatuses).map(methodStatus => ({
-                            value: methodStatus,
-                            label: methodStatus,
-                        }))}
-                        {...register("methodStatus")}
-                    />
-
-                    <FormLabel>Niepewność</FormLabel>
-                    <Input {...register("uncertainty")}
-                    />
-
-                    <FormLabel>LOD</FormLabel>
-                    <Input {...register("lod")}
-                    />
-
-                    <FormLabel>LOQ</FormLabel>
-                    <Input {...register("loq")}
-                    />
-
-                    <Button type="submit" className='mt-3 w-1/2 justify-self-end'>Zapisz</Button>
-                </div>
             </form>
         </FormProvider>
         
