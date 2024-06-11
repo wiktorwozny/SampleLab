@@ -133,9 +133,6 @@ const SampleList = () => {
                                                 onClick={() => updatePageNumber(numberOfPages - 1)}/>
                 </div>
                 <br/>
-                <Button className="mt-2" type="button" onClick={() => {
-                    navigate('/addSample')
-                }}>Dodaj nową próbkę</Button>
             </div>}
             {isLoading && <div className="text-2xl">Loading...</div>}
         </div>

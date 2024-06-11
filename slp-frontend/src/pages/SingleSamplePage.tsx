@@ -95,7 +95,7 @@ const SingleSamplePage = () => {
             {`${sample?.state}`}
         </Div>
 
-        <div className="flex justify-between w-3/4">
+        <div className="flex justify-between w-3/4 p-3">
             <Button type="button" onClick={()=>{navigate(`/sample/addReportData/${sampleId}`)}}>Dodaj dodatkowe informacje</Button>
             <Button type="button" onClick={() => {navigate(`/sample/manageExaminations/${sampleId}`)}}>Zarządzaj badaniami</Button>
             <Button type="button" onClick={(e) => {
