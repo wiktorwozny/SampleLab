@@ -95,14 +95,15 @@ export type Sample = {
     reportData: ReportData
 }
 
-export type SortingAndPaginationRequest = {
+export type FilterRequest = {
     fieldName: string,
     ascending: boolean,
     pageNumber: number,
-    pageSize: number
+    pageSize: number,
+    filters: Map<string, string []>
 }
 
-export type SortingAndPaginationResponse = {
+export type FilterResponse = {
     id: number,
     code: string,
     group: string,

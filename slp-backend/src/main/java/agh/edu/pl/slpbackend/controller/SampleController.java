@@ -2,9 +2,8 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationRequest;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationResponse;
-import agh.edu.pl.slpbackend.model.Sample;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterRequest;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterResponse;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -62,8 +61,8 @@ public class SampleController extends AbstractController {
     }
 
 
-    @PutMapping("list/sorted-and-paginated")
-    public ResponseEntity<List<SortingAndPaginationResponse>> sortAndPaginate(@RequestBody SortingAndPaginationRequest request) {
-        return new ResponseEntity<>(sampleService.sortAndPaginate(request), HttpStatus.OK);
+    @PutMapping("list/filtered")
+    public ResponseEntity<List<FilterResponse>> filter(@RequestBody FilterRequest request) {
+        return new ResponseEntity<>(sampleService.filter(request), HttpStatus.OK);
     }
 }

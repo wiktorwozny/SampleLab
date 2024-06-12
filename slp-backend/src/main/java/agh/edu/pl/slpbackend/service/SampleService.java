@@ -1,8 +1,8 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationRequest;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.SortingAndPaginationResponse;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterRequest;
+import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterResponse;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
@@ -16,11 +16,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,10 +65,18 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         sampleRepository.deleteById(id);
     }
 
-    public List<SortingAndPaginationResponse> sortAndPaginate(SortingAndPaginationRequest request) {
+    public List<FilterResponse> filter(FilterRequest request) {
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
-        return sampleRepository.findAll(PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()))).stream()
-                .map(sample -> new SortingAndPaginationResponse(
+        PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()));
+        Specification<Sample> specification = Specification.where(null);
+
+        for (Map.Entry<String, List<String>> filter : request.filters().entrySet()) {
+            specification = specification.and(hasFieldIn(filter.getKey(), filter.getValue()));
+        }
+
+
+        return sampleRepository.findAll(specification, pageRequest).stream()
+                .map(sample -> new FilterResponse(
                         sample.getId(),
                         sample.getCode().getId(),
                         sample.getGroup().getName(),
@@ -80,5 +88,13 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
 
     public long count() {
         return sampleRepository.count();
+    }
+
+    private Specification<Sample> hasFieldIn(String fieldName, List<String> values) {
+        if (fieldName.contains(".")) {
+            String[] split = fieldName.split("\\.");
+            return ((root, query, criteriaBuilder) -> root.get(split[0]).get(split[1]).in(values));
+        }
+        return ((root, query, criteriaBuilder) -> root.get(fieldName).in(values));
     }
 }

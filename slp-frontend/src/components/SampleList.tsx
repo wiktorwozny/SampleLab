@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react"
-import {SortingAndPaginationRequest, SortingAndPaginationResponse} from "../utils/types"
+import {FilterRequest, FilterResponse} from "../utils/types"
 import {Button} from "./ui/Button"
-import {getNumberOfSamples, getSortedAndPaginatedSamples} from "../helpers/samplingApi"
+import {getNumberOfSamples, getFilteredSamples} from "../helpers/samplingApi"
 import {useNavigate} from "react-router-dom"
 import {
     MdKeyboardArrowLeft,
@@ -12,14 +12,15 @@ import {
 
 const SampleList = () => {
 
-    const [samples, setSamples] = useState<SortingAndPaginationResponse []>([])
+    const [samples, setSamples] = useState<FilterResponse []>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const navigate = useNavigate()
-    const [request, setRequest] = useState<SortingAndPaginationRequest>({
+    const [request, setRequest] = useState<FilterRequest>({
         fieldName: 'id',
         ascending: true,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
+        filters: new Map()
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
     const [numberOfSamples, setNumberOfSamples] = useState<number>(0);
@@ -39,7 +40,7 @@ const SampleList = () => {
 
         const getSamples = async () => {
             try {
-                let response = await getSortedAndPaginatedSamples(request);
+                let response = await getFilteredSamples(request);
                 if (response.status === 200) {
                     setSamples(response.data)
                     setIsLoading(false)
@@ -83,8 +84,8 @@ const SampleList = () => {
                         <th scope="col" className={activeColumn === 'id' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("id")}>ID
                         </th>
-                        <th scope="col" className={activeColumn === 'code' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("code")}>Kod próbki
+                        <th scope="col" className={activeColumn === 'code.id' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("code.id")}>Kod próbki
                         </th>
                         <th scope="col" className={activeColumn === 'group.name' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("group.name")}>Grupa
@@ -92,7 +93,7 @@ const SampleList = () => {
                         <th scope="col" className={activeColumn === 'assortment' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("assortment")}>Asortyment
                         </th>
-                        <th scope="col" className={activeColumn === 'client' ? '!bg-gray-400' : '!bg-gray-300'}
+                        <th scope="col" className={activeColumn === 'client.name' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("client.name")}>Nazwa klienta
                         </th>
                         <th scope="col" className={activeColumn === 'admissionDate' ? '!bg-gray-400' : '!bg-gray-300'}
