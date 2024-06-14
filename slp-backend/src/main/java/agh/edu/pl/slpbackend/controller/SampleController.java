@@ -2,8 +2,8 @@ package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterRequest;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterResponse;
+import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
+import agh.edu.pl.slpbackend.dto.filters.FilterResponse;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

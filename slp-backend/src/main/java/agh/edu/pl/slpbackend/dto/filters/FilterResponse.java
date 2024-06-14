@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.dto.sorting_and_pagination;
+package agh.edu.pl.slpbackend.dto.filters;
 
 import java.time.LocalDate;
 

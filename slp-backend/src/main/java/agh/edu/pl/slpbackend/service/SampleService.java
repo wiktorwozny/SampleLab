@@ -1,8 +1,8 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.SampleDto;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterRequest;
-import agh.edu.pl.slpbackend.dto.sorting_and_pagination.FilterResponse;
+import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
+import agh.edu.pl.slpbackend.dto.filters.FilterResponse;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
@@ -20,7 +20,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,14 +65,12 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
     public List<FilterResponse> filter(FilterRequest request) {
+        Specification<Sample> specification = hasFieldIn("code", "id", request.filters().codes())
+                .and(hasFieldIn("client", "name", request.filters().clients()))
+                .and(hasFieldIn("group", "name", request.filters().groups()));
+
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
         PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()));
-        Specification<Sample> specification = Specification.where(null);
-
-        for (Map.Entry<String, List<String>> filter : request.filters().entrySet()) {
-            specification = specification.and(hasFieldIn(filter.getKey(), filter.getValue()));
-        }
-
 
         return sampleRepository.findAll(specification, pageRequest).stream()
                 .map(sample -> new FilterResponse(
@@ -90,11 +87,10 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return sampleRepository.count();
     }
 
-    private Specification<Sample> hasFieldIn(String fieldName, List<String> values) {
-        if (fieldName.contains(".")) {
-            String[] split = fieldName.split("\\.");
-            return ((root, query, criteriaBuilder) -> root.get(split[0]).get(split[1]).in(values));
+    private Specification<Sample> hasFieldIn(String fieldName, String attribute, List<String> values) {
+        if (values.isEmpty()) {
+            return (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
         }
-        return ((root, query, criteriaBuilder) -> root.get(fieldName).in(values));
+        return (root, query, criteriaBuilder) -> root.get(fieldName).get(attribute).in(values);
     }
 }
