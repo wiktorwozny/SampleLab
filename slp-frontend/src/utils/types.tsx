@@ -100,7 +100,7 @@ export type FilterRequest = {
     ascending: boolean,
     pageNumber: number,
     pageSize: number,
-    filters: Map<string, string []>
+    filters: FiltersData
 }
 
 export type FilterResponse = {
@@ -110,4 +110,10 @@ export type FilterResponse = {
     assortment: string,
     clientName: string,
     admissionDate: Date
+}
+
+export type FiltersData = {
+    codes: string[],
+    clients: string[],
+    groups: string[]
 }

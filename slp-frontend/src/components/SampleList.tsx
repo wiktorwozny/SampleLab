@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {FilterRequest, FilterResponse} from "../utils/types"
+import {FilterRequest, FilterResponse, FiltersData} from "../utils/types"
 import {Button} from "./ui/Button"
 import {getNumberOfSamples, getFilteredSamples} from "../helpers/samplingApi"
 import {useNavigate} from "react-router-dom"
@@ -9,8 +9,9 @@ import {
     MdKeyboardDoubleArrowLeft,
     MdKeyboardDoubleArrowRight
 } from "react-icons/md";
+import FilterComponet from "./FilterComponent"
 
-const SampleList = () => {
+const SampleList:React.FC<any> = ({selectedFilters}) => {
 
     const [samples, setSamples] = useState<FilterResponse []>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -20,11 +21,15 @@ const SampleList = () => {
         ascending: true,
         pageNumber: 0,
         pageSize: 10,
-        filters: new Map()
+        filters: selectedFilters
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
     const [numberOfSamples, setNumberOfSamples] = useState<number>(0);
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
+    
+    useEffect(()=>{
+        setRequest(prev=>({...prev,filters:selectedFilters}))
+    },[selectedFilters])
 
     useEffect(() => {
         const getCount = async () => {
@@ -52,7 +57,7 @@ const SampleList = () => {
 
         getCount();
         getSamples();
-    }, [request])
+    }, [request, selectedFilters])
 
     useEffect(() => {
         setNumberOfPages(Math.ceil(numberOfSamples / request.pageSize))

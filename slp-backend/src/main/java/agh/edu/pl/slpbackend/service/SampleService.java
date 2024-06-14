@@ -88,7 +88,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
     private Specification<Sample> hasFieldIn(String fieldName, String attribute, List<String> values) {
-        if (values.isEmpty()) {
+        if (values == null || values.isEmpty()) {
             return (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
         }
         return (root, query, criteriaBuilder) -> root.get(fieldName).get(attribute).in(values);

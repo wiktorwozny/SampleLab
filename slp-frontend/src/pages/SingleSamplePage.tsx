@@ -5,9 +5,11 @@ import { Sample } from "../utils/types";
 import { Div } from "../components/ui/Div";
 import { Button } from "../components/ui/Button";
 import { generateReportForSample } from "../helpers/generateReportApi";
+
 const SingleSamplePage = () => {
     let { sampleId } = useParams();
     const [sample, setSample] = useState<Sample>();
+    
     const navigate = useNavigate()
 
     useEffect(()=>{
