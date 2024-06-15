@@ -57,7 +57,7 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
 
         getCount();
         getSamples();
-    }, [request, selectedFilters])
+    }, [request])
 
     useEffect(() => {
         setNumberOfPages(Math.ceil(numberOfSamples / request.pageSize))
