@@ -18,7 +18,7 @@ public class DataService {
 
     public Filters getFilters() {
         List<String> codes = codeService.selectAll().stream()
-                .map(CodeDto::getName)
+                .map(CodeDto::getId)
                 .toList();
         List<String> clients = clientService.selectAll().stream()
                 .map(ClientDto::getName)

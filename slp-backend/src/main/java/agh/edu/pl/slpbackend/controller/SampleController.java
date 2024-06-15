@@ -62,7 +62,7 @@ public class SampleController extends AbstractController {
 
 
     @PutMapping("list/filtered")
-    public ResponseEntity<List<FilterResponse>> filter(@RequestBody FilterRequest request) {
+    public ResponseEntity<FilterResponse> filter(@RequestBody FilterRequest request) {
         return new ResponseEntity<>(sampleService.filter(request), HttpStatus.OK);
     }
 }

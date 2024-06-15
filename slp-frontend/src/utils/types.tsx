@@ -27,7 +27,7 @@ export type Inspection = {
 export type SamplingStandards = {
     id: number,
     name: string,
-    groups: ProductGroup []
+    groups: ProductGroup[]
 }
 export type Indication = {
     id: number,
@@ -59,8 +59,8 @@ export type Examination = {
 export type ProductGroup = {
     id: number,
     name: string,
-    indications?: Indication [],
-    samplingStandards?: SamplingStandards []
+    indications?: Indication[],
+    samplingStandards?: SamplingStandards[]
 }
 
 export type ReportData = {
@@ -105,13 +105,18 @@ export type FilterRequest = {
     filters: FiltersData
 }
 
-export type FilterResponse = {
+export type SummarySample = {
     id: number,
     code: string,
     group: string,
     assortment: string,
     clientName: string,
     admissionDate: Date
+}
+
+export type FilterResponse = {
+    totalPages: number,
+    samples: SummarySample[]
 }
 
 export type FiltersData = {

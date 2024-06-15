@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {FilterRequest, FilterResponse, FiltersData} from "../utils/types"
+import {FilterRequest, FilterResponse, FiltersData, SummarySample} from "../utils/types"
 import {Button} from "./ui/Button"
 import {getNumberOfSamples, getFilteredSamples} from "../helpers/samplingApi"
 import {useNavigate} from "react-router-dom"
@@ -12,10 +12,9 @@ import {
 import FilterComponet from "./FilterComponent"
 
 const SampleList:React.FC<any> = ({selectedFilters}) => {
-
-    const [samples, setSamples] = useState<FilterResponse []>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
     const navigate = useNavigate()
+    const [samples, setSamples] = useState<SummarySample[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [request, setRequest] = useState<FilterRequest>({
         fieldName: 'id',
         ascending: true,
@@ -24,30 +23,23 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
         filters: selectedFilters
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
-    const [numberOfSamples, setNumberOfSamples] = useState<number>(0);
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
     
     useEffect(()=>{
-        setRequest(prev=>({...prev,filters:selectedFilters}))
+        setRequest(prev => ({
+            ...prev,
+            filters: selectedFilters,
+            pageNumber: 0
+        }))
     },[selectedFilters])
 
     useEffect(() => {
-        const getCount = async () => {
-            try {
-                let response = await getNumberOfSamples()
-                if (response.status === 200) {
-                    setNumberOfSamples(response.data)
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
         const getSamples = async () => {
             try {
                 let response = await getFilteredSamples(request);
                 if (response.status === 200) {
-                    setSamples(response.data)
+                    setSamples(response.data.samples)
+                    setNumberOfPages(response.data.totalPages)
                     setIsLoading(false)
                 }
             } catch (err) {
@@ -55,13 +47,8 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
             }
         }
 
-        getCount();
         getSamples();
     }, [request])
-
-    useEffect(() => {
-        setNumberOfPages(Math.ceil(numberOfSamples / request.pageSize))
-    }, [numberOfSamples, request.pageSize])
 
     const updateSortParams = (newFieldName: string) => {
         const ascending = request.fieldName === newFieldName ? !request.ascending : true;
@@ -82,7 +69,7 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
 
     return (
         <div className="w-full">
-            {!isLoading && <div>
+            {!isLoading && numberOfPages > 0 && <div>
                 <table className="table table-hover table-bordered cursor-pointer">
                     <thead>
                     <tr>
@@ -141,6 +128,7 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
                 <br/>
             </div>}
             {isLoading && <div className="text-2xl">Loading...</div>}
+            {!isLoading && numberOfPages == 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
         </div>
     )
 }

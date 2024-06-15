@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.service;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
 import agh.edu.pl.slpbackend.dto.filters.FilterResponse;
+import agh.edu.pl.slpbackend.dto.filters.SummarySample;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
@@ -14,6 +15,7 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -64,7 +66,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         sampleRepository.deleteById(id);
     }
 
-    public List<FilterResponse> filter(FilterRequest request) {
+    public FilterResponse filter(FilterRequest request) {
         Specification<Sample> specification = hasFieldIn("code", "id", request.filters().codes())
                 .and(hasFieldIn("client", "name", request.filters().clients()))
                 .and(hasFieldIn("group", "name", request.filters().groups()));
@@ -72,8 +74,9 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
         PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()));
 
-        return sampleRepository.findAll(specification, pageRequest).stream()
-                .map(sample -> new FilterResponse(
+        Page<Sample> page = sampleRepository.findAll(specification, pageRequest);
+        List<SummarySample> samples = page.stream()
+                .map(sample -> new SummarySample(
                         sample.getId(),
                         sample.getCode().getId(),
                         sample.getGroup().getName(),
@@ -81,6 +84,8 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
                         sample.getClient().getName(),
                         sample.getAdmissionDate()))
                 .toList();
+
+        return new FilterResponse(page.getTotalPages(), samples);
     }
 
     public long count() {

@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.dto.filters;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public record FilterResponse(Long id, String code, String group, String assortment, String clientName, LocalDate admissionDate) {
+public record FilterResponse(int totalPages, List<SummarySample> samples) {
 }
