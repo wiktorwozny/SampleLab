@@ -13,6 +13,8 @@ import {useNavigate, useParams} from 'react-router-dom';
 import AddressForm from './AddressForm';
 import {AddressController} from './ui/AddressController';
 import {getReportDataBySampleId} from '../helpers/reportDataApi';
+import { AlertContext } from '../contexts/AlertsContext';
+import { useContext } from 'react';
 
 type ReportDataFormFields = {
     manufacturerName: string,
@@ -37,6 +39,7 @@ const ReportDataForm: FC<{}> = ({}) => {
     const [isSeller, setIsSeller] = useState<Boolean>(true)
     const {sampleId} = useParams()
     const navigate = useNavigate()
+    const {setAlertDetails} = useContext(AlertContext);
     useEffect(() => {
         const getAddresses = async () => {
             try {
@@ -96,8 +99,10 @@ const ReportDataForm: FC<{}> = ({}) => {
             let response = await addReportData(values)
             console.log(response)
             navigate(`/sample/${sampleId}`);
+            setAlertDetails({isAlert:true, message:"Udało ci się dodać dodatkowe informacje", type:"success"})
         } catch (err) {
             console.log(err)
+            setAlertDetails({isAlert:true, message:"Wystąpił bład spróbuj ponownie później", type:"error"})
         }
     }
 
