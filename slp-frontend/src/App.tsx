@@ -8,6 +8,7 @@ import SingleSamplePage from './pages/SingleSamplePage';
 import SampleListPage from './pages/SampleListPage';
 import ExaminationForm from "./components/ExaminationForm";
 import Sidebar from "./components/Sidebar";
+import FilterComponet from './components/FilterComponent';
 
 
 function App() {

@@ -30,21 +30,7 @@ type ReportDataFormFields = {
 
 const ReportDataForm: FC<{}> = ({}) => {
     const [reportData, setReportData] = useState<ReportData | null>(null);
-    const method = useForm({
-        defaultValues: {
-            manufacturerName: reportData?.manufacturerName || '',
-            manufacturerAddress: reportData?.manufacturerAddress || null,
-            supplierName: reportData?.supplierName || '',
-            supplierAddress: reportData?.supplierAddress || null,
-            sellerName: reportData?.sellerName || '',
-            sellerAddress: reportData?.sellerAddress || null,
-            recipientName: reportData?.recipientName || "",
-            recipientAddress: reportData?.recipientAddress || null,
-            jobNumber: reportData?.jobNumber || null,
-            mechanism: reportData?.mechanism || '',
-            deliveryMethod: reportData?.deliveryMethod || '',
-        },
-    });
+    const method = useForm();
     const {handleSubmit, register, formState: {errors}, setValue} = method;
     const [message, setMessage] = useState<String>("")
     const [addresses, setAddresses] = useState<Address []>([])
@@ -92,6 +78,7 @@ const ReportDataForm: FC<{}> = ({}) => {
     ]
 
     useEffect(() => {
+        console.log()
         fieldsToSet.forEach(field => {
             if (reportData && reportData[field]) {
                 setValue(field, reportData[field]);
