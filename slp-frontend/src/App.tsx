@@ -9,27 +9,32 @@ import SampleListPage from './pages/SampleListPage';
 import ExaminationForm from "./components/ExaminationForm";
 import Sidebar from "./components/Sidebar";
 import FilterComponet from './components/FilterComponent';
+import AlertComponent from './components/AlertComponent';
+import AlertsContext from './contexts/AlertsContext';
 
 
 function App() {
     return (
         <div className="App flex relative">
-            <BrowserRouter>
-                <Sidebar/>
-                <Routes>
-                    <Route path='/' element={<SampleListPage/>}/>
-                    <Route path='/addSample' element={<SampleForm/>}/>
-                    <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
-                    <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
-                    <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                    <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
-                    <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
-                           element={<ExaminationForm/>}/>
-                </Routes>
-
-
-            </BrowserRouter>
-            {/* <ReportDataForm/> */}
+            <AlertsContext>
+                <BrowserRouter>
+                    <Sidebar/>
+                    <Routes>
+                        <Route path='/' element={<SampleListPage/>}/>
+                        <Route path='/addSample' element={<SampleForm/>}/>
+                        <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
+                        <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
+                        <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
+                        <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
+                        <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
+                            element={<ExaminationForm/>}/>
+                    </Routes>
+                </BrowserRouter>
+                <div className='fixed right-2 bottom-2'>
+                    <AlertComponent/>
+                </div>
+                {/* <ReportDataForm/> */}
+            </AlertsContext>
         </div>
     );
 }

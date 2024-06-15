@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material"
+
 export type Code = {
     id: string,
     name: string
@@ -116,4 +118,10 @@ export type FiltersData = {
     codes: string[],
     clients: string[],
     groups: string[]
+}
+
+export type AlertDetails = {
+    isAlert: boolean,
+    message: string,
+    type: AlertColor
 }

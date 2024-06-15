@@ -14,6 +14,8 @@ import { ListFormat } from 'typescript';
 import { Code, Client, Inspection, ProductGroup, SamplingStandards, ReportData, Sample } from '../utils/types';
 import { addSample } from '../helpers/samplingApi';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AlertContext } from '../contexts/AlertsContext';
 const SampleForm:FC<{}>=()=>{
 
     const method = useForm();
@@ -26,7 +28,8 @@ const SampleForm:FC<{}>=()=>{
     const [samplingStandard, setSamplingStandard] = useState<SamplingStandards []>([])
     const [reportData, setReportData] = useState<ReportData []>([])
     const navigate = useNavigate()
-    
+    const {setAlertDetails} = useContext(AlertContext);
+
     useEffect(() => {
         const getCodes = async() => {
             try{
@@ -124,11 +127,13 @@ const SampleForm:FC<{}>=()=>{
         try{
             let response = await addSample(values)
             console.log(response)
-            if(response.status === 201){
+            if(response.status === 201 || response.status === 200){
+                setAlertDetails({isAlert:true, message:"Udało ci dodać próbkę", type:"success"})
                 navigate("/")
             }
         }catch(err){
             console.log(err)
+            setAlertDetails({isAlert:true, message:"Wystąpił bład spróbuj ponownie później", type:"error"})
         }
     }
 
