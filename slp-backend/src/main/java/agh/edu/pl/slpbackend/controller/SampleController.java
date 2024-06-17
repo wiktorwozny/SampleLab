@@ -4,6 +4,8 @@ import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
 import agh.edu.pl.slpbackend.dto.filters.FilterResponse;
+import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
+import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,11 @@ public class SampleController extends AbstractController {
         return new ResponseEntity<>(sampleDto, HttpStatus.OK);
     }
 
+    @PutMapping("status/{sampleId}/{status}")
+    public ResponseEntity<Sample> updateStatus(@PathVariable final Long sampleId, @PathVariable final String status) {
+        return new ResponseEntity<>(sampleService.updateStatus(sampleId, ProgressStatusEnum.convertEnum(status)), HttpStatus.OK);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody SampleDto sampleDto) throws Exception {
         return add(sampleDto, sampleService);
@@ -57,7 +64,7 @@ public class SampleController extends AbstractController {
 
     @PutMapping("/{sampleId}")
     public ResponseEntity<Void> update(@PathVariable final Long sampleId, @RequestBody SampleDto sampleDto) throws Exception {
-        return edit(sampleDto,sampleService);
+        return edit(sampleDto, sampleService);
     }
 
 

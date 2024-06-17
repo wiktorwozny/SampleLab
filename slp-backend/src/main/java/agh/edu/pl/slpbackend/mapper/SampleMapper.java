@@ -22,6 +22,7 @@ public interface SampleMapper {
                 .group(model.getGroup())
                 .samplingStandard(model.getSamplingStandard())
                 .reportData(model.getReportData())
+                .progressStatus(model.getProgressStatus())
                 .build();
         //@formatter:on
 
@@ -45,6 +46,7 @@ public interface SampleMapper {
                 .group(dto.getGroup())
                 .samplingStandard(dto.getSamplingStandard())
                 .reportData(dto.getReportData())
+                .progressStatus(dto.getProgressStatus())
                 .build();
         //@formatter:on
 

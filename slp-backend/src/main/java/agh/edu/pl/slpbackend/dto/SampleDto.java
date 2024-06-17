@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.dto;
 
+import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
@@ -71,4 +72,7 @@ public class SampleDto implements IModel, Serializable {
 
     @ModelFieldName("reportData")
     private ReportData reportData;
+
+    @ModelFieldName("progressStatus")
+    private ProgressStatusEnum progressStatus;
 }

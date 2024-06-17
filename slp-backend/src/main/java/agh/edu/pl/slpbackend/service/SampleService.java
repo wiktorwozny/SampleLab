@@ -4,6 +4,7 @@ import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
 import agh.edu.pl.slpbackend.dto.filters.FilterResponse;
 import agh.edu.pl.slpbackend.dto.filters.SummarySample;
+import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
@@ -48,6 +49,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
 
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
+        sample.setProgressStatus(ProgressStatusEnum.DONE);
         return sampleRepository.save(sample);
 
     }
@@ -57,6 +59,12 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
         return sampleRepository.save(sample);
+    }
+
+    public Sample updateStatus(final Long id, final ProgressStatusEnum progress) {
+        final Sample toUpdate = sampleRepository.findById(id).orElseThrow(SampleNotFoundException::new);
+        toUpdate.setProgressStatus(progress);
+        return sampleRepository.save(toUpdate);
     }
 
     @Override
@@ -82,7 +90,8 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
                         sample.getGroup().getName(),
                         sample.getAssortment(),
                         sample.getClient().getName(),
-                        sample.getAdmissionDate()))
+                        sample.getAdmissionDate(),
+                        sample.getProgressStatus()))
                 .toList();
 
         return new FilterResponse(page.getTotalPages(), samples);

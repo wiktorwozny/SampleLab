@@ -1,20 +1,16 @@
-import {FC, useEffect, useState} from 'react'
+import {FC, useContext, useEffect, useState} from 'react'
 import {Input} from './ui/Input';
-import {FormSelect} from './ui/Select';
 import {FormProvider, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
-import {Button, CancelButton} from './ui/Button';
+import {CancelButton, StandardButton} from './ui/StandardButton';
 import {Address, ReportData} from '../utils/types';
 import {getAllAddresses} from '../helpers/addressApi';
 // import { addReportDataToSample } from '../helpers/sampleApi';
 // import {addReportDataToSample} from '../helpers/reportDataApi';
-import {addReportData} from '../helpers/reportDataApi';
+import {addReportData, getReportDataBySampleId} from '../helpers/reportDataApi';
 import {useNavigate, useParams} from 'react-router-dom';
-import AddressForm from './AddressForm';
 import {AddressController} from './ui/AddressController';
-import {getReportDataBySampleId} from '../helpers/reportDataApi';
-import { AlertContext } from '../contexts/AlertsContext';
-import { useContext } from 'react';
+import {AlertContext} from '../contexts/AlertsContext';
 
 type ReportDataFormFields = {
     manufacturerName: string,
@@ -99,10 +95,10 @@ const ReportDataForm: FC<{}> = ({}) => {
             let response = await addReportData(values)
             console.log(response)
             navigate(`/sample/${sampleId}`);
-            setAlertDetails({isAlert:true, message:"Udało ci się dodać dodatkowe informacje", type:"success"})
+            setAlertDetails({isAlert: true, message: "Udało ci się dodać dodatkowe informacje", type: "success"})
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert:true, message:"Wystąpił bład spróbuj ponownie później", type:"error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
         }
     }
 
@@ -269,10 +265,11 @@ const ReportDataForm: FC<{}> = ({}) => {
                     </div>
 
                     <div className='flex justify-center p-5 gap-5'>
-                        <CancelButton type='button' className='mt-3' onClick={() => navigate(`/sample/${sampleId}`)}>Anuluj</CancelButton>
-                        <Button type="submit" className='mt-3 justify-self-end' onClick={() => {
+                        <CancelButton type='button' className='mt-3'
+                                      onClick={() => navigate(`/sample/${sampleId}`)}>Anuluj</CancelButton>
+                        <StandardButton type="submit" className='mt-3 justify-self-end' onClick={() => {
                             handleSubmit(submit)()
-                        }}>Dodaj</Button>
+                        }}>Dodaj</StandardButton>
                     </div>
 
                 </div>

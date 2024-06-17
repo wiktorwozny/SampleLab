@@ -1,4 +1,5 @@
-import { AlertColor } from "@mui/material"
+import {AlertColor} from "@mui/material"
+import {ProgressStateEnum} from "./enums";
 
 export type Code = {
     id: string,
@@ -95,6 +96,7 @@ export type Sample = {
     group: ProductGroup,
     samplingStandard: SamplingStandards,
     reportData: ReportData
+    progressStatus: ProgressStateEnum
 }
 
 export type FilterRequest = {
@@ -105,6 +107,11 @@ export type FilterRequest = {
     filters: FiltersData
 }
 
+export type ProgressState = {
+    value: ProgressStateEnum,
+    label: string
+}
+
 export type SummarySample = {
     id: number,
     code: string,
@@ -112,6 +119,7 @@ export type SummarySample = {
     assortment: string,
     clientName: string,
     admissionDate: Date
+    progressStatus: ProgressStateEnum,
 }
 
 export type FilterResponse = {

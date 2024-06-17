@@ -5,7 +5,7 @@ import {FormProvider, useForm} from "react-hook-form";
 import {FormLabel} from "./ui/Labels";
 import {Input} from "./ui/Input";
 import {FormSelect} from "./ui/Select";
-import {Button, CancelButton} from "./ui/Button";
+import {CancelButton, StandardButton} from "./ui/StandardButton";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
 import {getSampleById} from "../helpers/sampleApi";
@@ -237,14 +237,15 @@ const ExaminationForm: FC<{}> = () => {
                         </div>
                     </div>
                     <div className='flex justify-center gap-5'>
-                        <CancelButton type='button' className='mt-3' onClick={() => navigate(`/sample/manageExaminations/${sampleId}`)}>Anuluj</CancelButton>
-                        <Button type="submit" className='mt-3 justify-self-end'>Zapisz</Button>
+                        <CancelButton type='button' className='mt-3'
+                                      onClick={() => navigate(`/sample/manageExaminations/${sampleId}`)}>Anuluj</CancelButton>
+                        <StandardButton type="submit" className='mt-3 justify-self-end'>Zapisz</StandardButton>
                     </div>
                 </div>
 
             </form>
         </FormProvider>
-        
+
     </div>)
 }
 

@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.model;
 
+import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -64,4 +65,6 @@ public class Sample implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sample")
     @JsonIgnoreProperties("sample")
     private List<Examination> examinations;
+
+    private ProgressStatusEnum progressStatus;
 }

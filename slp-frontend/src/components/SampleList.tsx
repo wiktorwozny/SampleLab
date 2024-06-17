@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react"
-import {FilterRequest, FilterResponse, FiltersData, SummarySample} from "../utils/types"
-import {Button} from "./ui/Button"
-import {getNumberOfSamples, getFilteredSamples} from "../helpers/samplingApi"
+import {FilterRequest, SummarySample} from "../utils/types"
+import {getFilteredSamples} from "../helpers/samplingApi"
 import {useNavigate} from "react-router-dom"
 import {
     MdKeyboardArrowLeft,
@@ -9,9 +8,16 @@ import {
     MdKeyboardDoubleArrowLeft,
     MdKeyboardDoubleArrowRight
 } from "react-icons/md";
-import FilterComponet from "./FilterComponent"
 
-const SampleList:React.FC<any> = ({selectedFilters}) => {
+import {FormProvider, useForm} from 'react-hook-form';
+import {ProgressStateEnum, ProgressStateEnumDesc} from "../utils/enums";
+import {ProgressFormSelect} from "./ui/ProgressFormSelect";
+
+
+const SampleList: React.FC<any> = ({selectedFilters}) => {
+    const progressEnumDesc = ProgressStateEnumDesc;
+    const method = useForm();
+    const {handleSubmit, register, formState: {errors}} = method
     const navigate = useNavigate()
     const [samples, setSamples] = useState<SummarySample[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -24,14 +30,14 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         setRequest(prev => ({
             ...prev,
             filters: selectedFilters,
             pageNumber: 0
         }))
-    },[selectedFilters])
+    }, [selectedFilters])
 
     useEffect(() => {
         const getSamples = async () => {
@@ -39,6 +45,7 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
                 let response = await getFilteredSamples(request);
                 if (response.status === 200) {
                     setSamples(response.data.samples)
+                    console.log(response.data.samples)
                     setNumberOfPages(response.data.totalPages)
                     setIsLoading(false)
                 }
@@ -91,19 +98,44 @@ const SampleList:React.FC<any> = ({selectedFilters}) => {
                         <th scope="col" className={activeColumn === 'admissionDate' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("admissionDate")}>Data przyjęcia
                         </th>
+                        <th scope="col" className={activeColumn === 'progress' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("progress")}>Progres
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     {samples.map(sample => (
-                        <tr key={sample.id} onClick={() => {
-                            navigate(`/sample/${sample.id}`)
-                        }}>
+                        <tr
+                            key={sample.id} onClick={() => {
+                            if (sample.progressStatus !== ProgressStateEnum.TODO && sample.progressStatus !== null) navigate(`/sample/${sample.id}`)
+                        }}
+                        >
                             <td>{sample.id}</td>
                             <td>{sample.code}</td>
                             <td>{sample.group}</td>
                             <td>{sample.assortment}</td>
                             <td>{sample.clientName}</td>
                             <td>{sample.admissionDate.toString()}</td>
+                            <td className="w-64 h-max"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                }}
+                            >
+                                <FormProvider {...method}>
+                                    <ProgressFormSelect
+                                        className="shadow-none h-max"
+                                        options={progressEnumDesc.map(desc => ({value: desc.value, label: desc.label}))}
+                                        sample={sample}
+                                        defaultValue={
+                                            progressEnumDesc.filter((obj) => obj.value === sample.progressStatus)
+                                        }
+                                        {...register("analysis", {})}
+                                    />
+                                    {errors.analysis && errors.analysis.message &&
+                                        <p className="text-red-600">{`${errors.analysis.message}`}</p>}
+
+                                </FormProvider>
+                            </td>
                         </tr>))}
                     </tbody>
                 </table>

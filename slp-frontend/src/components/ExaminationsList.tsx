@@ -1,11 +1,10 @@
 import {FC, useEffect, useState} from "react";
-import { Div } from "./ui/Div"
-import {useParams} from "react-router-dom";
-import {Indication, Examination} from "../utils/types";
+import {Div} from "./ui/Div"
+import {useNavigate, useParams} from "react-router-dom";
+import {Examination, Indication} from "../utils/types";
 import {getIndicationsForSample} from "../helpers/indicationApi";
-import { useNavigate } from "react-router-dom"
 import {deleteExamination, getExaminationsForSample} from "../helpers/examinationApi";
-import {Button} from "./ui/Button";
+import {StandardButton} from "./ui/StandardButton";
 
 const ExaminationsList: FC<{}> = () => {
 
@@ -60,17 +59,17 @@ const ExaminationsList: FC<{}> = () => {
 
     const handleNavigation = (sampleId: any, examinationId: number | null, indicationId: number) => {
         if (examinationId === null) {
-            navigate(`/sample/manageExaminations/${sampleId}/newExamination`, { state: { indicationId: indicationId } });
+            navigate(`/sample/manageExaminations/${sampleId}/newExamination`, {state: {indicationId: indicationId}});
         } else {
             navigate(`/sample/manageExaminations/${sampleId}/newExamination/${examinationId}`, {
-                state: { indicationId },
+                state: {indicationId},
             });
         }
     }
 
     const handleCheckboxChange = async (indicationId: number, examinationId: number) => {
         setCheckedStates(prevState => {
-            const newState = { ...prevState };
+            const newState = {...prevState};
             if (newState[indicationId]) {
                 const confirmed = window.confirm("Czy na pewno? Badanie zostanie usunięte!");
                 if (!confirmed) {
@@ -110,14 +109,15 @@ const ExaminationsList: FC<{}> = () => {
                         <span className="font-bold ml-2">{indication.name}</span>
                     </div>
                     {checkedStates[indication.id] && (
-                        <Button type="button" onClick={() => {
+                        <StandardButton type="button" onClick={() => {
                             const examination = checkedStates[indication.id];
                             handleNavigation(sampleId, examination.id, indication.id);
-                        }}>Wprowadź wyniki badań</Button>
+                        }}>Wprowadź wyniki badań</StandardButton>
                     )}
                 </Div>
             ))}
-            <Button type='button' className='mt-3' onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</Button>
+            <StandardButton type='button' className='mt-3'
+                            onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</StandardButton>
         </div>
     );
 }
