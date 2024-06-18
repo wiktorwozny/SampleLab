@@ -142,14 +142,17 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
             createCellAtIndexWithValue(newRow, 3, uncertaintyExists ? "16,7 " + examination.getUncertainty() : "16,7", workbook);
             createCellAtIndexWithValue(newRow, 4, "[giet]", workbook);
             int colNum = 5;
+
             if (pattern[0]) {
                 createCellAtIndexWithValue(newRow, colNum, !examination.getSignage().equals("") ? examination.getSignage() : "-", workbook);
                 colNum += 1;
             }
+
             if (pattern[1]) {
                 createCellAtIndexWithValue(newRow, colNum, !examination.getSpecification().equals("") ? examination.getSpecification() : "-", workbook);
                 colNum += 1;
             }
+
             if (pattern[2]) {
                 if ((!pattern[0] && pattern[1]) || (!pattern[1] && pattern[0])) {
                     colNum = colNum + 1;

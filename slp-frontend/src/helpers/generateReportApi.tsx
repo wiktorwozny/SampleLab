@@ -10,6 +10,14 @@ const generateReportForSample = (sampleId: number | undefined) => {
     return null;
 }
 
+const generateKzwaForSample = (sampleId: number | undefined) => {
+    if (sampleId !== undefined) {
+        return axios.post(backendUrl + url + `kzwa-report/${sampleId}`);
+    }
+    return null;
+}
+
 export {
     generateReportForSample,
+    generateKzwaForSample,
 }

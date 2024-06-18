@@ -229,7 +229,7 @@ const SampleForm: FC<{}> = () => {
                             {errors.group && errors.group.message &&
                                 <p className="text-red-600">{`${errors.group.message}`}</p>}
 
-                            <FormLabel>Expiration Comment</FormLabel>
+                            <FormLabel>Dodatkowy komentarz</FormLabel>
                             <Input {...register("expirationComment", {
                                 required: {
                                     value: true,
