@@ -98,8 +98,8 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         <th scope="col" className={activeColumn === 'admissionDate' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("admissionDate")}>Data przyjęcia
                         </th>
-                        <th scope="col" className={activeColumn === 'progress' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("progress")}>Progres
+                        <th scope="col" className={activeColumn === 'progressStatus' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("progressStatus")}>Progres
                         </th>
                     </tr>
                     </thead>

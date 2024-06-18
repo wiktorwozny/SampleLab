@@ -77,7 +77,8 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     public FilterResponse filter(FilterRequest request) {
         Specification<Sample> specification = hasFieldIn("code", "id", request.filters().codes())
                 .and(hasFieldIn("client", "name", request.filters().clients()))
-                .and(hasFieldIn("group", "name", request.filters().groups()));
+                .and(hasFieldIn("group", "name", request.filters().groups()))
+                .and(hasFieldIn("progressStatus", null, request.filters().progressStatuses()));
 
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
         PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()));
@@ -101,9 +102,12 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return sampleRepository.count();
     }
 
-    private Specification<Sample> hasFieldIn(String fieldName, String attribute, List<String> values) {
+    private Specification<Sample> hasFieldIn(String fieldName, String attribute, List<?> values) {
         if (values == null || values.isEmpty()) {
             return (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
+        }
+        if (attribute == null) {
+            return (root, query, criteriaBuilder) -> root.get(fieldName).in(values);
         }
         return (root, query, criteriaBuilder) -> root.get(fieldName).get(attribute).in(values);
     }

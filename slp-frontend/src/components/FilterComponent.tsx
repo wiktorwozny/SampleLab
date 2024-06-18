@@ -3,6 +3,8 @@ import Chip from '@mui/material/Chip';
 import { ChipFilter } from "./ui/ChipFilter";
 import { useEffect, useState } from "react";
 import { getFiltersData } from "../helpers/dataApi";
+import {ProgressStateEnumDesc } from "../utils/enums";
+import { ProgressState } from "../utils/types";
 const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, setSelectedFilters}:any) => {
     const [isOpen,setIsOpen]=useState<boolean>(true);
     return(<div className="fixed w-full h-full top-0 flex justify-end left-0">
@@ -61,6 +63,20 @@ const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, 
                         label={`${el}`} 
                         key={i}
                         keyValue="groups"
+                        setSelectedFilters={setSelectedFilters}
+                        selectedFilters={selectedFilters}
+                    />))}
+                </div>
+            </div>
+
+            <div className="w-full border my-2"></div>
+            <div className="flex flex-col">
+                <h2 className="text-start text-xl">Status</h2>
+                <div className="flex mt-2 flex-wrap">
+                    {ProgressStateEnumDesc.map((el:ProgressState,i:number)=>(<ChipFilter 
+                        label={`${el.value}`} 
+                        key={i}
+                        keyValue="progressStatuses"
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
                     />))}
