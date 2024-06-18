@@ -73,7 +73,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             pageNumber: pageNumber
         }));
     }
-
+    console.log(samples)
     return (
         <div className="w-full">
             {!isLoading && numberOfPages > 0 && <div>
@@ -129,6 +129,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                                         defaultValue={
                                             progressEnumDesc.filter((obj) => obj.value === sample.progressStatus)
                                         }
+                                        setSamples={setSamples}
                                         {...register("analysis", {})}
                                     />
                                     {errors.analysis && errors.analysis.message &&
