@@ -81,7 +81,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
                 .and(hasFieldIn("progressStatus", null, request.filters().progressStatuses()));
 
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
-        PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()));
+        PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()).and(Sort.by("id")));
 
         Page<Sample> page = sampleRepository.findAll(specification, pageRequest);
         List<SummarySample> samples = page.stream()
