@@ -20,7 +20,7 @@ public class BackupController {
     @GetMapping("/")
     public ResponseEntity<Void> backup() {
         try {
-            if (backupService.exportDatabase() != 0) {
+            if (backupService.exportDatabase() == 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // nie wiem jaki inny exeption
