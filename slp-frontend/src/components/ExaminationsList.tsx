@@ -4,7 +4,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Examination, Indication} from "../utils/types";
 import {getIndicationsForSample} from "../helpers/indicationApi";
 import {deleteExamination, getExaminationsForSample} from "../helpers/examinationApi";
-import {StandardButton} from "./ui/StandardButton";
+import {CancelButton, StandardButton} from "./ui/StandardButton";
+import {generateKzwaForSample, generateReportForSample} from "../helpers/generateReportApi";
 
 const ExaminationsList: FC<{}> = () => {
 
@@ -67,6 +68,15 @@ const ExaminationsList: FC<{}> = () => {
         }
     }
 
+    const generateKzwa = async (sampleId: number) => {
+        try {
+            let response = await generateKzwaForSample(sampleId);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     const handleCheckboxChange = async (indicationId: number, examinationId: number) => {
         setCheckedStates(prevState => {
             const newState = {...prevState};
@@ -116,8 +126,14 @@ const ExaminationsList: FC<{}> = () => {
                     )}
                 </Div>
             ))}
-            <StandardButton type='button' className='mt-3'
-                            onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</StandardButton>
+            <StandardButton type='button' className='mt-3' onClick={
+                (e) => {
+                    e.stopPropagation();
+                    generateKzwa(Number(sampleId));
+                }
+            }>Generuj KZWA</StandardButton>
+            <CancelButton type='button' className='mt-3'
+                            onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</CancelButton>
         </div>
     );
 }

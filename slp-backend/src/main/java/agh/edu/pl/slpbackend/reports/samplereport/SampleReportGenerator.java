@@ -23,10 +23,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Service
@@ -64,20 +61,21 @@ public class SampleReportGenerator {
                 fillExaminationsTimesTable(examinationsTimesTable);
             }
 
-            boolean[] pattern = getRequirementsPattern();
-            Tbl examinationsTable = findNthTable(tables, 3);
-
-            if (examinationsTable != null) {
-                deleteRequirementsColumns(examinationsTable, pattern);
-                fillExaminationsTable(examinationsTable, pattern, uncertaintyExists);
-            }
-
             documentPart.variableReplace(fieldsMap);
             headerPart.variableReplace(fieldsMap);
             footerPart.variableReplace(fieldsMap);
 
+            boolean[] pattern = getRequirementsPattern();
+            XLSXtoTblConverter xlsXtoTblConverter = new XLSXtoTblConverter(pattern, uncertaintyExists, examinationList);
+            Tbl convertedExaminationsTable = xlsXtoTblConverter.convert();
+
+            adjustExaminationsTableSize(convertedExaminationsTable, pattern);
+            addTableAtParagraph(documentPart, "EXAMINATIONS_TABLE", convertedExaminationsTable);
+
             String home = System.getProperty("user.home");
             Docx4J.save(wordMLPackage, new File(home + "/Downloads/" + "report.docx"));
+
+            xlsXtoTblConverter.cleanFiles();
         } catch (Exception e) {
             throw new Exception(e);
         }
@@ -120,14 +118,12 @@ public class SampleReportGenerator {
 
         // uncertainty cases
         if (uncertaintyExists) {
-            fieldsMap.put("uncertainty", "± niepewność pomiaru/ [niepewność pomiaru]");
             fieldsMap.put("uncertaintyInfo", """
                     Podana niepewność jest niepewnością rozszerzoną, uzyskaną przez pomnożenie niepewności standardowej\s
                     i współczynnika rozszerzenia k=2, co w przybliżeniu zapewnia poziom ufności 95%.
                     Podana niepewność pomiaru oszacowana została tylko i wyłącznie dla podanej metodyki badawczej.
                     """);
         } else {
-            fieldsMap.put("uncertainty", "");
             fieldsMap.put("uncertaintyInfo", "");
         }
 
@@ -161,41 +157,6 @@ public class SampleReportGenerator {
 
             addRowToTable(examinationsTimesTable, formatLocalDate(startDate), lp, formatLocalDate(endDate), lp);
         }
-    }
-
-    private void fillExaminationsTable(Tbl examinationsTable, boolean[] pattern, boolean uncertaintyExists) {
-        if (examinationList == null) {
-            throw new IllegalStateException("ExaminationList not set");
-        }
-
-        String lpCellText, indicationCellText, methodCellText, resultCellText, unitCellText, signageCellText = null, nutritionalValueCellText = null, specificationCellText = null;
-
-        for (int i = 0; i < examinationList.size(); i++) {
-            Examination examination = examinationList.get(i);
-            lpCellText = Integer.toString(i);
-            indicationCellText = examination.getIndication().getName();
-            methodCellText = "METODA POBRANIA";
-            resultCellText = "150";
-
-            if (uncertaintyExists) {
-                resultCellText += "±" + examination.getUncertainty();
-            }
-
-            unitCellText = "[giet]";
-
-            if (pattern[0]) {
-                signageCellText = !examination.getSignage().equals("") ? examination.getSignage() : "-";
-            }
-            if (pattern[1]) {
-                specificationCellText = !examination.getSpecification().equals("") ? examination.getSpecification() : "-";
-            }
-            if (pattern[2]) {
-                nutritionalValueCellText = !examination.getNutritionalValue().equals("") ? examination.getNutritionalValue() : "-";
-            }
-
-            addRowToTable(examinationsTable, lpCellText, indicationCellText, methodCellText, resultCellText, unitCellText, signageCellText, specificationCellText, nutritionalValueCellText);
-        }
-
     }
 
     private void addRowToTable(Tbl table, String... cellTexts) {
@@ -240,6 +201,102 @@ public class SampleReportGenerator {
         return border;
     }
 
+    private void addTableAtParagraph(MainDocumentPart documentPart, String placeholder, Tbl table) {
+        List<Object> content = documentPart.getContent();
+
+        for (Object object : documentPart.getContent()) {
+            if (object instanceof P) {
+                P paragraph = (P) object;
+                String paragraphText = getParagraphText(paragraph);
+                if (placeholder.equals(paragraphText.trim())) {
+                    int index = content.indexOf(paragraph);
+                    content.set(index, table);
+                }
+            }
+        }
+    }
+
+    private String getParagraphText(P paragraph) {
+        StringBuilder text = new StringBuilder();
+        for (Object obj : paragraph.getContent()) {
+            if (obj instanceof R run) {
+                for (Object o : run.getContent()) {
+                    if (o instanceof JAXBElement) {
+                        JAXBElement jaxbElement = (JAXBElement) o;
+                        if (jaxbElement.getValue() instanceof Text) {
+                            text.append(((Text) jaxbElement.getValue()).getValue());
+                        }
+                    }
+                }
+            }
+        }
+        return text.toString();
+    }
+
+    private void adjustExaminationsTableSize(Tbl table, boolean[] pattern) {
+
+        List<Object> rowObjects = table.getContent();
+        int totalWidth = getTableTotalWidthFromRow((Tr) rowObjects.get(0));
+
+        Tc requirementsTitleCell = (Tc) ((JAXBElement) (((Tr) rowObjects.get(0)).getContent().get(5))).getValue();
+        int requirementsTitleCellWidth = requirementsTitleCell.getTcPr().getTcW().getW().intValue();
+        int mainColumnsTotalWidth = totalWidth - requirementsTitleCellWidth;
+
+        List<Integer> widthsToSet = new ArrayList<>();
+
+        widthsToSet.add(mainColumnsTotalWidth * 1 / 19);
+        widthsToSet.add(mainColumnsTotalWidth * 6 / 19);
+        widthsToSet.add(mainColumnsTotalWidth * 5 / 19);
+        widthsToSet.add(mainColumnsTotalWidth * 4 / 19);
+        widthsToSet.add(mainColumnsTotalWidth * 3 / 19);
+
+        // first row
+        Tr firstRow = (Tr) rowObjects.get(0);
+        for (int i = 0; i < widthsToSet.size(); i++) {
+            Tc cell = (Tc) ((JAXBElement) firstRow.getContent().get(i)).getValue();
+            TblWidth tblWidth = new TblWidth();
+            tblWidth.setW(BigInteger.valueOf(widthsToSet.get(i)));
+            cell.getTcPr().setTcW(tblWidth);
+        }
+
+
+        for (int i = 0; i < examinationList.size(); i++) {
+            Tr row = (Tr) rowObjects.get(i + 2);
+            for (int j = 0; j < widthsToSet.size(); j++) {
+                Tc cell = (Tc) ((JAXBElement) row.getContent().get(j)).getValue();
+                TblWidth tblWidth = new TblWidth();
+                tblWidth.setW(BigInteger.valueOf(widthsToSet.get(j)));
+                cell.getTcPr().setTcW(tblWidth);
+            }
+        }
+
+        if (IntStream.range(0, pattern.length)
+                .filter(i -> pattern[i])
+                .count() == 2) {
+            for (int i = 0; i < examinationList.size() + 1; i++) {
+                Tr row = (Tr) rowObjects.get(i + 1);
+                for (int j = 6; j < 8; j++) {
+                    Tc cell = (Tc) ((JAXBElement) row.getContent().get(j)).getValue();
+                    TblWidth tblWidth = new TblWidth();
+                    tblWidth.setW(BigInteger.valueOf(requirementsTitleCellWidth / 2));
+                    cell.getTcPr().setTcW(tblWidth);
+                }
+            }
+        }
+
+    }
+
+    private int getTableTotalWidthFromRow(Tr row) {
+        BigInteger totalWidth = BigInteger.ZERO;
+
+        for (Object cellObj: row.getContent()) {
+            Tc cell = (Tc) ((JAXBElement) cellObj).getValue();
+            totalWidth = totalWidth.add(cell.getTcPr().getTcW().getW());
+        }
+
+        return totalWidth.intValue();
+    }
+
     private boolean[] getRequirementsPattern() {
         if (examinationList == null) {
             throw new IllegalStateException("ExaminationList not set");
@@ -260,67 +317,6 @@ public class SampleReportGenerator {
         });
 
         return pattern;
-    }
-
-    private void deleteRequirementsColumns(Tbl table, boolean[] pattern) {
-
-        long requirementsColumnsNumber = IntStream.range(0, pattern.length)
-                .filter(i -> pattern[i])
-                .count();
-
-        if (requirementsColumnsNumber == 3) {
-            return;
-        }
-
-        List<Object> rowObjects = table.getContent();
-        Tr requirementsRow = (Tr) rowObjects.get(1);
-        Tc requirementsTitleCell = (Tc) ((JAXBElement) (((Tr) rowObjects.get(0)).getContent().get(5))).getValue();
-
-        List<Object> cellObjects = requirementsRow.getContent();
-        BigInteger totalWidth = new BigInteger("0");
-
-        for (int i = 0; i < pattern.length; i++) {
-            JAXBElement element = (JAXBElement) cellObjects.get(5 + i);
-            Tc tc = (Tc) element.getValue();
-            totalWidth = totalWidth.add(tc.getTcPr().getTcW().getW());
-        }
-
-        for (int i = pattern.length - 1; i >= 0; i--) {
-            if (!pattern[i]) {
-                cellObjects.remove(5 + i);
-            }
-        }
-
-        if (requirementsColumnsNumber == 2) {
-            Tc cell1 = (Tc) ((JAXBElement) cellObjects.get(5)).getValue();
-            Tc cell2 = (Tc) ((JAXBElement) cellObjects.get(6)).getValue();
-
-            if (pattern[2]) {
-                setCellWidth(cell2, totalWidth.multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(5)));
-                setCellWidth(cell1, totalWidth.multiply(BigInteger.valueOf(2)).divide(BigInteger.valueOf(5)));
-            } else {
-                setCellWidth(cell2, totalWidth.divide(BigInteger.valueOf(2)));
-                setCellWidth(cell1, totalWidth.divide(BigInteger.valueOf(2)));
-            }
-        } else if (requirementsColumnsNumber == 1) {
-            Tc cell1 = (Tc) ((JAXBElement) cellObjects.get(5)).getValue();
-            setCellWidth(cell1, totalWidth);
-        }
-
-        setCellWidth(requirementsTitleCell, totalWidth);
-    }
-
-    private static void setCellWidth(Tc cell, BigInteger width) {
-        TcPr tcPr = cell.getTcPr();
-        if (tcPr == null) {
-            tcPr = new TcPr();
-            cell.setTcPr(tcPr);
-        }
-
-        TblWidth tcW = new TblWidth();
-        tcW.setType("dxa");
-        tcW.setW(width);
-        tcPr.setTcW(tcW);
     }
 
     private boolean checkIfUncertaintyExists() {

@@ -73,7 +73,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             pageNumber: pageNumber
         }));
     }
-
+    console.log(samples)
     return (
         <div className="w-full">
             {!isLoading && numberOfPages > 0 && <div>
@@ -98,8 +98,8 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         <th scope="col" className={activeColumn === 'admissionDate' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("admissionDate")}>Data przyjęcia
                         </th>
-                        <th scope="col" className={activeColumn === 'progress' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("progress")}>Progres
+                        <th scope="col" className={activeColumn === 'progressStatus' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("progressStatus")}>Progres
                         </th>
                     </tr>
                     </thead>
@@ -129,6 +129,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                                         defaultValue={
                                             progressEnumDesc.filter((obj) => obj.value === sample.progressStatus)
                                         }
+                                        setSamples={setSamples}
                                         {...register("analysis", {})}
                                     />
                                     {errors.analysis && errors.analysis.message &&

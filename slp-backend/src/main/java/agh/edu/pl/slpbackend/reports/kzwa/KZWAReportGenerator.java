@@ -2,11 +2,10 @@ package agh.edu.pl.slpbackend.reports.kzwa;
 
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.model.Sample;
+import agh.edu.pl.slpbackend.reports.XLSXFilesHelper;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellReference;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.apache.poi.ss.usermodel.*;
@@ -24,7 +23,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KZWAReportGenerator {
+public class KZWAReportGenerator extends XLSXFilesHelper {
 
     @NonNull
     private final ExaminationRepository examinationRepository;
@@ -100,59 +99,9 @@ public class KZWAReportGenerator {
             }
 
             // merging cells
-            CellRangeAddress requirementsCellRangeAddress = new CellRangeAddress(lastRowNum + 1, lastRowNum + 1 + examination.getSamplesNumber(), 2, 2);
-            CellRangeAddress methodsCellRangeAddress = new CellRangeAddress(lastRowNum + 1, lastRowNum + 1 + examination.getSamplesNumber(), 3, 3);
-
-            sheet.addMergedRegion(requirementsCellRangeAddress);
-            sheet.addMergedRegion(methodsCellRangeAddress);
+            mergeCells(sheet, lastRowNum + 1, lastRowNum + 1 + examination.getSamplesNumber(), 2, 2);
+            mergeCells(sheet, lastRowNum + 1, lastRowNum + 1 + examination.getSamplesNumber(), 3, 3);
         }
-    }
-
-    private void createCellAtIndexWithValue(Row row, int i, String value, Workbook workbook) {
-        Cell newCell = row.createCell(i);
-        newCell.setCellValue(value);
-
-        CellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
-        cellStyle.setBorderTop(BorderStyle.THIN);
-        cellStyle.setBorderBottom(BorderStyle.THIN);
-        cellStyle.setBorderRight(BorderStyle.THIN);
-        cellStyle.setBorderLeft(BorderStyle.THIN);
-
-        cellStyle.setWrapText(true);
-
-        newCell.setCellStyle(cellStyle);
-    }
-
-    private void changeCellWithSpecificText(Sheet sheet, String text, String modifiedText) {
-        boolean found = false;
-        for (Row row : sheet) {
-            for (Cell cell : row) {
-                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals(text)) {
-                    cell.setCellValue(text + modifiedText);
-                    found = true;
-                    break;
-                }
-            }
-            if (found) break;
-        }
-    }
-
-    private void changeCellWithCellReference(Sheet sheet, String reference, String modifiedText) {
-        CellReference cellRef = new CellReference(reference);
-
-        Row row = sheet.getRow(cellRef.getRow());
-        if (row == null) {
-            row = sheet.createRow(cellRef.getRow());
-        }
-        Cell cell = row.getCell(cellRef.getCol());
-        if (cell == null) {
-            cell = row.createCell(cellRef.getCol());
-        }
-
-        cell.setCellValue(modifiedText);
     }
 
     private String getCurrentTime() {

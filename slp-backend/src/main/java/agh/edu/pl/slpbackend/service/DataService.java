@@ -27,6 +27,6 @@ public class DataService {
                 .map((ProductGroupDto::getName))
                 .toList();
 
-        return new Filters(codes, clients, groups);
+        return new Filters(codes, clients, groups, null);
     }
 }

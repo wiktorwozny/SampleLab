@@ -114,7 +114,7 @@ const SampleForm: FC<{}> = () => {
     const submit = async (values: any) => {
         values.code = JSON.parse(values.code)
         values.client = JSON.parse(values.client)
-        // values.inspection = JSON.parse(values.inspection)
+        values.inspection = JSON.parse(values.inspection)
         values.group = JSON.parse(values.group)
         values.samplingStandard = JSON.parse(values.samplingStandard)
         // values.reportData = JSON.parse(values.reportData)
@@ -155,6 +155,20 @@ const SampleForm: FC<{}> = () => {
                             {errors.code && errors.code.message &&
                                 <p className="text-red-600">{`${errors.code.message}`}</p>}
 
+                            <FormLabel>Inspekcja</FormLabel>
+                            <FormSelect
+                                className="my-custom-class"
+                                options={inspections.map(inspection => ({value: JSON.stringify(inspection), label: inspection.name}))}
+                                {...register("inspection", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                            />
+
+                            {errors.inspection && errors.inspection.message &&
+                                <p className="text-red-600">{`${errors.inspection.message}`}</p>}
                             <FormLabel>Data przyjęcia próbki</FormLabel>
                             <Input type="date" {...register("admissionDate", {
                                 required: {
@@ -177,7 +191,7 @@ const SampleForm: FC<{}> = () => {
                             {errors.expirationDate && errors.expirationDate.message &&
                                 <p className="text-red-600">{`${errors.expirationDate.message}`}</p>}
 
-                            <FormLabel>Planowana data zakończenia badań</FormLabel>
+                            <FormLabel>Data zakończenia badań</FormLabel>
                             <Input type="date" {...register("examinationEndDate", {
                                 required: {
                                     value: true,
@@ -188,8 +202,19 @@ const SampleForm: FC<{}> = () => {
                             {errors.examinationEndDate && errors.examinationEndDate.message &&
                                 <p className="text-red-600">{`${errors.examinationEndDate.message}`}</p>}
 
+                            <FormLabel>Asortyment</FormLabel>
+                            <Input {...register("assortment", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.assortment && errors.assortment.message &&
+                                <p className="text-red-600">{`${errors.assortment.message}`}</p>}
                         </div>
                         <div className='w-1/4'>
+                            <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
                             <FormLabel>Analiza odwoławcza</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
@@ -229,7 +254,7 @@ const SampleForm: FC<{}> = () => {
                             {errors.group && errors.group.message &&
                                 <p className="text-red-600">{`${errors.group.message}`}</p>}
 
-                            <FormLabel>Expiration Comment</FormLabel>
+                            <FormLabel>Dodatkowy komentarz</FormLabel>
                             <Input {...register("expirationComment", {
                                 required: {
                                     value: true,
@@ -256,6 +281,17 @@ const SampleForm: FC<{}> = () => {
                             />
                             {errors.samplingStandard && errors.samplingStandard.message &&
                                 <p className="text-red-600">{`${errors.samplingStandard.message}`}</p>}
+
+                            <FormLabel>Wielkość próbki</FormLabel>
+                            <Input {...register("size", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.size && errors.size.message &&
+                                <p className="text-red-600">{`${errors.size.message}`}</p>}
                         </div>
                         <div className='w-1/4'>
                             <h2 className='font-bold text-2xl'>Dane Klienta</h2>

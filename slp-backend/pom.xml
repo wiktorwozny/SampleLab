@@ -8,11 +8,21 @@
         <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.example</groupId>
     <artifactId>slp-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>slp-backend</name>
     <description>slp-backend</description>
+
+    <repositories>
+        <repository>
+            <id>com.e-iceblue</id>
+            <name>e-iceblue</name>
+            <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -89,6 +99,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.26.2</version>
+        </dependency>
+        <dependency>
+            <groupId>e-iceblue</groupId>
+            <artifactId>spire.office</artifactId>
+            <version>8.1.2</version>
         </dependency>
 
     </dependencies>

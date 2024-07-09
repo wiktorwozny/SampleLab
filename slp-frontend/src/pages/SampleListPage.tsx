@@ -7,7 +7,7 @@ import { getFiltersData } from "../helpers/dataApi";
 const SampleListPage = () => {
     const [isFilters, setIsFilters] = useState<boolean>(false)
     const [filtersData, setFiltersData] = useState<FiltersData | null>(null);
-    const [selectedFilters, setSelectedFilters] = useState<FiltersData>({codes:[],groups:[],clients:[]})
+    const [selectedFilters, setSelectedFilters] = useState<FiltersData>({codes:[],groups:[],clients:[], progressStatuses:[]})
     useEffect(()=>{
         const getFiltersDataFunction = async () => {
             try {

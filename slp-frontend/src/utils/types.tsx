@@ -131,6 +131,7 @@ export type FiltersData = {
     codes: string[],
     clients: string[],
     groups: string[]
+    progressStatuses: string[]
 }
 
 export type AlertDetails = {
