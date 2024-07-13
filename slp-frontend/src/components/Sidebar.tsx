@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
                         className="text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
                         // onClick={() => handleBackup()}
                         onClick={() => navigate('/backup')}
-                    >back-up danych
+                    >Archiwizacja danych
                     </a>
                     </li>
 
