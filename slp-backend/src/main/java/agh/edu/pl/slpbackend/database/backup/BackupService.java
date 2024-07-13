@@ -19,7 +19,7 @@ public class BackupService {
         String port = "5432";
         String database = "postgres";
         String user = "postgres";
-        String password = "Rk020409";
+        String password = "[password]";
         String home = System.getProperty("user.home");
         String backupFile = home + "/Downloads/" + "backup.sql";
 
