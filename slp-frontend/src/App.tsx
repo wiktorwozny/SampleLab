@@ -8,9 +8,9 @@ import SingleSamplePage from './pages/SingleSamplePage';
 import SampleListPage from './pages/SampleListPage';
 import ExaminationForm from "./components/ExaminationForm";
 import Sidebar from "./components/Sidebar";
-import FilterComponet from './components/FilterComponent';
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
+import BackupView from "./components/BackupView";
 
 
 function App() {
@@ -27,7 +27,8 @@ function App() {
                         <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
                         <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
                         <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
-                            element={<ExaminationForm/>}/>
+                               element={<ExaminationForm/>}/>
+                        <Route path='/backup' element={<BackupView/>}/>
                     </Routes>
                 </BrowserRouter>
                 <div className='fixed right-2 bottom-2'>

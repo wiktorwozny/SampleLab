@@ -17,32 +17,43 @@ import java.util.List;
 @AllArgsConstructor
 public class BackupService {
 
-    private int exportDatabaseToSQL(final String backupMode) throws IOException, InterruptedException {
+    public int exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
         String pgDumpPath = "\"C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump.exe\"";  // Ścieżka do pg_dump
         String host = "localhost";
         String port = "5432";
         String database = "postgres";
         String user = "postgres";
         String password = "Rk020409";
-        String format = "custom";
+        String format = "plain";
         String home = System.getProperty("user.home");
         String backupFile = home + "/Downloads/" + "backup.sql";
 
         // Tworzenie komendy
-        String[] command = new String[]{
+        String[] command1 = new String[]{
                 pgDumpPath,
                 "--host=" + host,
                 "--port=" + port,
                 "--username=" + user,
                 "--format=" + format,
-                backupMode,
                 "--file=" + backupFile,
                 database
         };
 
+        String[] command2 = new String[]{
+                pgDumpPath,
+                "--host=" + host,
+                "--port=" + port,
+                "--username=" + user,
+                "--format=" + format,
+                "--data-only",
+                "--file=" + backupFile,
+                database
+        };
+
+
         try {
             // Ustawienie zmiennej środowiskowej dla hasła
-            ProcessBuilder pb = new ProcessBuilder(command);
+            ProcessBuilder pb = new ProcessBuilder(BackupModeEnum.FULL_BACKUP.equals(backupMode) ? command1 : command2);
             pb.environment().put("PGPASSWORD", password);
             pb.redirectErrorStream(true);
 
@@ -113,18 +124,4 @@ public class BackupService {
         }
     }
 
-    public int modeSelector(final BackupModeEnum mode) throws IOException, InterruptedException {
-        switch (mode) {
-            case FULL_BACKUP -> {
-                return exportDatabaseToSQL("");
-            }
-            case DATA_ONLY -> {
-                return exportDatabaseToSQL("--data-onlu");
-            }
-            case CSV -> {
-                return exportDatabaseToCSV();
-            }
-        }
-        return 1;
-    }
 }

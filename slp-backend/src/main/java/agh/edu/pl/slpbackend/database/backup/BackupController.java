@@ -15,10 +15,10 @@ public class BackupController {
 
     private BackupService backupService;
 
-    @GetMapping("/${mode}")
+    @GetMapping("/{mode}")
     public ResponseEntity<Void> backup(@PathVariable final String mode) {
         try {
-            if (backupService.modeSelector(BackupModeEnum.convertEnum(mode)) == 0) {
+            if (backupService.exportDatabaseToSQL(BackupModeEnum.convertEnum(mode)) == 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // nie wiem jaki inny exeption
