@@ -18,12 +18,12 @@ import java.util.List;
 public class BackupService {
 
     public int exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
-        String pgDumpPath = "\"C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump.exe\"";  // Ścieżka do pg_dump
-        String host = "localhost";
+        String pgDumpPath = "\"C:\\Program Files\\PostgreSQL\\16\\bin\\pg_dump.exe\"";  // Ścieżka do pg_dump
+        String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
         String port = "5432";
-        String database = "postgres";
+        String database = "SampleLabDB";
         String user = "postgres";
-        String password = "[password]";
+        String password = "12345678";
         String format = "plain";
         String home = System.getProperty("user.home");
         String backupFile = home + "/Downloads/" + "backup.sql";
