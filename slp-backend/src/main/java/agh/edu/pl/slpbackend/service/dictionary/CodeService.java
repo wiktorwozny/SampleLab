@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.service;
+package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.CodeDto;
 import agh.edu.pl.slpbackend.mapper.CodeMapper;
@@ -28,15 +28,21 @@ public class CodeService extends AbstractService implements CodeMapper {
 
     @Override
     public Object insert(IModel model) {
-        return null;
+        final CodeDto dto = (CodeDto) model;
+        final Code code = toModel(dto);
+        return codeRepository.save(code);
     }
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final CodeDto dto = (CodeDto) model;
+        final Code code = toModel(dto);
+        return codeRepository.save(code);
     }
 
     @Override
     public void delete(IModel model) {
+        final CodeDto dto = (CodeDto) model;
+        codeRepository.deleteById(dto.getId());
     }
 }
