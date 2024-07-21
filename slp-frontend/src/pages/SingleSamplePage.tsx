@@ -32,6 +32,16 @@ const SingleSamplePage = () => {
         try {
             let response = await generateReportForSample(sampleId);
             console.log(response);
+
+            if (response != null) {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `report${sampleId}.docx`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
         } catch (e) {
             console.log(e);
         }

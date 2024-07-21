@@ -1,7 +1,8 @@
 package agh.edu.pl.slpbackend.reports.kzwa;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +14,12 @@ public class KZWAReportGeneratorController {
 
     private final KZWAReportGeneratorService kzwaReportGeneratorService;
 
-    @PostMapping("/kzwa-report/{sampleId}")
-    public ResponseEntity<HttpStatus> generate(@PathVariable final Long sampleId) {
-        try {
-            return kzwaReportGeneratorService.generateReport(sampleId);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("/kzwa-report/{sampleId}")
+    public ResponseEntity<InputStreamResource> generate(@PathVariable final Long sampleId) {
+        InputStreamResource resource = kzwaReportGeneratorService.generateReport(sampleId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }

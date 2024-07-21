@@ -18,7 +18,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBElement;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -36,7 +36,7 @@ public class SampleReportGenerator {
     private Sample sample;
     private List<Examination> examinationList;
 
-    public void generateReport() throws Exception {
+    public ByteArrayOutputStream generateReport() {
         if (sample == null) {
             throw new IllegalStateException("Sample not set");
         }
@@ -72,12 +72,15 @@ public class SampleReportGenerator {
             adjustExaminationsTableSize(convertedExaminationsTable, pattern);
             addTableAtParagraph(documentPart, "EXAMINATIONS_TABLE", convertedExaminationsTable);
 
-            String home = System.getProperty("user.home");
-            Docx4J.save(wordMLPackage, new File(home + "/Downloads/" + "report.docx"));
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            Docx4J.save(wordMLPackage, byteArrayOutputStream);
 
             xlsXtoTblConverter.cleanFiles();
+
+            return byteArrayOutputStream;
         } catch (Exception e) {
-            throw new Exception(e);
+            e.printStackTrace();
+            return null;
         }
     }
 

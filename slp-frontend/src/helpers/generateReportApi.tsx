@@ -5,14 +5,18 @@ const url = 'generate-report/'
 
 const generateReportForSample = (sampleId: number | undefined) => {
     if (sampleId !== undefined) {
-        return axios.post(backendUrl + url + `sample-report/${sampleId}`);
+        return axios.get(backendUrl + url + `sample-report/${sampleId}`, {
+            responseType: 'blob'
+        });
     }
     return null;
 }
 
 const generateKzwaForSample = (sampleId: number | undefined) => {
     if (sampleId !== undefined) {
-        return axios.post(backendUrl + url + `kzwa-report/${sampleId}`);
+        return axios.get(backendUrl + url + `kzwa-report/${sampleId}`, {
+            responseType: 'blob'
+        });
     }
     return null;
 }

@@ -5,7 +5,7 @@ import {Examination, Indication} from "../utils/types";
 import {getIndicationsForSample} from "../helpers/indicationApi";
 import {deleteExamination, getExaminationsForSample} from "../helpers/examinationApi";
 import {CancelButton, StandardButton} from "./ui/StandardButton";
-import {generateKzwaForSample, generateReportForSample} from "../helpers/generateReportApi";
+import {generateKzwaForSample} from "../helpers/generateReportApi";
 
 const ExaminationsList: FC<{}> = () => {
 
@@ -72,6 +72,16 @@ const ExaminationsList: FC<{}> = () => {
         try {
             let response = await generateKzwaForSample(sampleId);
             console.log(response);
+
+            if (response != null) {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `kzwa${sampleId}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
         } catch (e) {
             console.log(e);
         }

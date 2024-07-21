@@ -6,13 +6,15 @@ import agh.edu.pl.slpbackend.reports.XLSXFilesHelper;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,10 +32,8 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
     private Sample sample;
     private List<Examination> examinationList;
 
-    public void generateReport() {
+    public ByteArrayOutputStream generateReport() {
         String templateFilePath = "report_templates/kzwa_template.xlsx";
-        String home = System.getProperty("user.home");
-        String newFilePath = home + "/Downloads/" + "kzwa.xlsx";
 
         try (FileInputStream fileInputStream = new FileInputStream(templateFilePath);
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {
@@ -42,12 +42,13 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
 
             modifySheet(sheet, workbook);
 
-            try (FileOutputStream fileOutputStream = new FileOutputStream(newFilePath)) {
-                workbook.write(fileOutputStream);
-            }
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            workbook.write(byteArrayOutputStream);
 
+            return byteArrayOutputStream;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
