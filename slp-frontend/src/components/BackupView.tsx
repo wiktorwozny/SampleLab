@@ -31,10 +31,15 @@ const BackupView: React.FC<{}> = () => {
                 >
                     Pełna archiwizacja
                 </button>
-                <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none"
+                <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-600 focus:outline-none"
                         onClick={() => handleBackup('DATA_ONLY')}
                 >
                     Archiwizacja "data-only"
+                </button>
+                <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none"
+                        onClick={() => handleBackup('CSV')}
+                >
+                    Archiwizacja do plików *.csv
                 </button>
             </div>
         </div>
