@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.enums;
 
 public enum BackupModeEnum {
     FULL_BACKUP,
+    CSV,
     DATA_ONLY;
 
 
@@ -10,6 +11,7 @@ public enum BackupModeEnum {
         return switch (value) {
             case "FULL_BACKUP" -> BackupModeEnum.FULL_BACKUP;
             case "DATA_ONLY" -> BackupModeEnum.DATA_ONLY;
+            case "CSV" -> BackupModeEnum.CSV;
             default -> null;
         };
     }

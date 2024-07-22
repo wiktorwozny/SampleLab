@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BackupService {
 
-    public int exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
+    private int exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
         String pgDumpPath = "\"C:\\Program Files\\PostgreSQL\\16\\bin\\pg_dump.exe\"";  // Ścieżka do pg_dump
         String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
         String port = "5432";
@@ -25,8 +26,8 @@ public class BackupService {
         String user = "postgres";
         String password = "12345678";
         String format = "plain";
-        String home = System.getProperty("user.home");
-        String backupFile = home + "/Downloads/" + "backup.sql";
+//        String home = System.getProperty("user.home");
+        String backupFile = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\";
 
         // Tworzenie komendy
         String[] command1 = new String[]{
@@ -76,14 +77,14 @@ public class BackupService {
 
     private int exportDatabaseToCSV() {
 
-        String host = "localhost";
+        String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
         String port = "5432";
-        String database = "postgres";
+        String database = "SampleLabDB";
         String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
         String user = "postgres";
-        String password = "Rk020409";
-        String home = System.getProperty("user.home");
-        String outputDirectory = home + "/Downloads/"; // Ścieżka do katalogu, gdzie zapisywane będą pliki CSV
+        String password = "12345678";
+//        String home = System.getProperty("user.home");
+        String outputDirectory = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\"; // Ścieżka do katalogu, gdzie zapisywane będą pliki CSV
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             // Uzyskiwanie listy tabel
@@ -114,14 +115,62 @@ public class BackupService {
     }
 
     private static void exportTableToCSV(Connection conn, String tableName, String csvFilePath) {
-        String copyQuery = String.format("COPY %s TO '%s' DELIMITER ',' CSV HEADER;", tableName, csvFilePath);
+        Statement stmt = null;
+        ResultSet rs = null;
+        FileWriter fileWriter = null;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM " + tableName);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
 
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(copyQuery);
-            System.out.println("Exported table " + tableName + " to " + csvFilePath);
-        } catch (SQLException e) {
+            fileWriter = new FileWriter(csvFilePath);
+
+            // Zapisz nagłówki kolumn
+            for (int i = 1; i <= columnCount; i++) {
+                fileWriter.append(rsmd.getColumnName(i));
+                if (i < columnCount) fileWriter.append(",");
+            }
+            fileWriter.append("\n");
+
+            // Zapisz dane tabeli
+            while (rs.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    String data = rs.getString(i);
+                    if (data != null) {
+                        fileWriter.append(data.replaceAll("\"", "\"\"")); // Escape double quotes
+                    }
+                    if (i < columnCount) fileWriter.append(",");
+                }
+                fileWriter.append("\n");
+            }
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (fileWriter != null) fileWriter.close();
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    public int backupExecutor(final BackupModeEnum backupMode) throws IOException, InterruptedException {
+        switch (backupMode) {
+            case FULL_BACKUP, DATA_ONLY -> {
+                return exportDatabaseToSQL(backupMode);
+            }
+            case CSV -> {
+                return exportDatabaseToCSV();
+            }
+            default -> {
+                return 1;
+            }
+        }
+
+    }
+
 
 }

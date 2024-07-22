@@ -4,6 +4,8 @@ import agh.edu.pl.slpbackend.dto.ClientDto;
 import agh.edu.pl.slpbackend.dto.CodeDto;
 import agh.edu.pl.slpbackend.dto.ProductGroupDto;
 import agh.edu.pl.slpbackend.dto.filters.Filters;
+import agh.edu.pl.slpbackend.service.dictionary.ClientService;
+import agh.edu.pl.slpbackend.service.dictionary.CodeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

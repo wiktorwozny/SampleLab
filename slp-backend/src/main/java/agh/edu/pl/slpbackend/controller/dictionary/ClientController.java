@@ -1,8 +1,8 @@
-package agh.edu.pl.slpbackend.controller;
+package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ClientDto;
-import agh.edu.pl.slpbackend.service.ClientService;
+import agh.edu.pl.slpbackend.service.dictionary.ClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

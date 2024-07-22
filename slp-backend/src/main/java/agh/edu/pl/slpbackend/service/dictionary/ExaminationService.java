@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.service;
+package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;

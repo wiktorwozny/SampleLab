@@ -18,7 +18,7 @@ public class BackupController {
     @GetMapping("/{mode}")
     public ResponseEntity<Void> backup(@PathVariable final String mode) {
         try {
-            if (backupService.exportDatabaseToSQL(BackupModeEnum.convertEnum(mode)) == 0) {
+            if (backupService.backupExecutor(BackupModeEnum.convertEnum(mode)) == 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // nie wiem jaki inny exeption

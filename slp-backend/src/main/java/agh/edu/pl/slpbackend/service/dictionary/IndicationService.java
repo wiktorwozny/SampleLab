@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.service;
+package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.IndicationDto;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
@@ -55,6 +55,7 @@ public class IndicationService extends AbstractService implements IndicationMapp
 
     @Override
     public Object update(IModel model) {
+
         return null;
     }
 

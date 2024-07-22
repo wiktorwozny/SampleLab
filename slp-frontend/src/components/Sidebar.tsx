@@ -28,7 +28,6 @@ const Sidebar: React.FC = () => {
                     </li>
                     <li className="my-1.5"><a
                         className="text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-                        // onClick={() => handleBackup()}
                         onClick={() => navigate('/backup')}
                     >Archiwizacja danych
                     </a>
@@ -36,7 +35,10 @@ const Sidebar: React.FC = () => {
 
                     <li className="my-1.5"><a
                         className="text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-                        href="#contact">to be done</a></li>
+                        onClick={() => navigate('/dictionary')}
+                    >Słowniki
+                    </a>
+                    </li>
                 </ul>
             </div>
 
