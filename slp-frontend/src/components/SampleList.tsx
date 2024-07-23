@@ -106,9 +106,8 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                     <tbody>
                     {samples.map(sample => (
                         <tr
-                            key={sample.id} onClick={() => {
-                            if (sample.progressStatus !== ProgressStateEnum.TODO && sample.progressStatus !== null) navigate(`/sample/${sample.id}`)
-                        }}
+                            key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)
+                        }
                         >
                             <td>{sample.id}</td>
                             <td>{sample.code}</td>

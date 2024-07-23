@@ -29,6 +29,8 @@ public interface SampleMapper {
     }
 
     default Sample toModel(final SampleDto dto) {
+        String expirationComment = dto.getExpirationComment().isEmpty() ? "Brak" : dto.getExpirationComment();
+        String state = dto.getState().isEmpty() ? "Bez zastrzeżeń" : dto.getState();
         //@formatter:off
         return Sample.builder()
                 .id(dto.getId())
@@ -36,11 +38,11 @@ public interface SampleMapper {
                 .client(dto.getClient())
                 .assortment(dto.getAssortment())
                 .admissionDate(dto.getAdmissionDate())
-                .expirationComment(dto.getExpirationComment())
+                .expirationComment(expirationComment)
                 .expirationDate(dto.getExpirationDate())
                 .examinationEndDate(dto.getExaminationEndDate())
                 .size(dto.getSize())
-                .state(dto.getState())
+                .state(state)
                 .analysis(dto.isAnalysis())
                 .inspection(dto.getInspection())
                 .group(dto.getGroup())

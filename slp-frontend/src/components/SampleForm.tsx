@@ -144,7 +144,7 @@ const SampleForm: FC<{}> = () => {
                             <FormLabel>Symbol próbki</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
-                                options={codes.map(code => ({value: JSON.stringify(code), label: code.name}))}
+                                options={codes.map(code => ({value: JSON.stringify(code), label: code.id}))}
                                 {...register("code", {
                                     required: {
                                         value: true,
@@ -191,6 +191,13 @@ const SampleForm: FC<{}> = () => {
                             {errors.expirationDate && errors.expirationDate.message &&
                                 <p className="text-red-600">{`${errors.expirationDate.message}`}</p>}
 
+                            <FormLabel>Dodatkowy komentarz</FormLabel>
+                            <Input {...register("expirationComment", {
+                            })}
+                            />
+                            {errors.expirationComment && errors.expirationComment.message &&
+                                <p className="text-red-600">{`${errors.expirationComment.message}`}</p>}
+
                             <FormLabel>Data zakończenia badań</FormLabel>
                             <Input type="date" {...register("examinationEndDate", {
                                 required: {
@@ -201,7 +208,9 @@ const SampleForm: FC<{}> = () => {
                             />
                             {errors.examinationEndDate && errors.examinationEndDate.message &&
                                 <p className="text-red-600">{`${errors.examinationEndDate.message}`}</p>}
-
+                        </div>
+                        <div className='w-1/4'>
+                            <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
                             <FormLabel>Asortyment</FormLabel>
                             <Input {...register("assortment", {
                                 required: {
@@ -212,9 +221,7 @@ const SampleForm: FC<{}> = () => {
                             />
                             {errors.assortment && errors.assortment.message &&
                                 <p className="text-red-600">{`${errors.assortment.message}`}</p>}
-                        </div>
-                        <div className='w-1/4'>
-                            <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
+
                             <FormLabel>Analiza odwoławcza</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
@@ -231,10 +238,6 @@ const SampleForm: FC<{}> = () => {
 
                             <FormLabel>Stan próbki</FormLabel>
                             <Input {...register("state", {
-                                required: {
-                                    value: true,
-                                    message: "Pole wymagane"
-                                }
                             })}
                             />
                             {errors.state && errors.state.message &&
@@ -253,17 +256,6 @@ const SampleForm: FC<{}> = () => {
                             />
                             {errors.group && errors.group.message &&
                                 <p className="text-red-600">{`${errors.group.message}`}</p>}
-
-                            <FormLabel>Dodatkowy komentarz</FormLabel>
-                            <Input {...register("expirationComment", {
-                                required: {
-                                    value: true,
-                                    message: "Pole wymagane"
-                                }
-                            })}
-                            />
-                            {errors.expirationComment && errors.expirationComment.message &&
-                                <p className="text-red-600">{`${errors.expirationComment.message}`}</p>}
 
                             <FormLabel>Wybierz normę pobrania próbki</FormLabel>
                             <FormSelect
