@@ -1,9 +1,7 @@
 package agh.edu.pl.slpbackend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import agh.edu.pl.slpbackend.enums.RoleEnum;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,17 +15,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 @Getter
-public class Address implements Serializable {
+@Table(name = "users")
 
+public class User implements Serializable {
     @Serial
-    private static final long serialVersionUID = -7755837064791015239L;
+    private static final long serialVersionUID = 3180491386254929785L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String street;
+    private String name;
 
-    private String zipCode;
+    private String email;
 
-    private String city;
+    private String password;
+
+    private RoleEnum role;
 }

@@ -27,7 +27,7 @@ public class BackupService {
         String password = "12345678";
         String format = "plain";
 //        String home = System.getProperty("user.home");
-        String backupFile = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\";
+        String backupFile = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\backup.sql";
 
         // Tworzenie komendy
         String[] command1 = new String[]{

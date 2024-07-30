@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.config;
 
+import agh.edu.pl.slpbackend.enums.RoleEnum;
 import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.repository.*;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +21,8 @@ public class Config {
             final SamplingStandardRepository samplingStandardRepository,
             final IndicationRepository indicationRepository,
             final ProductGroupRepository groupRepository,
-            final ExaminationRepository examinationRepository) {
+            final ExaminationRepository examinationRepository,
+            final UserRepository userRepository) {
         return args -> {
             if (sampleRepository.count() == 0) {
                 //code
@@ -275,6 +277,15 @@ public class Config {
                         .build();
 
                 examinationRepository.saveAll(List.of(examination1, examination2));
+
+                User user = User.builder()
+                        .name("user1")
+                        .email("user1@emali.com")
+                        .password("123456")
+                        .role(RoleEnum.WORKER)
+                        .build();
+
+                userRepository.save(user);
             }
         };
     }
