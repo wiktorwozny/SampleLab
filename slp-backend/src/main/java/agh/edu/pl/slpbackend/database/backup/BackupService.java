@@ -3,22 +3,22 @@ package agh.edu.pl.slpbackend.database.backup;
 import agh.edu.pl.slpbackend.enums.BackupModeEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class BackupService {
 
-    private int exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
+    public InputStreamResource exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
         String pgDumpPath = "\"C:\\Program Files\\PostgreSQL\\16\\bin\\pg_dump.exe\"";  // Ścieżka do pg_dump
         String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
         String port = "5432";
@@ -26,7 +26,6 @@ public class BackupService {
         String user = "postgres";
         String password = "12345678";
         String format = "plain";
-//        String home = System.getProperty("user.home");
         String backupFile = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\backup.sql";
 
         // Tworzenie komendy
@@ -51,54 +50,79 @@ public class BackupService {
                 database
         };
 
+        ProcessBuilder pb = new ProcessBuilder(BackupModeEnum.FULL_BACKUP.equals(backupMode) ? command1 : command2);
+        pb.environment().put("PGPASSWORD", password);
+        pb.redirectErrorStream(true);
 
-        try {
-            // Ustawienie zmiennej środowiskowej dla hasła
-            ProcessBuilder pb = new ProcessBuilder(BackupModeEnum.FULL_BACKUP.equals(backupMode) ? command1 : command2);
-            pb.environment().put("PGPASSWORD", password);
-            pb.redirectErrorStream(true);
+        Process process = pb.start();
 
-            // Uruchomienie procesu
-            Process process = pb.start();
-
-            // Odczyt wyjścia procesu
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
-
-            // Czekanie na zakończenie procesu
-            return process.waitFor();
-        } catch (Exception e) {
-            throw e;
         }
+
+        // Czekanie na zakończenie procesu
+        int exitCode = process.waitFor();
+
+        if (exitCode != 0) {
+            throw new IOException("Backup process failed with exit code " + exitCode);
+        }
+
+        // Odczyt pliku backup.sql do InputStreamResource
+        File file = new File(backupFile);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fileInputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        fileInputStream.close();
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+        if (!file.delete()) {
+            System.err.println("Failed to delete the backup file: " + backupFile);
+        }
+
+        return new InputStreamResource(byteArrayInputStream);
     }
 
-    private int exportDatabaseToCSV() {
-
+    public InputStreamResource exportDatabaseToCSV() throws IOException {
         String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
         String port = "5432";
         String database = "SampleLabDB";
         String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
         String user = "postgres";
         String password = "12345678";
-//        String home = System.getProperty("user.home");
-        String outputDirectory = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\"; // Ścieżka do katalogu, gdzie zapisywane będą pliki CSV
+        String outputDirectory = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\";
+        String zipFilePath = outputDirectory + "backup.zip"; // Ścieżka do pliku ZIP
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             // Uzyskiwanie listy tabel
             List<String> tableNames = getTableNames(conn);
 
+            // Eksportowanie tabel do plików CSV
             for (String tableName : tableNames) {
                 exportTableToCSV(conn, tableName, outputDirectory + tableName + ".csv");
             }
 
-            System.out.println("All tables have been exported to CSV files.");
-            return 0;
+            // Pakowanie plików CSV do ZIP
+            zipCSVFiles(outputDirectory, zipFilePath, tableNames);
+
+            System.out.println("All tables have been exported to CSV files and zipped.");
+
+            // Odczyt ZIP do InputStreamResource
+            return new InputStreamResource(new FileInputStream(zipFilePath));
+
         } catch (SQLException e) {
             e.printStackTrace();
-            return 1;
+            throw new IOException("Error exporting database to CSV.", e);
+        } finally {
+            // Usunięcie zawartości katalogu backup_directory po zakończeniu
+            deleteBackupDirectoryContents(outputDirectory);
         }
     }
 
@@ -157,7 +181,44 @@ public class BackupService {
         }
     }
 
-    public int backupExecutor(final BackupModeEnum backupMode) throws IOException, InterruptedException {
+    private static void zipCSVFiles(String outputDirectory, String zipFilePath, List<String> tableNames) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+            for (String tableName : tableNames) {
+                String csvFilePath = outputDirectory + tableName + ".csv";
+                File csvFile = new File(csvFilePath);
+                try (FileInputStream fis = new FileInputStream(csvFile)) {
+                    ZipEntry zipEntry = new ZipEntry(tableName + ".csv");
+                    zos.putNextEntry(zipEntry);
+
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) != -1) {
+                        zos.write(buffer, 0, length);
+                    }
+
+                    zos.closeEntry();
+                }
+            }
+        }
+    }
+
+    private void deleteBackupDirectoryContents(String outputDirectory) {
+        File directory = new File(outputDirectory);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.isDirectory()) {
+                    if (!file.delete()) {
+                        System.err.println("Failed to delete the file: " + file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+    }
+
+
+    public InputStreamResource backupExecutor(final BackupModeEnum backupMode) throws IOException, InterruptedException {
         switch (backupMode) {
             case FULL_BACKUP, DATA_ONLY -> {
                 return exportDatabaseToSQL(backupMode);
@@ -166,7 +227,7 @@ public class BackupService {
                 return exportDatabaseToCSV();
             }
             default -> {
-                return 1;
+                return null;
             }
         }
 

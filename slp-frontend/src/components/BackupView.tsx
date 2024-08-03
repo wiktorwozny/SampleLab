@@ -6,13 +6,33 @@ import {AlertContext} from "../contexts/AlertsContext";
 const BackupView: React.FC<{}> = () => {
 
     const {setAlertDetails} = useContext(AlertContext);
+    const formatDate = (date: Date) => {
+        return date.toLocaleDateString('pl-PL', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
 
     const handleBackup = async (mode: string) => {
         try {
             let response = await backup(mode)
             console.log(response)
             setAlertDetails({isAlert: true, message: "Archiwizacja danych zakończona poprawnie", type: "success"})
-
+            if (response != null) {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const a = document.createElement('a');
+                a.href = url;
+                if (mode === "CSV") {
+                    a.download = `backup_folder_with_csv_${formatDate(new Date())}.zip`;
+                } else {
+                    a.download = `backup_${formatDate(new Date())}_.sql`;
+                }
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            }
         } catch (err) {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
