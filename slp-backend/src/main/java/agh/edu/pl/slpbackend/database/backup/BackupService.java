@@ -6,7 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,6 @@ public class BackupService {
         String user = "postgres";
         String password = "12345678";
         String format = "plain";
-        String backupFile = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\backup.sql";
 
         // Tworzenie komendy
         String[] command1 = new String[]{
@@ -35,7 +37,6 @@ public class BackupService {
                 "--port=" + port,
                 "--username=" + user,
                 "--format=" + format,
-                "--file=" + backupFile,
                 database
         };
 
@@ -46,7 +47,6 @@ public class BackupService {
                 "--username=" + user,
                 "--format=" + format,
                 "--data-only",
-                "--file=" + backupFile,
                 database
         };
 
@@ -56,10 +56,12 @@ public class BackupService {
 
         Process process = pb.start();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (InputStream inputStream = process.getInputStream()) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, length);
             }
         }
 
@@ -70,22 +72,7 @@ public class BackupService {
             throw new IOException("Backup process failed with exit code " + exitCode);
         }
 
-        // Odczyt pliku backup.sql do InputStreamResource
-        File file = new File(backupFile);
-        FileInputStream fileInputStream = new FileInputStream(file);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = fileInputStream.read(buffer)) != -1) {
-            byteArrayOutputStream.write(buffer, 0, length);
-        }
-        fileInputStream.close();
-
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-
-        if (!file.delete()) {
-            System.err.println("Failed to delete the backup file: " + backupFile);
-        }
 
         return new InputStreamResource(byteArrayInputStream);
     }
@@ -97,32 +84,28 @@ public class BackupService {
         String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
         String user = "postgres";
         String password = "12345678";
-        String outputDirectory = "D:\\Studia_AGH\\praca inżynierska\\SampleLab\\slp-backend\\backup_directory\\";
-        String zipFilePath = outputDirectory + "backup.zip"; // Ścieżka do pliku ZIP
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             // Uzyskiwanie listy tabel
             List<String> tableNames = getTableNames(conn);
 
-            // Eksportowanie tabel do plików CSV
-            for (String tableName : tableNames) {
-                exportTableToCSV(conn, tableName, outputDirectory + tableName + ".csv");
+            // Tworzenie pliku ZIP w pamięci
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            try (ZipOutputStream zos = new ZipOutputStream(byteArrayOutputStream)) {
+                for (String tableName : tableNames) {
+                    exportTableToCSVInMemory(conn, tableName, zos);
+                }
             }
-
-            // Pakowanie plików CSV do ZIP
-            zipCSVFiles(outputDirectory, zipFilePath, tableNames);
 
             System.out.println("All tables have been exported to CSV files and zipped.");
 
             // Odczyt ZIP do InputStreamResource
-            return new InputStreamResource(new FileInputStream(zipFilePath));
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+            return new InputStreamResource(byteArrayInputStream);
 
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IOException("Error exporting database to CSV.", e);
-        } finally {
-            // Usunięcie zawartości katalogu backup_directory po zakończeniu
-            deleteBackupDirectoryContents(outputDirectory);
         }
     }
 
@@ -138,81 +121,46 @@ public class BackupService {
         return tableNames;
     }
 
-    private static void exportTableToCSV(Connection conn, String tableName, String csvFilePath) {
+    private static void exportTableToCSVInMemory(Connection conn, String tableName, ZipOutputStream zos) {
         Statement stmt = null;
         ResultSet rs = null;
-        FileWriter fileWriter = null;
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM " + tableName);
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
 
-            fileWriter = new FileWriter(csvFilePath);
+            ZipEntry zipEntry = new ZipEntry(tableName + ".csv");
+            zos.putNextEntry(zipEntry);
 
             // Zapisz nagłówki kolumn
             for (int i = 1; i <= columnCount; i++) {
-                fileWriter.append(rsmd.getColumnName(i));
-                if (i < columnCount) fileWriter.append(",");
+                zos.write(rsmd.getColumnName(i).getBytes());
+                if (i < columnCount) zos.write(",".getBytes());
             }
-            fileWriter.append("\n");
+            zos.write("\n".getBytes());
 
             // Zapisz dane tabeli
             while (rs.next()) {
                 for (int i = 1; i <= columnCount; i++) {
                     String data = rs.getString(i);
                     if (data != null) {
-                        fileWriter.append(data.replaceAll("\"", "\"\"")); // Escape double quotes
+                        zos.write(data.replaceAll("\"", "\"\"").getBytes()); // Escape double quotes
                     }
-                    if (i < columnCount) fileWriter.append(",");
+                    if (i < columnCount) zos.write(",".getBytes());
                 }
-                fileWriter.append("\n");
+                zos.write("\n".getBytes());
             }
+
+            zos.closeEntry();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
-                if (fileWriter != null) fileWriter.close();
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    private static void zipCSVFiles(String outputDirectory, String zipFilePath, List<String> tableNames) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
-            for (String tableName : tableNames) {
-                String csvFilePath = outputDirectory + tableName + ".csv";
-                File csvFile = new File(csvFilePath);
-                try (FileInputStream fis = new FileInputStream(csvFile)) {
-                    ZipEntry zipEntry = new ZipEntry(tableName + ".csv");
-                    zos.putNextEntry(zipEntry);
-
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = fis.read(buffer)) != -1) {
-                        zos.write(buffer, 0, length);
-                    }
-
-                    zos.closeEntry();
-                }
-            }
-        }
-    }
-
-    private void deleteBackupDirectoryContents(String outputDirectory) {
-        File directory = new File(outputDirectory);
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (!file.isDirectory()) {
-                    if (!file.delete()) {
-                        System.err.println("Failed to delete the file: " + file.getAbsolutePath());
-                    }
-                }
             }
         }
     }
