@@ -11,7 +11,8 @@ import Sidebar from "./components/Sidebar";
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
 import BackupView from "./components/BackupView";
-import DictionariesView from "./components/DictionariesView";
+import DictionariesView from "./components/dictionary/DictionariesView";
+import TestDict from "./components/dictionary/TestDict";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                                element={<ExaminationForm/>}/>
                         <Route path='/backup' element={<BackupView/>}/>
                         <Route path='/dictionary' element={<DictionariesView/>}/>
+                        <Route path='/dictionary/test' element={<TestDict/>}/>
                     </Routes>
                 </BrowserRouter>
                 <div className='fixed right-2 bottom-2'>
