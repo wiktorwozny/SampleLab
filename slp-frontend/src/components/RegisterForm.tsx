@@ -5,13 +5,23 @@ import { StandardButton } from './ui/StandardButton';
 import { useNavigate } from 'react-router-dom';
 import { FormSelect } from './ui/Select';
 import { RoleEnumDesc } from '../utils/enums';
+import { registerRequest } from '../helpers/userApi';
+
 const RegisterForm = () => {
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
     const navigate = useNavigate();
 
-    const registerFunction = (values:any) => {
-        console.log(values)
+    const registerFunction = async (values: any) => {
+        try {
+            let response = await registerRequest(values)
+            console.log(response)
+            if (response.status === 201 || response.status === 200) {
+                console.log("udalo ci się zalogować")
+            }
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return(<div className="w-full flex items-center flex-col relative justify-center">
@@ -34,10 +44,15 @@ const RegisterForm = () => {
                 <FormLabel className='text-start'>E-mail</FormLabel>
                 <Input
                     className="my-custom-class"
+                    type="email"
                     {...register("email", {
                         required: {
                             value: true,
                             message: "Pole wymagane"
+                        },
+                        pattern: {
+                            value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                            message: "Zły format email"
                         }
                     })}
                 />

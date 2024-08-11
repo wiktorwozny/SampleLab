@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/users")
+    @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 

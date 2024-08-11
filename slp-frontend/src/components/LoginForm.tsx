@@ -3,13 +3,24 @@ import { Input } from './ui/Input';
 import { FormLabel } from './ui/Labels';
 import { StandardButton } from './ui/StandardButton';
 import { useNavigate } from 'react-router-dom';
+import { loginRequest } from '../helpers/userApi';
+
 const LoginForm = () => {
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
     const navigate = useNavigate();
 
-    const loginFunction = (values:any) => {
-        console.log(values)
+    const loginFunction = async (values: any) => {
+        try {
+            let response = await loginRequest(values)
+            console.log(response)
+            if (response.status === 201 || response.status === 200) {
+                console.log("udalo ci się zalogować")
+                navigate("/")
+            }
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return(<div className="w-full flex items-center flex-col justify-center relative">
@@ -18,10 +29,15 @@ const LoginForm = () => {
                 <FormLabel className='text-start'>E-mail</FormLabel>
                 <Input
                     className="my-custom-class"
+                    type="email"
                     {...register("email", {
                         required: {
                             value: true,
                             message: "Pole wymagane"
+                        },
+                        pattern: {
+                            value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                            message: "Zły format email"
                         }
                     })}
                 />
@@ -30,6 +46,7 @@ const LoginForm = () => {
 
                 <FormLabel className='text-start mt-3'>Hasło</FormLabel>
                 <Input
+                    type="password"
                     className="my-custom-class"
                     {...register("password", {
                         required: {
