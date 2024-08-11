@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.service;
 
+import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
 import agh.edu.pl.slpbackend.dto.users.UserDto;
 import agh.edu.pl.slpbackend.exception.AccountAlreadyExistsException;
@@ -47,5 +48,17 @@ public class UserService extends AbstractService implements UserMapper {
             throw new WrongPasswordException();
         }
         return toDto(user);
+    }
+
+    public void changePassword(ChangePasswordRequest request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!user.getPassword().equals(request.oldPassword())) {
+            throw new WrongPasswordException();
+        }
+
+        user.setPassword(request.newPassword());
+        userRepository.save(user);
     }
 }

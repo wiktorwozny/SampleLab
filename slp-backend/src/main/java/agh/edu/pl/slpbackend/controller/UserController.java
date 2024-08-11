@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.controller;
 
+import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
 import agh.edu.pl.slpbackend.dto.users.UserDto;
 import agh.edu.pl.slpbackend.model.User;
@@ -26,5 +27,11 @@ public class UserController {
     public ResponseEntity<UserDto> login(@RequestBody LoginRequest request) {
         UserDto user = userService.login(request);
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+        userService.changePassword(request);
+        return ResponseEntity.ok().build();
     }
 }
