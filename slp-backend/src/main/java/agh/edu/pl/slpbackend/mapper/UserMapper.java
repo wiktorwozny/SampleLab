@@ -14,4 +14,12 @@ public interface UserMapper {
                 .password(RandomStringUtils.randomAlphanumeric(8))
                 .build();
     }
+
+    default UserDto toDto(final User user) {
+        return UserDto.builder()
+                .email(user.getEmail())
+                .role(user.getRole())
+                .name(user.getName())
+                .build();
+    }
 }
