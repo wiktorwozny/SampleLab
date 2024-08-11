@@ -1,5 +1,5 @@
 import {AlertColor} from "@mui/material"
-import {ProgressStateEnum} from "./enums";
+import {ProgressStateEnum, RoleEnum} from "./enums";
 
 export type Code = {
     id: string,
@@ -109,6 +109,11 @@ export type FilterRequest = {
 
 export type ProgressState = {
     value: ProgressStateEnum,
+    label: string
+}
+
+export type Role = {
+    value: RoleEnum,
     label: string
 }
 

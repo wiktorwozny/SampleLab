@@ -13,6 +13,7 @@ import AlertsContext from './contexts/AlertsContext';
 import BackupView from "./components/BackupView";
 import DictionariesView from "./components/DictionariesView";
 import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
                         <Route path='/backup' element={<BackupView/>}/>
                         <Route path='/dictionary' element={<DictionariesView/>}/>
                         <Route path='/login' element={<LoginForm/>}/>
+                        <Route path='/register' element={<RegisterForm/>}/>
                     </Routes>
                 </BrowserRouter>
                 <div className='fixed right-2 bottom-2'>
