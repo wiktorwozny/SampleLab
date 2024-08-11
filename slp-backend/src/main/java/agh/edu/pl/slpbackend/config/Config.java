@@ -277,7 +277,9 @@ public class Config {
                         .build();
 
                 examinationRepository.saveAll(List.of(examination1, examination2));
+            }
 
+            if(userRepository.count() == 0) {
                 User user = User.builder()
                         .name("user1")
                         .email("user1@emali.com")
