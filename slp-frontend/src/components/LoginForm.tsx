@@ -33,7 +33,7 @@ const LoginForm = () => {
         }
     }
 
-    return(<div className="w-full flex items-center flex-col justify-center relative">
+    return(<div className="w-full flex items-center flex-col justify-center relative h-screen">
             <h2 className="font-bold my-3 text-2xl">Formularz Logowania</h2>
             <form className='flex flex-col w-1/3 mt-3' onSubmit={handleSubmit(loginFunction)}>
                 <FormLabel className='text-start'>E-mail</FormLabel>
