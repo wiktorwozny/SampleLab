@@ -4,10 +4,13 @@ import { FormLabel } from './ui/Labels';
 import { StandardButton } from './ui/StandardButton';
 import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../helpers/userApi';
+import { useContext } from 'react';
+import { AlertContext } from '../contexts/AlertsContext';
 
 const LoginForm = () => {
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
+    const {setAlertDetails} = useContext(AlertContext)
     const navigate = useNavigate();
 
     const loginFunction = async (values: any) => {
@@ -16,9 +19,16 @@ const LoginForm = () => {
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 console.log("udalo ci się zalogować")
+                setAlertDetails({type: "success", isAlert: true, message: "Udało ci się pomyślnie zalogować"})
                 navigate("/")
             }
-        } catch (err) {
+        } catch (err:any) {
+            if(err?.response?.data?.message === "User not found" || err?.response?.data?.message === "Wrong password") {
+                setAlertDetails({type: "error", isAlert: true, message: "Błędny e-mail lub hasło"})
+            } else {
+                setAlertDetails({type: "error", isAlert: true, message: "Nie udało się zalogować. Spróbuj ponownie później"})
+            }
+            
             console.log(err)
         }
     }

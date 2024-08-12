@@ -2,24 +2,35 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from './ui/Input';
 import { FormLabel } from './ui/Labels';
 import { StandardButton } from './ui/StandardButton';
-import { useNavigate } from 'react-router-dom';
 import { FormSelect } from './ui/Select';
 import { RoleEnumDesc } from '../utils/enums';
 import { registerRequest } from '../helpers/userApi';
+import { useContext } from 'react';
+import {AlertContext} from '../contexts/AlertsContext';
 
-const RegisterForm = () => {
+type Props = {
+    setPassword: (password: string) => void
+}
+
+const RegisterForm = ({setPassword}: Props) => {
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
-    const navigate = useNavigate();
+    const {setAlertDetails} = useContext(AlertContext);
 
     const registerFunction = async (values: any) => {
         try {
             let response = await registerRequest(values)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
-                console.log("udalo ci się zalogować")
+                setPassword(response.data.password)
+                setAlertDetails({isAlert:true, type:"success", message: "Utworzyłeś nowe konto"})
             }
-        } catch (err) {
+        } catch (err:any) {
+            if(err?.response?.data?.message === "Account already exists") {
+                setAlertDetails({isAlert:true, type:"error", message: "Ten email jest już wykorzystany"})
+            } else {
+                setAlertDetails({isAlert:true, type:"error", message: "Nie udało się stworzyć konta. Spróbuj później"})
+            }
             console.log(err)
         }
     }
