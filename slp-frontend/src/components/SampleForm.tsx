@@ -14,6 +14,7 @@ import {Client, Code, Inspection, ProductGroup, ReportData, SamplingStandards} f
 import {addSample} from '../helpers/samplingApi';
 import {useNavigate} from 'react-router-dom';
 import {AlertContext} from '../contexts/AlertsContext';
+import { Checkbox } from '@mui/material';
 
 const SampleForm: FC<{}> = () => {
 
@@ -118,8 +119,8 @@ const SampleForm: FC<{}> = () => {
         values.group = JSON.parse(values.group)
         values.samplingStandard = JSON.parse(values.samplingStandard)
         // values.reportData = JSON.parse(values.reportData)
-        values.analysis = values.analysis === "true" ? true : false;
-
+        // values.analysis = values.analysis === "true" ? true : false;
+        console.log(values.analysis)
         try {
             let response = await addSample(values)
             console.log(response)
@@ -221,9 +222,14 @@ const SampleForm: FC<{}> = () => {
                             />
                             {errors.assortment && errors.assortment.message &&
                                 <p className="text-red-600">{`${errors.assortment.message}`}</p>}
-
-                            <FormLabel>Analiza odwoławcza</FormLabel>
-                            <FormSelect
+                            <div className='flex items-center justify-between'>
+                                <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza odwoławcza</label>
+                                <Checkbox
+                                    {...register("analysis", {})}
+                                />
+                            </div>
+                            
+                            {/* <FormSelect
                                 className="my-custom-class"
                                 options={[{value: "true", label: "Tak"}, {value: "false", label: "Nie"}]}
                                 {...register("analysis", {
@@ -232,9 +238,8 @@ const SampleForm: FC<{}> = () => {
                                         message: "Pole wymagane"
                                     }
                                 })}
-                            />
-                            {errors.analysis && errors.analysis.message &&
-                                <p className="text-red-600">{`${errors.analysis.message}`}</p>}
+                            /> */}
+                            
 
                             <FormLabel>Stan próbki</FormLabel>
                             <Input {...register("state", {

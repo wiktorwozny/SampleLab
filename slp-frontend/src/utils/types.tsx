@@ -1,5 +1,5 @@
 import {AlertColor} from "@mui/material"
-import {ProgressStateEnum} from "./enums";
+import {ProgressStateEnum, RoleEnum} from "./enums";
 
 export type Code = {
     id: string,
@@ -112,6 +112,11 @@ export type ProgressState = {
     label: string
 }
 
+export type Role = {
+    value: RoleEnum,
+    label: string
+}
+
 export type SummarySample = {
     id: number,
     code: string,
@@ -138,4 +143,15 @@ export type AlertDetails = {
     isAlert: boolean,
     message: string,
     type: AlertColor
+}
+
+export type LoginData = {
+    email: string,
+    password: string
+}
+
+export type RegisterData = {
+    name: string,
+    email: string,
+    role: RoleEnum
 }
