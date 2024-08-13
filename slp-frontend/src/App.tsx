@@ -13,7 +13,6 @@ import AlertsContext from './contexts/AlertsContext';
 import BackupView from "./components/BackupView";
 import DictionariesView from "./components/DictionariesView";
 import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
 import RegisterPage from './pages/RegisterPage';
 
 
@@ -23,24 +22,26 @@ function App() {
             <AlertsContext>
                 <BrowserRouter>
                     <Sidebar/>
-                    <Routes>
-                        <Route path='/' element={<SampleListPage/>}/>
-                        <Route path='/addSample' element={<SampleForm/>}/>
-                        <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
-                        <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
-                        <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                        <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
-                        <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
-                               element={<ExaminationForm/>}/>
-                        <Route path='/backup' element={<BackupView/>}/>
-                        <Route path='/dictionary' element={<DictionariesView/>}/>
-                        <Route path='/login' element={<LoginForm/>}/>
-                        <Route path='/register' element={<RegisterPage/>}/>
-                    </Routes>
+                    <div className='relative w-full h-screen'>
+                        <div className='fixed w-full top-2 z-2'>
+                            <AlertComponent/>
+                        </div>
+                        <Routes>
+                            <Route path='/' element={<SampleListPage/>}/>
+                            <Route path='/addSample' element={<SampleForm/>}/>
+                            <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
+                            <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
+                            <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
+                            <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
+                            <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId' element={<ExaminationForm/>}/>
+                            <Route path='/backup' element={<BackupView/>}/>
+                            <Route path='/dictionary' element={<DictionariesView/>}/>
+                            <Route path='/login' element={<LoginForm/>}/>
+                            <Route path='/register' element={<RegisterPage/>}/>
+                        </Routes>
+                    </div>
                 </BrowserRouter>
-                <div className='fixed right-2 bottom-2'>
-                    <AlertComponent/>
-                </div>
+                
                 {/* <ReportDataForm/> */}
             </AlertsContext>
         </div>

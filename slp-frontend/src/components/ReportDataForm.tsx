@@ -1,4 +1,4 @@
-import {FC, useContext, useEffect, useState} from 'react'
+import {FC, useContext, useEffect, useRef, useState} from 'react'
 import {Input} from './ui/Input';
 import {FormProvider, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
@@ -11,6 +11,8 @@ import {addReportData, getReportDataBySampleId} from '../helpers/reportDataApi';
 import {useNavigate, useParams} from 'react-router-dom';
 import {AddressController} from './ui/AddressController';
 import {AlertContext} from '../contexts/AlertsContext';
+import { RefObject } from 'react';
+
 
 type ReportDataFormFields = {
     manufacturerName: string,
@@ -36,6 +38,9 @@ const ReportDataForm: FC<{}> = ({}) => {
     const {sampleId} = useParams()
     const navigate = useNavigate()
     const {setAlertDetails} = useContext(AlertContext);
+    const sellerInputRef:RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+    const deliverInputRef:RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         const getAddresses = async () => {
             try {
@@ -47,6 +52,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                 console.log(err)
             }
         }
+
         const getReportData = async () => {
             try {
                 let response = await getReportDataBySampleId(sampleId);
@@ -57,8 +63,13 @@ const ReportDataForm: FC<{}> = ({}) => {
                 console.log(err)
             }
         }
+
         if (sampleId) {
             getReportData();
+        }
+
+        if(sellerInputRef.current){
+            sellerInputRef.current.checked = true;
         }
     }, [])
 
@@ -81,7 +92,13 @@ const ReportDataForm: FC<{}> = ({}) => {
         fieldsToSet.forEach(field => {
             if (reportData && reportData[field]) {
                 setValue(field, reportData[field]);
+                if(reportData.supplierName && deliverInputRef.current && sellerInputRef.current){
+                    deliverInputRef.current.checked = true;
+                    sellerInputRef.current.checked = false;
+                    setIsSeller(false);
+                }
             }
+
         });
     }, [reportData, setValue]);
 
@@ -137,13 +154,15 @@ const ReportDataForm: FC<{}> = ({}) => {
                             <div className='flex'>
                                 <div className='flex mr-7'>
                                     <input className="form-check-input" type="radio" name="typeOfAddress"
+                                           ref={sellerInputRef}
                                            onChange={val => {
                                                setIsSeller(true)
-                                           }} defaultChecked/>
+                                           }}/>
                                     <div>&nbsp;sprzedawca</div>
                                 </div>
                                 <div className='flex'>
                                     <input className="form-check-input" type="radio" name="typeOfAddress"
+                                           ref={deliverInputRef}
                                            onChange={val => {
                                                setIsSeller(false)
                                            }}/>
