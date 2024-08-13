@@ -42,7 +42,7 @@ public class Sample implements Serializable {
 
     private String expirationComment;
 
-    private LocalDate examinationEndDate;
+    private LocalDate examinationExpectedEndDate;
 
     private String size;
 
