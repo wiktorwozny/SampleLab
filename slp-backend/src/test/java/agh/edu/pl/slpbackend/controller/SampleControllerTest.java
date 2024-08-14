@@ -30,7 +30,7 @@ public class SampleControllerTest {
                 .assortment("test")
                 .admissionDate(LocalDate.now())
                 .expirationComment("test")
-                .examinationEndDate(LocalDate.now())
+                .examinationExpectedEndDate(LocalDate.now())
                 .size("test")
                 .state("test")
                 .analysis(Boolean.TRUE)

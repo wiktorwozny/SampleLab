@@ -2,11 +2,13 @@ package agh.edu.pl.slpbackend.dto;
 
 import agh.edu.pl.slpbackend.model.Address;
 import agh.edu.pl.slpbackend.model.Client;
+import agh.edu.pl.slpbackend.model.User;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
@@ -36,6 +39,9 @@ public class ReportDataDto implements IModel, Serializable {
     @ModelFieldName("manufacturerAddress")
     private Address manufacturerAddress;
 
+    @ModelFieldName("manufacturerCountry")
+    private String manufacturerCountry;
+
     @ModelFieldName("supplierName")
     private String supplierName;
 
@@ -53,6 +59,27 @@ public class ReportDataDto implements IModel, Serializable {
 
     @ModelFieldName("recipientAddress")
     private Address recipientAddress;
+
+    @ModelFieldName("productionDate")
+    private LocalDate productionDate;
+
+    @ModelFieldName("batchNumber")
+    private int batchNumber;
+
+    @ModelFieldName("batchSizeProd")
+    private String batchSizeProd;
+
+    @ModelFieldName("batchSizeStorehouse")
+    private String batchSizeStorehouse;
+
+    @ModelFieldName("samplePacking")
+    private String samplePacking;
+
+    @ModelFieldName("sampleCollectionSite")
+    private String sampleCollectionSite;
+
+    @ModelFieldName("sampleCollector")
+    private User sampleCollector;
 
     @ModelFieldName("jobNumber")
     private Integer jobNumber;
