@@ -199,16 +199,16 @@ const SampleForm: FC<{}> = () => {
                             {errors.expirationComment && errors.expirationComment.message &&
                                 <p className="text-red-600">{`${errors.expirationComment.message}`}</p>}
 
-                            <FormLabel>Data zakończenia badań</FormLabel>
-                            <Input type="date" {...register("examinationEndDate", {
+                            <FormLabel>Planowana data zakończenia badań</FormLabel>
+                            <Input type="date" {...register("examinationExpectedEndDate", {
                                 required: {
                                     value: true,
                                     message: "Pole wymagane"
                                 }
                             })}
                             />
-                            {errors.examinationEndDate && errors.examinationEndDate.message &&
-                                <p className="text-red-600">{`${errors.examinationEndDate.message}`}</p>}
+                            {errors.examinationExpectedEndDate && errors.examinationExpectedEndDate.message &&
+                                <p className="text-red-600">{`${errors.examinationExpectedEndDate.message}`}</p>}
                         </div>
                         <div className='w-1/4'>
                             <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>

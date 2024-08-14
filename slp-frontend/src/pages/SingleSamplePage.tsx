@@ -76,7 +76,7 @@ const SingleSamplePage = () => {
 
         <Div className="text-start">
             <span className="font-bold">Data zakonczenia badan: </span>
-            {`${sample?.examinationEndDate}`}
+            {`${sample?.examinationExpectedEndDate}`}
         </Div>
 
         <Div className="text-start">

@@ -66,6 +66,12 @@ public class ReportDataDto implements IModel, Serializable {
     @ModelFieldName("batchNumber")
     private int batchNumber;
 
+    @ModelFieldName("batchSizeProd")
+    private String batchSizeProd;
+
+    @ModelFieldName("batchSizeStorehouse")
+    private String batchSizeStorehouse;
+
     @ModelFieldName("samplePacking")
     private String samplePacking;
 

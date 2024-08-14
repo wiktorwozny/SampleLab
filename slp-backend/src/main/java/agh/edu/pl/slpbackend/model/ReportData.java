@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +50,10 @@ public class ReportData implements Serializable {
     private LocalDate productionDate;
 
     private int batchNumber;
+
+    private String batchSizeProd;
+
+    private String batchSizeStorehouse;
 
     private String samplePacking;
 

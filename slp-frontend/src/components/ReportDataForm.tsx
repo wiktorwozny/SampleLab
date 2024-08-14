@@ -3,7 +3,7 @@ import {Input} from './ui/Input';
 import {FormProvider, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
 import {CancelButton, StandardButton} from './ui/StandardButton';
-import {Address, ReportData} from '../utils/types';
+import {Address, ReportData, Sample} from '../utils/types';
 import {getAllAddresses} from '../helpers/addressApi';
 // import { addReportDataToSample } from '../helpers/sampleApi';
 // import {addReportDataToSample} from '../helpers/reportDataApi';
@@ -12,17 +12,26 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {AddressController} from './ui/AddressController';
 import {AlertContext} from '../contexts/AlertsContext';
 import { RefObject } from 'react';
+import {getSampleById} from "../helpers/sampleApi";
+import {FormSelect} from "./ui/Select";
 
 
 type ReportDataFormFields = {
     manufacturerName: string,
     manufacturerAddress: Address,
+    manufacturerCountry: string,
     supplierName: string,
     supplierAddress: Address,
     sellerName: string,
     sellerAddress: Address,
     recipientName: string,
     recipientAddress: Address,
+    productionDate: Date,
+    batchNumber: number,
+    batchSizeProd: string,
+    batchSizeStorehouse: string,
+    samplePacking: string,
+    sampleCollectionSite: string,
     jobNumber: number,
     mechanism: string,
     deliveryMethod: string
@@ -36,8 +45,10 @@ const ReportDataForm: FC<{}> = ({}) => {
     const [addresses, setAddresses] = useState<Address []>([])
     const [isSeller, setIsSeller] = useState<Boolean>(true)
     const {sampleId} = useParams()
+    const [sample, setSample] = useState<Sample | null>(null);
     const navigate = useNavigate()
     const {setAlertDetails} = useContext(AlertContext);
+    const [countries, setCountries] = useState<string[]>([]);
     const sellerInputRef:RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
     const deliverInputRef:RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
@@ -66,6 +77,19 @@ const ReportDataForm: FC<{}> = ({}) => {
 
         if (sampleId) {
             getReportData();
+
+            const getSample = async () => {
+                try {
+                    let response = await getSampleById(sampleId);
+                    if (response?.status === 200) {
+                        setSample(response.data);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+
+            getSample();
         }
 
         if(sellerInputRef.current){
@@ -76,16 +100,34 @@ const ReportDataForm: FC<{}> = ({}) => {
     const fieldsToSet: Array<keyof ReportDataFormFields> = [
         'manufacturerName',
         'manufacturerAddress',
+        'manufacturerCountry',
         'supplierName',
         'supplierAddress',
         'sellerName',
         'sellerAddress',
         'recipientName',
         'recipientAddress',
+        'productionDate',
+        'batchNumber',
+        'batchSizeProd',
+        'batchSizeStorehouse',
+        'samplePacking',
+        'sampleCollectionSite',
         'jobNumber',
         'mechanism',
         'deliveryMethod'
     ]
+
+    interface Country {
+        name: {
+            common: string;
+        };
+        translations: {
+            pol?: {
+                common: string;
+            };
+        };
+    }
 
     useEffect(() => {
         console.log()
@@ -101,6 +143,18 @@ const ReportDataForm: FC<{}> = ({}) => {
 
         });
     }, [reportData, setValue]);
+
+    useEffect(() => {
+        fetch('https://restcountries.com/v3.1/all')
+            .then(response => response.json())
+            .then((data: Country[]) => {
+                const countryNames = data.map((country) =>
+                    country.translations?.pol?.common || country.name.common
+                );
+                setCountries(countryNames);
+            })
+            .catch(error => console.error('Error fetching countries:', error));
+    }, []);
 
     const submit = async (values: any) => {
         values.sampleId = sampleId === undefined ? null : parseInt(sampleId)
@@ -120,12 +174,84 @@ const ReportDataForm: FC<{}> = ({}) => {
     }
 
     return (<div className='flex flex-col justify-center items-center w-full'>
-        <h2 className="text-center font-bold my-10 text-2xl">Dodawanie dodatkowych informacji</h2>
+        <h2 className="text-center font-bold mt-10 text-2xl">Dodawanie dodatkowych informacji</h2>
+        <h3 className="text-center font-bold my-3 text-2xl">dla próbki numer {sampleId}: {sample?.assortment}</h3>
         <FormProvider {...method}>
-            <form className="w-4/5 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
+            <form className="w-100 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
+
                 <div className='flex-col'>
                     <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
-                        <div className='w-1/3'>
+                        <div className='w-1/6'>
+                            <FormLabel>Wielkość partii prod.</FormLabel>
+                            <Input
+                                defaultValue='nie dotyczy'
+                                {...register("batchSizeProd", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.batchSizeProd && errors.batchSizeProd.message &&
+                                <p className="text-red-600">{`${errors.batchSizeProd.message}`}</p>}
+                        </div>
+                        <div className='w-1/6'>
+                            <FormLabel>Wielkość partii magazyn.</FormLabel>
+                            <Input
+                                defaultValue='nie dotyczy'
+                                {...register("batchSizeStorehouse", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                            />
+                            {errors.batchSizeStorehouse && errors.batchSizeStorehouse.message &&
+                                <p className="text-red-600">{`${errors.batchSizeStorehouse.message}`}</p>}
+                        </div>
+                        <div className='w-1/6'>
+                            <FormLabel>Data produkcji</FormLabel>
+                            <Input type="date" {...register("productionDate", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.productionDate && errors.productionDate.message &&
+                                <p className="text-red-600">{`${errors.productionDate.message}`}</p>}
+                        </div>
+                        <div className='w-1/6'>
+                            <FormLabel>Numer partii</FormLabel>
+                            <Input {...register("batchNumber", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                            />
+                            {errors.batchNumber && errors.batchNumber.message &&
+                                <p className="text-red-600">{`${errors.batchNumber.message}`}</p>}
+                        </div>
+                        <div className='w-1/6'>
+                            <FormLabel>Opakowanie</FormLabel>
+                            <Input {...register("samplePacking", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                            />
+                            {errors.samplePacking && errors.samplePacking.message &&
+                                <p className="text-red-600">{`${errors.samplePacking.message}`}</p>}
+                        </div>
+                    </div>
+
+
+                </div>
+                <div className='flex-col'>
+                    <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
+                        <div className='w-5/12'>
                             {/* <h2 className='text-2xl font-bold'></h2> */}
                             <FormLabel>Nazwa producenta</FormLabel>
                             <Input {...register("manufacturerName", {
@@ -150,6 +276,20 @@ const ReportDataForm: FC<{}> = ({}) => {
                             />
                             {errors.manufacturerAddress && errors.manufacturerAddress.message &&
                                 <p className="text-red-600">{`${errors.manufacturerAddress.message}`}</p>}
+
+                            <FormLabel>Kraj pochodzenia producenta</FormLabel>
+                            <FormSelect
+                                className="my-custom-class"
+                                options={countries.map(country => ({value: country, label: country}))}
+                                {...register("manufacturerCountry", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.manufacturerCountry && errors.manufacturerCountry.message &&
+                                <p className="text-red-600">{`${errors.manufacturerCountry.message}`}</p>}
 
                             <div className='flex'>
                                 <div className='flex mr-7'>
@@ -247,8 +387,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                                 <p className="text-red-600">{`${errors.recipientAddress.message}`}</p>}
                         </div>
 
-                        <div className='w-1/3 flex flex-col'>
-                            <h2 className='text-2xl font-bold'>Dane Klienta</h2>
+                        <div className='w-5/12 flex flex-col'>
                             <FormLabel>Numer zlecenia</FormLabel>
                             <Input type='number' {...register("jobNumber", {
                                 required: {
@@ -259,7 +398,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                             />
                             {errors.jobNumber && errors.jobNumber.message &&
                                 <p className="text-red-600">{`${errors.jobNumber.message}`}</p>}
-                            <FormLabel>Mechanizm</FormLabel>
+                            <FormLabel>Nazwa i symbol mechanizmu</FormLabel>
                             <Input {...register("mechanism", {
                                 required: {
                                     value: true,
@@ -270,7 +409,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                             {errors.mechanism && errors.mechanism.message &&
                                 <p className="text-red-600">{`${errors.mechanism.message}`}</p>}
 
-                            <FormLabel>Metoda dostawcy</FormLabel>
+                            <FormLabel>Sposób dostarczenia próbki</FormLabel>
                             <Input {...register("deliveryMethod", {
                                 required: {
                                     value: true,
@@ -280,10 +419,26 @@ const ReportDataForm: FC<{}> = ({}) => {
                             />
                             {errors.deliveryMethod && errors.deliveryMethod.message &&
                                 <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
+                            <h2 className='text-2xl font-bold p-2'>Dane próbkobiorcy</h2>
+                            <FormLabel>Próbkę pobrał</FormLabel>
+                            <Input
+                            />
+                            {errors.deliveryMethod && errors.deliveryMethod.message &&
+                                <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
+                            <FormLabel>Miejsce pobrania próbki</FormLabel>
+                            <Input {...register("sampleCollectionSite", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.sampleCollectionSite && errors.sampleCollectionSite.message &&
+                                <p className="text-red-600">{`${errors.sampleCollectionSite.message}`}</p>}
                         </div>
                     </div>
 
-                    <div className='flex justify-center p-5 gap-5'>
+                    <div className='flex justify-center p-2 gap-5'>
                         <CancelButton type='button' className='mt-3'
                                       onClick={() => navigate(`/sample/${sampleId}`)}>Anuluj</CancelButton>
                         <StandardButton type="submit" className='mt-3 justify-self-end' onClick={() => {
