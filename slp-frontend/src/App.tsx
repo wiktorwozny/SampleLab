@@ -11,11 +11,10 @@ import Sidebar from "./components/Sidebar";
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
 import BackupView from "./components/BackupView";
-import DictionariesView from "./components/DictionariesView";
-import LoginForm from './components/LoginForm';
-import RegisterPage from './pages/RegisterPage';
 import DictionariesView from "./components/dictionary/DictionariesView";
-import TestDict from "./components/dictionary/TestDict";
+import LoginForm from "./components/LoginForm";
+import RegisterPage from "./pages/RegisterPage";
+import ClientDict from "./components/dictionary/client/ClientDict";
 
 
 function App() {
@@ -28,19 +27,22 @@ function App() {
                         <div className='fixed w-full top-2 z-2'>
                             <AlertComponent/>
                         </div>
-                    <Routes>
-                        <Route path='/' element={<SampleListPage/>}/>
-                        <Route path='/addSample' element={<SampleForm/>}/>
-                        <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
-                        <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
-                        <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                        <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
-                        <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
-                               element={<ExaminationForm/>}/>
-                        <Route path='/backup' element={<BackupView/>}/>
-                        <Route path='/dictionary' element={<DictionariesView/>}/>
-                        <Route path='/dictionary/test' element={<TestDict/>}/>
-                    </Routes>
+                        <Routes>
+                            <Route path='/' element={<SampleListPage/>}/>
+                            <Route path='/addSample' element={<SampleForm/>}/>
+                            <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
+                            <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
+                            <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
+                            <Route path='/sample/manageExaminations/:sampleId/newExamination'
+                                   element={<ExaminationForm/>}/>
+                            <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
+                                   element={<ExaminationForm/>}/>
+                            <Route path='/backup' element={<BackupView/>}/>
+                            <Route path='/dictionary' element={<DictionariesView/>}/>
+                            <Route path='/dictionary/clientDict' element={<ClientDict/>}/>
+                            <Route path='/login' element={<LoginForm/>}/>
+                            <Route path='/register' element={<RegisterPage/>}/>
+                        </Routes>
                     </div>
                 </BrowserRouter>
 

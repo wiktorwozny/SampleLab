@@ -7,7 +7,7 @@ const DictionariesView: React.FC = () => {
     const navigate: NavigateFunction = useNavigate();
 
     const buttons = [
-        {label: 'Test', onClick: () => navigate('/dictionary/test')},
+        {label: 'Klienci', onClick: () => navigate('/dictionary/clientDict')},
         {label: 'Button 2', onClick: () => alert('Button 2 clicked')},
         {label: 'Button 3', onClick: () => alert('Button 3 clicked')},
     ];

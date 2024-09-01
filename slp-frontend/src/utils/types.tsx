@@ -1,5 +1,6 @@
 import {AlertColor} from "@mui/material"
 import {ProgressStateEnum, RoleEnum} from "./enums";
+import {ReactNode} from "react";
 
 export type Code = {
     id: string,
@@ -14,7 +15,7 @@ export type Address = {
 }
 
 export type Client = {
-    id: number,
+    id: number | null,
     wijharsCode: string,
     name: string,
     address: Address
@@ -154,4 +155,10 @@ export type RegisterData = {
     name: string,
     email: string,
     role: RoleEnum
+}
+
+export interface Column<T> {
+    header: string;
+    accessor: keyof T | string;
+    render?: (value: T[keyof T]) => ReactNode;
 }
