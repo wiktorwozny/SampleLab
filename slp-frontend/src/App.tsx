@@ -19,11 +19,11 @@ import ClientDict from "./components/dictionary/client/ClientDict";
 
 function App() {
     return (
-        <div className="App flex relative">
+        <div className="App flex relative h-fit">
             <AlertsContext>
                 <BrowserRouter>
                     <Sidebar/>
-                    <div className='relative w-full h-screen'>
+                    <div className='relative w-full min-h-screen'>
                         <div className='fixed w-full top-2 z-2'>
                             <AlertComponent/>
                         </div>

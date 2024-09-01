@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -28,6 +30,8 @@ public class ReportData implements Serializable {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address manufacturerAddress;
 
+    private String manufacturerCountry;
+
     private String supplierName;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -42,6 +46,21 @@ public class ReportData implements Serializable {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address recipientAddress;
+
+    private LocalDate productionDate;
+
+    private int batchNumber;
+
+    private String batchSizeProd;
+
+    private String batchSizeStorehouse;
+
+    private String samplePacking;
+
+    private String sampleCollectionSite;
+
+    @ManyToOne
+    private User sampleCollector;
 
     private Integer jobNumber;
 

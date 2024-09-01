@@ -50,7 +50,7 @@ public class SampleDto implements IModel, Serializable {
     private String expirationComment;
 
     @ModelFieldName("examinationEndDate")
-    private LocalDate examinationEndDate;
+    private LocalDate examinationExpectedEndDate;
 
     @ModelFieldName("size")
     private String size;
