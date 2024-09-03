@@ -279,15 +279,23 @@ public class Config {
                 examinationRepository.saveAll(List.of(examination1, examination2));
             }
 
-            if(userRepository.count() == 0) {
-                User user = User.builder()
-                        .name("user1")
-                        .email("user1@emali.com")
-                        .password("123456")
+            if (userRepository.count() == 0) {
+                User admin = User.builder()
+                        .name("admin")
+                        .email("admin@gmail.com")
+                        .password("admin")
+                        .role(RoleEnum.ADMIN)
+                        .build();
+
+                User worker = User.builder()
+                        .name("worker")
+                        .email("worker@gmail.com")
+                        .password("worker")
                         .role(RoleEnum.WORKER)
                         .build();
 
-                userRepository.save(user);
+
+                userRepository.saveAll(List.of(admin, worker));
             }
         };
     }

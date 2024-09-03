@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.service;
 
+import agh.edu.pl.slpbackend.auth.JwtUtil;
 import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
 import agh.edu.pl.slpbackend.dto.users.UserDto;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserService extends AbstractService implements UserMapper {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     @Override
     public Object insert(IModel model) {
@@ -47,7 +49,9 @@ public class UserService extends AbstractService implements UserMapper {
         if (!user.getPassword().equals(request.password())) {
             throw new WrongPasswordException();
         }
-        return toDto(user);
+
+        String token = jwtUtil.generateToken(user.getEmail());
+        return toDto(user, token);
     }
 
     public void changePassword(ChangePasswordRequest request) {

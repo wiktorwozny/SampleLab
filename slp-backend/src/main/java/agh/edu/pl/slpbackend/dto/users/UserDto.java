@@ -8,5 +8,5 @@ import lombok.Builder;
 
 @ModelClass(User.class)
 @Builder
-public record UserDto(String name, String email, RoleEnum role) implements IModel {
+public record UserDto(String name, String email, RoleEnum role, String token) implements IModel {
 }

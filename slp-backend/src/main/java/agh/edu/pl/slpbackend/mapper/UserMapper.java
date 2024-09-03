@@ -15,11 +15,12 @@ public interface UserMapper {
                 .build();
     }
 
-    default UserDto toDto(final User user) {
+    default UserDto toDto(final User user, String token) {
         return UserDto.builder()
                 .email(user.getEmail())
                 .role(user.getRole())
                 .name(user.getName())
+                .token(token)
                 .build();
     }
 }

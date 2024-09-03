@@ -7,6 +7,7 @@ import agh.edu.pl.slpbackend.model.User;
 import agh.edu.pl.slpbackend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class UserController {
 
     public final UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody UserDto userDto) {
         User user = (User) userService.insert(userDto);
