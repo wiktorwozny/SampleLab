@@ -1,9 +1,10 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.auth.JwtUtil;
+import agh.edu.pl.slpbackend.dto.UserDto;
 import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
-import agh.edu.pl.slpbackend.dto.users.UserDto;
+import agh.edu.pl.slpbackend.dto.users.LoginResponse;
 import agh.edu.pl.slpbackend.exception.AccountAlreadyExistsException;
 import agh.edu.pl.slpbackend.exception.UserNotFoundException;
 import agh.edu.pl.slpbackend.exception.WrongPasswordException;
@@ -25,7 +26,7 @@ public class UserService extends AbstractService implements UserMapper {
     @Override
     public Object insert(IModel model) {
         final UserDto userDto = (UserDto) model;
-        if (userRepository.existsByEmail(userDto.email())) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new AccountAlreadyExistsException();
         }
         final User user = toModel(userDto);
@@ -42,7 +43,7 @@ public class UserService extends AbstractService implements UserMapper {
 
     }
 
-    public UserDto login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -50,8 +51,9 @@ public class UserService extends AbstractService implements UserMapper {
             throw new WrongPasswordException();
         }
 
+        UserDto userDto = toDto(user);
         String token = jwtUtil.generateToken(user.getEmail());
-        return toDto(user, token);
+        return new LoginResponse(userDto, token);
     }
 
     public void changePassword(ChangePasswordRequest request) {
