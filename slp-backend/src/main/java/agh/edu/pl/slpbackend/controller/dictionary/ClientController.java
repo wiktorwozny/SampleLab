@@ -42,7 +42,7 @@ public class ClientController extends AbstractController {
         return edit(clientDto, clientService);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
         return delete(ClientDto.builder().id(id).build(), clientService);
     }
