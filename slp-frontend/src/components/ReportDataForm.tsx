@@ -1,17 +1,14 @@
-import {FC, useContext, useEffect, useRef, useState} from 'react'
+import {FC, RefObject, useContext, useEffect, useRef, useState} from 'react'
 import {Input} from './ui/Input';
 import {FormProvider, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
 import {CancelButton, StandardButton} from './ui/StandardButton';
 import {Address, ReportData, Sample} from '../utils/types';
 import {getAllAddresses} from '../helpers/addressApi';
-// import { addReportDataToSample } from '../helpers/sampleApi';
-// import {addReportDataToSample} from '../helpers/reportDataApi';
 import {addReportData, getReportDataBySampleId} from '../helpers/reportDataApi';
 import {useNavigate, useParams} from 'react-router-dom';
 import {AddressController} from './ui/AddressController';
 import {AlertContext} from '../contexts/AlertsContext';
-import { RefObject } from 'react';
 import {getSampleById} from "../helpers/sampleApi";
 import {FormSelect} from "./ui/Select";
 
@@ -49,8 +46,8 @@ const ReportDataForm: FC<{}> = ({}) => {
     const navigate = useNavigate()
     const {setAlertDetails} = useContext(AlertContext);
     const [countries, setCountries] = useState<string[]>([]);
-    const sellerInputRef:RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
-    const deliverInputRef:RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+    const sellerInputRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+    const deliverInputRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const getAddresses = async () => {
@@ -92,7 +89,7 @@ const ReportDataForm: FC<{}> = ({}) => {
             getSample();
         }
 
-        if(sellerInputRef.current){
+        if (sellerInputRef.current) {
             sellerInputRef.current.checked = true;
         }
     }, [])
@@ -134,7 +131,7 @@ const ReportDataForm: FC<{}> = ({}) => {
         fieldsToSet.forEach(field => {
             if (reportData && reportData[field]) {
                 setValue(field, reportData[field]);
-                if(reportData.supplierName && deliverInputRef.current && sellerInputRef.current){
+                if (reportData.supplierName && deliverInputRef.current && sellerInputRef.current) {
                     deliverInputRef.current.checked = true;
                     sellerInputRef.current.checked = false;
                     setIsSeller(false);
@@ -186,11 +183,11 @@ const ReportDataForm: FC<{}> = ({}) => {
                             <Input
                                 defaultValue='nie dotyczy'
                                 {...register("batchSizeProd", {
-                                required: {
-                                    value: true,
-                                    message: "Pole wymagane"
-                                }
-                            })}
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
                             />
                             {errors.batchSizeProd && errors.batchSizeProd.message &&
                                 <p className="text-red-600">{`${errors.batchSizeProd.message}`}</p>}
@@ -224,11 +221,11 @@ const ReportDataForm: FC<{}> = ({}) => {
                         <div className='w-1/6'>
                             <FormLabel>Numer partii</FormLabel>
                             <Input {...register("batchNumber", {
-                                    required: {
-                                        value: true,
-                                        message: "Pole wymagane"
-                                    }
-                                })}
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
                             />
                             {errors.batchNumber && errors.batchNumber.message &&
                                 <p className="text-red-600">{`${errors.batchNumber.message}`}</p>}
@@ -236,11 +233,11 @@ const ReportDataForm: FC<{}> = ({}) => {
                         <div className='w-1/6'>
                             <FormLabel>Opakowanie</FormLabel>
                             <Input {...register("samplePacking", {
-                                    required: {
-                                        value: true,
-                                        message: "Pole wymagane"
-                                    }
-                                })}
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
                             />
                             {errors.samplePacking && errors.samplePacking.message &&
                                 <p className="text-red-600">{`${errors.samplePacking.message}`}</p>}
@@ -282,11 +279,11 @@ const ReportDataForm: FC<{}> = ({}) => {
                                 className="my-custom-class"
                                 options={countries.map(country => ({value: country, label: country}))}
                                 {...register("manufacturerCountry", {
-                                required: {
-                                    value: true,
-                                    message: "Pole wymagane"
-                                }
-                            })}
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
                             />
                             {errors.manufacturerCountry && errors.manufacturerCountry.message &&
                                 <p className="text-red-600">{`${errors.manufacturerCountry.message}`}</p>}

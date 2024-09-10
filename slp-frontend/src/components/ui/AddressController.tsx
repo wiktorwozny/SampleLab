@@ -20,7 +20,7 @@ export const AddressController = forwardRef<HTMLDivElement, AddressControllerPro
         const [isOpen, setIsOpen] = useState<boolean>(false);
 
         useEffect(() => {
-            console.log(item)
+            console.log(item);
         }, [item]);
 
         return (

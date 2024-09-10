@@ -75,7 +75,9 @@ const ClientDict = () => {
         }
     };
 
-    const handleClose = () => setOpenModal(false);
+    const handleClose = () => {
+        setOpenModal(false);
+    }
 
     const copyObject = (item: Client): Client => {
         return JSON.parse(JSON.stringify(item));

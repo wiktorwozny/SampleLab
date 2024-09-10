@@ -35,16 +35,21 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
         if (item !== null) {
             reset(item);
         } else {
-            reset(
-                {
-                    id: '',
-                    name: '',
-                    wijharsCode: '',
-                    address: null,
-                }
-            );
+            resetForm();
         }
     }, [item, reset]);
+
+    const resetForm = () => {
+        reset(
+            {
+                id: '',
+                name: '',
+                wijharsCode: '',
+                address: null,
+            }
+        );
+
+    }
 
 
     const handleEdit = (formData: any) => {
@@ -78,12 +83,17 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
     };
 
     const submit = (formData: any) => {
-        console.log('in')
         if (isEdit) {
             handleEdit(formData);
         } else {
             handleAdd(formData);
         }
+        resetForm();
+    }
+
+    const handleCancel = () => {
+        handleClose();
+        resetForm()
     }
 
     return (
@@ -133,14 +143,16 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                         />
                         {errors.wijharsCode && errors.wijharsCode.message &&
                             <p className="text-red-600">{`${errors.wijharsCode.message}`}</p>}
+
                         <FormLabel>Adres</FormLabel>
                         <AddressController
                             isDisabled={isView}
                             className={"my-custom-class"}
                             item={item?.address}
+
                             {...register("address", {
                                 required: {
-                                    value: true,
+                                    value: false,
                                     message: "Pole \"Adress\" wymagane"
                                 }
                             })}
@@ -156,7 +168,7 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                                 Zapisz
                             </Button>
                         )}
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="secondary" onClick={handleCancel}>
                             Anuluj
                         </Button>
                     </Modal.Footer>
