@@ -28,11 +28,11 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                                                            isEdit,
                                                        }) => {
     const method = useForm();
-    const {reset, handleSubmit, register, formState: {errors}} = method
+    const {reset, handleSubmit, register, formState: {errors}, setValue} = method
     const {setAlertDetails} = useContext(AlertContext);
 
     useEffect(() => {
-        if (item) {
+        if (item !== null) {
             reset(item);
         } else {
             reset(
@@ -44,14 +44,14 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                 }
             );
         }
-    }, [item]);
+    }, [item, reset]);
 
 
     const handleEdit = (formData: any) => {
         try {
             updateClient(formData).then((response) => {
                 if (response.status === 201 || response.status === 200) {
-                    setAlertDetails({isAlert: true, message: "Dodano nową definicję", type: "success"})
+                    setAlertDetails({isAlert: true, message: "Edytowano definicję", type: "success"})
                     refresh();
                     handleClose();
                 }
@@ -92,7 +92,7 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                 <form className="bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            {isView ? 'Client Details' : isEdit ? 'Edit Client' : 'Add New Client'}
+                            {isView ? 'Szczegóły' : isEdit ? 'Edycja' : 'Nowy'}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -112,7 +112,7 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                         <Input type="text" disabled={isView}
                                placeholder="Nazwa" {...register("name", {
                             required: {
-                                value: false,
+                                value: true,
                                 message: "Pole wymagane"
                             }
                         })}
@@ -126,7 +126,7 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                                minLength={2}
                                placeholder="Kod WIJHARS" {...register("wijharsCode", {
                             required: {
-                                value: false,
+                                value: true,
                                 message: "Pole wymagane"
                             }
                         })}
@@ -153,11 +153,11 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
                             <Button type={"submit"} variant="primary">
-                                Save
+                                Zapisz
                             </Button>
                         )}
                         <Button variant="secondary" onClick={handleClose}>
-                            Close
+                            Anuluj
                         </Button>
                     </Modal.Footer>
                 </form>

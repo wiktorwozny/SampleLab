@@ -1,4 +1,4 @@
-import React, {forwardRef, useState} from 'react';
+import React, {forwardRef, useEffect, useState} from 'react';
 import {ChangeHandler, Controller, useFormContext} from 'react-hook-form';
 import AddressForm from '../AddressForm';
 import {Address} from "../../utils/types";
@@ -18,6 +18,10 @@ export const AddressController = forwardRef<HTMLDivElement, AddressControllerPro
     ({className = '', name, onChange, item = null, onBlur, isDisabled = false, ...props}, ref) => {
         const {control} = useFormContext();
         const [isOpen, setIsOpen] = useState<boolean>(false);
+
+        useEffect(() => {
+            console.log(item)
+        }, [item]);
 
         return (
             <Controller

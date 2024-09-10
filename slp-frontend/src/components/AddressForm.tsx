@@ -37,7 +37,7 @@ const AddressForm: FC<{
                 }
             );
         }
-    }, [item]);
+    }, [item, reset]);
 
 
     return (

@@ -71,7 +71,7 @@ const DictionaryTable = <T extends {}>({columns, data, onView, onEdit, onDelete}
         <table className="table table-hover table-bordered">
             <thead>
             <tr>
-                <th>Actions</th>
+                <th>Akcja</th>
                 {columns.map((column, index) => {
                     const rule = sortRules.find(rule => rule.accessor === column.accessor);
                     const isSorted = rule && rule.direction !== 'none';
