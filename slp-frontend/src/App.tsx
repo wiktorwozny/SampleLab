@@ -14,6 +14,7 @@ import BackupView from "./components/BackupView";
 import DictionariesView from "./components/DictionariesView";
 import LoginForm from './components/LoginForm';
 import RegisterPage from './pages/RegisterPage';
+import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                             <Route path='/dictionary' element={<DictionariesView/>}/>
                             <Route path='/login' element={<LoginForm/>}/>
                             <Route path='/register' element={<RegisterPage/>}/>
+                            <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
                         </Routes>
                     </div>
                 </BrowserRouter>
