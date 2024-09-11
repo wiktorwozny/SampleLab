@@ -21,6 +21,9 @@ const LoginForm = () => {
                 console.log("udalo ci się zalogować")
                 console.log(response.data)
                 setAlertDetails({type: "success", isAlert: true, message: "Udało ci się pomyślnie zalogować"})
+                localStorage.setItem('role', response.data.user.role);
+                localStorage.setItem('token', response.data.token);
+                window.dispatchEvent(new Event('change'));
                 // navigate("/")
             }
         } catch (err: any) {
