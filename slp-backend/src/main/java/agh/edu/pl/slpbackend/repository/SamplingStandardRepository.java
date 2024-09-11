@@ -1,0 +1,7 @@
+package agh.edu.pl.slpbackend.repository;
+
+import agh.edu.pl.slpbackend.model.SamplingStandard;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SamplingStandardRepository extends JpaRepository<SamplingStandard, Long> {
+}
