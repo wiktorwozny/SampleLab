@@ -1,6 +1,7 @@
 import React, {useContext} from "react";
 import {backup} from "../helpers/backupApi";
 import {AlertContext} from "../contexts/AlertsContext";
+import { checkResponse } from "../utils/checkResponse";
 
 
 const BackupView: React.FC<{}> = () => {
@@ -36,7 +37,7 @@ const BackupView: React.FC<{}> = () => {
         } catch (err) {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
-
+            checkResponse(err);
         }
     }
 

@@ -6,7 +6,7 @@ import {getIndicationsForSample} from "../helpers/indicationApi";
 import {deleteExamination, getExaminationsForSample} from "../helpers/examinationApi";
 import {CancelButton, StandardButton} from "./ui/StandardButton";
 import {generateKzwaForSample} from "../helpers/generateReportApi";
-
+import { checkResponse } from "../utils/checkResponse";
 const ExaminationsList: FC<{}> = () => {
 
     const {sampleId} = useParams();
@@ -38,6 +38,7 @@ const ExaminationsList: FC<{}> = () => {
                 initializeCheckedStates(indicationsResponse?.data ?? [], examinationsResponse?.data ?? []);
             } catch (err) {
                 console.log(err);
+                checkResponse(err);
             } finally {
                 setIsLoading(false);
             }
