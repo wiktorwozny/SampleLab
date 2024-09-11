@@ -11,6 +11,10 @@ import Sidebar from "./components/Sidebar";
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
 import BackupView from "./components/BackupView";
+import DictionariesView from "./components/DictionariesView";
+import LoginForm from './components/LoginForm';
+import RegisterPage from './pages/RegisterPage';
+import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
 import DictionariesView from "./components/dictionary/DictionariesView";
 import LoginForm from "./components/LoginForm";
 import RegisterPage from "./pages/RegisterPage";
@@ -42,6 +46,7 @@ function App() {
                             <Route path='/dictionary/clientDict' element={<ClientDict/>}/>
                             <Route path='/login' element={<LoginForm/>}/>
                             <Route path='/register' element={<RegisterPage/>}/>
+                            <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
                         </Routes>
                     </div>
                 </BrowserRouter>

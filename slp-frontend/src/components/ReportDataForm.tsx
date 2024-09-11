@@ -179,7 +179,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                 <div className='flex-col'>
                     <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
                         <div className='w-1/6'>
-                            <FormLabel>Wielkość partii prod.</FormLabel>
+                            <FormLabel>Wielk. partii prod.</FormLabel>
                             <Input
                                 defaultValue='nie dotyczy'
                                 {...register("batchSizeProd", {
@@ -193,7 +193,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                                 <p className="text-red-600">{`${errors.batchSizeProd.message}`}</p>}
                         </div>
                         <div className='w-1/6'>
-                            <FormLabel>Wielkość partii magazyn.</FormLabel>
+                            <FormLabel>Wielk. partii magazyn.</FormLabel>
                             <Input
                                 defaultValue='nie dotyczy'
                                 {...register("batchSizeStorehouse", {
