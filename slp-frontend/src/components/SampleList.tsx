@@ -12,6 +12,7 @@ import {
 import {FormProvider, useForm} from 'react-hook-form';
 import {ProgressStateEnum, ProgressStateEnumDesc} from "../utils/enums";
 import {ProgressFormSelect} from "./ui/ProgressFormSelect";
+import {DisableButton} from "./ui/StandardButton";
 
 
 const SampleList: React.FC<any> = ({selectedFilters}) => {
@@ -30,6 +31,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
+    const [selectedSamplesIds, setSelectedSamplesIds] = useState<number[]>([]);
 
     useEffect(() => {
         setRequest(prev => ({
@@ -45,7 +47,6 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                 let response = await getFilteredSamples(request);
                 if (response.status === 200) {
                     setSamples(response.data.samples)
-                    console.log(response.data.samples)
                     setNumberOfPages(response.data.totalPages)
                     setIsLoading(false)
                 }
@@ -65,21 +66,31 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             ascending: ascending
         }));
         setActiveColumn(newFieldName);
-    }
+    };
 
     const updatePageNumber = (pageNumber: number) => {
         setRequest(prevRequest => ({
             ...prevRequest,
             pageNumber: pageNumber
         }));
-    }
-    console.log(samples)
+    };
+
+    const handleCheckboxChange = (sampleId: number) => {
+        setSelectedSamplesIds((prevSelected) =>
+            prevSelected.includes(sampleId) ? prevSelected.filter((id) => id !== sampleId) : [...prevSelected, sampleId]
+        );
+        console.log(selectedSamplesIds);
+    };
+
+    const isSampleSelected = (sampleId: number) => selectedSamplesIds.includes(sampleId);
+
     return (
         <div className="w-full">
             {!isLoading && numberOfPages > 0 && <div>
                 <table className="table table-hover table-bordered cursor-pointer">
                     <thead>
                     <tr>
+                        <th></th>
                         <th scope="col" className={activeColumn === 'id' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("id")}>ID
                         </th>
@@ -109,6 +120,15 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)
                         }
                         >
+                            <td style={{ padding: 5, textAlign: 'center', width: 35, height: 35 }} onClick={(e) => e.stopPropagation()}>
+                                <input
+                                    type="checkbox"
+                                    checked={isSampleSelected(sample.id)}
+                                    onChange={() => handleCheckboxChange(sample.id)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    style={{ width: '80%', height: '80%' }}
+                                />
+                            </td>
                             <td>{sample.id}</td>
                             <td>{sample.code}</td>
                             <td>{sample.group}</td>
@@ -139,23 +159,39 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         </tr>))}
                     </tbody>
                 </table>
-                <div className="flex flex-row justify-center items-center">
-                    <div className="mr-5">Pokaż: <input className="w-10 border" type="number"
-                                                        defaultValue={request.pageSize} onChange={(e) => {
-                        setRequest(prevRequest => ({
-                            ...prevRequest,
-                            pageSize: Number(e.target.value) > 0 ? Number(e.target.value) : request.pageSize,
-                            pageNumber: 0
-                        }));
-                    }}/></div>
-                    <MdKeyboardDoubleArrowLeft className="bg-gray-200" onClick={() => updatePageNumber(0)}/>
-                    <MdKeyboardArrowLeft className="bg-gray-200 mx-1"
-                                         onClick={() => updatePageNumber(Math.max(0, request.pageNumber - 1))}/>
-                    <div>Strona {request.pageNumber + 1} z {numberOfPages}</div>
-                    <MdKeyboardArrowRight className="bg-gray-200 mx-1"
-                                          onClick={() => updatePageNumber(Math.min(numberOfPages - 1, request.pageNumber + 1))}/>
-                    <MdKeyboardDoubleArrowRight className="bg-gray-200"
-                                                onClick={() => updatePageNumber(numberOfPages - 1)}/>
+                <div className="flex flex-row justify-between items-center w-full">
+
+                    <DisableButton type="button" disabled={selectedSamplesIds.length === 0} onClick={(e) => {
+                        e.stopPropagation();
+                        const encoded = encodeURIComponent(JSON.stringify(selectedSamplesIds));
+                        navigate(`/protocolReportData/${encoded}`);
+                    }
+                    }>
+                        Wprowadź dodatkowe dane
+                    </DisableButton>
+
+                    <div className="flex flex-row justify-center items-center w-full">
+                        <div className="mr-5">Pokaż: <input className="w-10 border" type="number"
+                                                            defaultValue={request.pageSize} onChange={(e) => {
+                            setRequest(prevRequest => ({
+                                ...prevRequest,
+                                pageSize: Number(e.target.value) > 0 ? Number(e.target.value) : request.pageSize,
+                                pageNumber: 0
+                            }));
+                        }}/></div>
+                        <MdKeyboardDoubleArrowLeft className="bg-gray-200" onClick={() => updatePageNumber(0)}/>
+                        <MdKeyboardArrowLeft className="bg-gray-200 mx-1"
+                                             onClick={() => updatePageNumber(Math.max(0, request.pageNumber - 1))}/>
+                        <div>Strona {request.pageNumber + 1} z {numberOfPages}</div>
+                        <MdKeyboardArrowRight className="bg-gray-200 mx-1"
+                                              onClick={() => updatePageNumber(Math.min(numberOfPages - 1, request.pageNumber + 1))}/>
+                        <MdKeyboardDoubleArrowRight className="bg-gray-200"
+                                                    onClick={() => updatePageNumber(numberOfPages - 1)}/>
+                    </div>
+
+                    <button className="opacity-0 px-3 py-1 rounded" style={{ cursor: 'default' }}>
+                        Wprowadź dodatkowe dane
+                    </button>
                 </div>
                 <br/>
             </div>}
