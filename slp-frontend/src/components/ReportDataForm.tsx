@@ -14,6 +14,8 @@ import {AlertContext} from '../contexts/AlertsContext';
 import { RefObject } from 'react';
 import {getSampleById} from "../helpers/sampleApi";
 import {FormSelect} from "./ui/Select";
+import { checkPrime } from 'crypto';
+import { checkResponse } from '../utils/checkResponse';
 
 
 type ReportDataFormFields = {
@@ -61,6 +63,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -72,6 +75,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -86,6 +90,7 @@ const ReportDataForm: FC<{}> = ({}) => {
                     }
                 } catch (err) {
                     console.log(err);
+                    checkResponse(err);
                 }
             }
 

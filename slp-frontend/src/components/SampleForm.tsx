@@ -15,7 +15,7 @@ import {addSample} from '../helpers/samplingApi';
 import {useNavigate} from 'react-router-dom';
 import {AlertContext} from '../contexts/AlertsContext';
 import { Checkbox } from '@mui/material';
-
+import { checkResponse } from '../utils/checkResponse';
 const SampleForm: FC<{}> = () => {
 
     const method = useForm();
@@ -40,6 +40,7 @@ const SampleForm: FC<{}> = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -52,6 +53,7 @@ const SampleForm: FC<{}> = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -64,6 +66,7 @@ const SampleForm: FC<{}> = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -76,6 +79,7 @@ const SampleForm: FC<{}> = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -88,6 +92,7 @@ const SampleForm: FC<{}> = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -100,6 +105,7 @@ const SampleForm: FC<{}> = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err);
             }
         }
 
@@ -131,6 +137,7 @@ const SampleForm: FC<{}> = () => {
         } catch (err) {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            checkResponse(err);
         }
     }
 

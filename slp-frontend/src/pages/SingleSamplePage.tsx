@@ -6,6 +6,7 @@ import {Div} from "../components/ui/Div";
 import {DisableButton, StandardButton} from "../components/ui/StandardButton";
 import {generateReportForSample} from "../helpers/generateReportApi";
 import {ProgressStateEnum} from "../utils/enums";
+import { checkResponse } from "../utils/checkResponse";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
@@ -23,6 +24,7 @@ const SingleSamplePage = () => {
                 }
             } catch (err) {
                 console.log(err)
+                checkResponse(err)
             }
         }
         getSample()

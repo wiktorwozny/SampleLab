@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import FilterComponet from "../components/FilterComponent";
 import { FiltersData } from "../utils/types";
 import { getFiltersData } from "../helpers/dataApi";
+import { checkResponse } from "../utils/checkResponse";
 const SampleListPage = () => {
     const [isFilters, setIsFilters] = useState<boolean>(false)
     const [filtersData, setFiltersData] = useState<FiltersData | null>(null);
@@ -17,6 +18,7 @@ const SampleListPage = () => {
                 } 
             }catch(err) {
                 console.log(err);
+                checkResponse(err);
             }
         }
         getFiltersDataFunction();
