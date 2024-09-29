@@ -38,7 +38,7 @@ const IndicationDictItem: React.FC<IndicationDictItemProps> = ({
         } else {
             resetForm();
         }
-    }, [item]);
+    }, [item, reset]);
 
     const resetForm = () => {
         reset(
