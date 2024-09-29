@@ -8,7 +8,7 @@ const DictionariesView: React.FC = () => {
 
     const buttons = [
         {label: 'Klienci', onClick: () => navigate('/dictionary/clientDict')},
-        {label: 'Button 2', onClick: () => alert('Button 2 clicked')},
+        {label: 'Indications', onClick: () => navigate('/dictionary/indicationDict')},
         {label: 'Button 3', onClick: () => alert('Button 3 clicked')},
     ];
 

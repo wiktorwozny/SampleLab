@@ -1,7 +1,18 @@
-import {useContext, useEffect, useState} from "react";
-import {Indication} from "../../../utils/types";
+import React, {useContext, useEffect, useState} from "react";
+import {Column, Indication} from "../../../utils/types";
 import {AlertContext} from "../../../contexts/AlertsContext";
 import {deleteIndication, getAllIndications} from "../../../helpers/indicationApi";
+import {Button} from "react-bootstrap";
+import DictionaryTable from "../../ui/DictionaryTable";
+import IndicationDictItem from "./IndicationDictItem";
+
+const columns: Column<Indication>[] = [
+    {header: 'ID', accessor: 'id'},
+    {header: 'Name', accessor: 'name'},
+    {header: 'Norm', accessor: 'norm'},
+    {header: 'Unit', accessor: 'unit'},
+    {header: 'Laboratory', accessor: 'laboratory'}
+];
 
 const IndicationDict = () => {
 
@@ -73,7 +84,41 @@ const IndicationDict = () => {
         getIndications();
     }, []);
 
-    return (<div></div>)
+    return (
+        <div className="w-full">
+            <h1 className="text-center font-bold text-3xl w-full my-3">Test dict</h1>
+
+            <div className="w-full justify-content-between flex">
+                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                    Dodaj nowy
+                </Button>
+                {/*<div*/}
+                {/*    className="flex border relative mr-2 mb-2 p-2 border-black items-center hover:bg-gray-300 cursor-pointer"*/}
+                {/*>*/}
+                {/*    <div>Filtruj &nbsp;</div>*/}
+                {/*    <HiAdjustmentsHorizontal className="text-3xl"></HiAdjustmentsHorizontal>*/}
+                {/*</div>*/}
+
+            </div>
+
+            <DictionaryTable<Indication>
+                columns={columns}
+                data={indicationList}
+                onView={handleView}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+            <IndicationDictItem
+                refresh={getIndications}
+                show={openModal}
+                handleClose={handleClose}
+                item={selectedItem}
+                isView={isViewMode}
+                isAdd={isAddMode}
+                isEdit={isEditMode}
+            />
+        </div>
+    )
 }
 
 export default IndicationDict
