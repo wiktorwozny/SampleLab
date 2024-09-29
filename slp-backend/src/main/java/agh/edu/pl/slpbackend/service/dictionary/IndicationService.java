@@ -55,12 +55,15 @@ public class IndicationService extends AbstractService implements IndicationMapp
 
     @Override
     public Object update(IModel model) {
-
-        return null;
+        final IndicationDto indicationDto = (IndicationDto) model;
+        final Indication indication = toModel(indicationDto);
+        return indicationRepository.save(indication);
     }
 
     @Override
     public void delete(IModel model) {
+        final IndicationDto indicationDto = (IndicationDto) model;
+        indicationRepository.deleteById(indicationDto.getId());
     }
 
 }

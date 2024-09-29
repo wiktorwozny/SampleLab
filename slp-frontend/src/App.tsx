@@ -16,6 +16,7 @@ import DictionariesView from "./components/dictionary/DictionariesView";
 import LoginForm from "./components/LoginForm";
 import RegisterPage from "./pages/RegisterPage";
 import ClientDict from "./components/dictionary/client/ClientDict";
+import IndicationDict from "./components/dictionary/indication/IndicationDict";
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                             <Route path='/backup' element={<BackupView/>}/>
                             <Route path='/dictionary' element={<DictionariesView/>}/>
                             <Route path='/dictionary/clientDict' element={<ClientDict/>}/>
+                            <Route path='/dictionary/indicationDict' element={<IndicationDict/>}/>
                             <Route path='/login' element={<LoginForm/>}/>
                             <Route path='/register' element={<RegisterPage/>}/>
                             <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>

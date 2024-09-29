@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {deleteClient, getAllClients} from "../../../helpers/clientApi";
 import {Address, Client, Column} from "../../../utils/types";
-import {HiAdjustmentsHorizontal} from "react-icons/hi2";
 import DictionaryTable from "../../ui/DictionaryTable";
 import ClientDictItem from "./ClientDictItem";
 import {Button} from "react-bootstrap";
@@ -101,14 +100,14 @@ const ClientDict = () => {
 
             <div className="w-full justify-content-between flex">
                 <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
-                    Add Client
+                    Dodaj nowy
                 </Button>
-                <div
-                    className="flex border relative mr-2 mb-2 p-2 border-black items-center hover:bg-gray-300 cursor-pointer"
-                >
-                    <div>Filtruj &nbsp;</div>
-                    <HiAdjustmentsHorizontal className="text-3xl"></HiAdjustmentsHorizontal>
-                </div>
+                {/*<div*/}
+                {/*    className="flex border relative mr-2 mb-2 p-2 border-black items-center hover:bg-gray-300 cursor-pointer"*/}
+                {/*>*/}
+                {/*    <div>Filtruj &nbsp;</div>*/}
+                {/*    <HiAdjustmentsHorizontal className="text-3xl"></HiAdjustmentsHorizontal>*/}
+                {/*</div>*/}
 
             </div>
 
