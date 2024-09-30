@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.dto;
 
 import agh.edu.pl.slpbackend.model.Indication;
+import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
@@ -10,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 
 @SuperBuilder(toBuilder = true)
@@ -35,6 +38,9 @@ public class IndicationDto implements IModel {
 
     @ModelFieldName("laboratory")
     private String laboratory;
+
+    @ModelFieldName("groups")
+    private List<ProductGroup> groups;
 
 
 }
