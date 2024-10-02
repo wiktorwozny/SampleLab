@@ -1,8 +1,8 @@
-package agh.edu.pl.slpbackend.controller;
+package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.SamplingStandardDto;
-import agh.edu.pl.slpbackend.service.SamplingStandardService;
+import agh.edu.pl.slpbackend.dto.ProductGroupDto;
+import agh.edu.pl.slpbackend.service.dictionary.ProductGroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +12,16 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/sampling-standard") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@RequestMapping("/product-group") //TODO odpowiedni rooting jeszcze nie wiem XDD
 @CrossOrigin(origins = "http://localhost:3000")
-public class SamplingStandardController extends AbstractController {
+public class ProductGroupController extends AbstractController {
 
-    private final SamplingStandardService samplingStandardService;
+    private final ProductGroupService productGroupService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<SamplingStandardDto>> list() {
+    public ResponseEntity<List<ProductGroupDto>> list() {
         try {
-            List<SamplingStandardDto> list = samplingStandardService.selectAll();
+            List<ProductGroupDto> list = productGroupService.selectAll();
 
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -33,7 +33,7 @@ public class SamplingStandardController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody SamplingStandardDto samplingStandardDto) throws Exception {
-        return add(samplingStandardDto, samplingStandardService);
+    public ResponseEntity<Void> add(@RequestBody ProductGroupDto productGroupDto) throws Exception {
+        return add(productGroupDto, productGroupService);
     }
 }

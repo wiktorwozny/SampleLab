@@ -1,12 +1,28 @@
 import axios from "axios"
-import { backendUrl } from "../utils/urls"
-const url='code/'
+import {backendUrl} from "../utils/urls"
+import {Code} from "../utils/types";
+
+const url = 'code/'
 
 const getAllCodes = () => {
-    return axios.get(backendUrl+url+"list")
+    return axios.get(backendUrl + url + "list")
+}
+const updateCode = (item: Code) => {
+    return axios.put(backendUrl + url + 'update', item);
+}
+
+const addCode = (item: Code) => {
+    return axios.post(backendUrl + url + "save", item);
+}
+
+const deleteCode = (id: string | null) => {
+    return axios.delete(backendUrl + url + `delete/${id}`);
 }
 
 
 export {
-    getAllCodes
+    getAllCodes,
+    updateCode,
+    addCode,
+    deleteCode
 }

@@ -1,30 +1,27 @@
+import {Code, Column} from "../../../utils/types";
 import React, {useContext, useEffect, useState} from "react";
-import {Column, Indication} from "../../../utils/types";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {deleteIndication, getAllIndications} from "../../../helpers/indicationApi";
+import {deleteCode, getAllCodes} from "../../../helpers/codeApi";
 import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
-import IndicationDictItem from "./IndicationDictItem";
+import CodeDictItem from "./CodeDictItem";
 
-const columns: Column<Indication>[] = [
+
+const columns: Column<Code>[] = [
     {header: 'ID', accessor: 'id'},
     {header: 'Name', accessor: 'name'},
-    {header: 'Norm', accessor: 'norm'},
-    {header: 'Unit', accessor: 'unit'},
-    {header: 'Laboratory', accessor: 'laboratory'}
 ];
 
-const IndicationDict = () => {
-
-    const [indicationList, setIndicationList] = useState<Indication[]>([]);
+const CodeDict = () => {
+    const [codeList, setCodeList] = useState<Code[]>([]);
     const {setAlertDetails} = useContext(AlertContext);
     const [openModal, setOpenModal] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<Indication | null>(null);
+    const [selectedItem, setSelectedItem] = useState<Code | null>(null);
     const [isViewMode, setIsViewMode] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
 
-    const handleView = (item: Indication) => {
+    const handleView = (item: Code) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
         setIsViewMode(true);
@@ -32,7 +29,7 @@ const IndicationDict = () => {
         setIsEditMode(false);
     };
 
-    const handleEdit = (item: Indication) => {
+    const handleEdit = (item: Code) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
         setIsViewMode(false);
@@ -48,14 +45,13 @@ const IndicationDict = () => {
         setIsEditMode(false);
     };
 
-
-    const handleDelete = async (item: Indication) => {
+    const handleDelete = async (item: Code) => {
         try {
-            let response = await deleteIndication(item?.id)
+            let response = await deleteCode(item?.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
-                getIndications();
+                getCodes();
                 handleClose();
             }
         } catch (err) {
@@ -68,20 +64,20 @@ const IndicationDict = () => {
         setOpenModal(false);
     }
 
-    const copyObject = (item: Indication): Indication => {
+    const copyObject = (item: Code): Code => {
         return JSON.parse(JSON.stringify(item));
     };
 
-    const getIndications = () => {
-        getAllIndications().then((res) => {
+    const getCodes = () => {
+        getAllCodes().then((res) => {
             if (res.status === 200) {
-                setIndicationList(res.data);
+                setCodeList(res.data);
             }
         })
     };
 
     useEffect(() => {
-        getIndications();
+        getCodes();
     }, []);
 
     return (
@@ -95,15 +91,15 @@ const IndicationDict = () => {
 
             </div>
 
-            <DictionaryTable<Indication>
+            <DictionaryTable<Code>
                 columns={columns}
-                data={indicationList}
+                data={codeList}
                 onView={handleView}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
-            <IndicationDictItem
-                refresh={getIndications}
+            <CodeDictItem
+                refresh={getCodes}
                 show={openModal}
                 handleClose={handleClose}
                 item={selectedItem}
@@ -114,5 +110,4 @@ const IndicationDict = () => {
         </div>
     )
 }
-
-export default IndicationDict
+export default CodeDict

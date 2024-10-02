@@ -29,15 +29,13 @@ public class CodeService extends AbstractService implements CodeMapper {
     @Override
     public Object insert(IModel model) {
         final CodeDto dto = (CodeDto) model;
-        final Code code = toModel(dto);
-        return codeRepository.save(code);
+        return codeRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
         final CodeDto dto = (CodeDto) model;
-        final Code code = toModel(dto);
-        return codeRepository.save(code);
+        return codeRepository.save(toModel(dto));
     }
 
     @Override
