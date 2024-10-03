@@ -5,6 +5,8 @@ import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
 import {deleteInspection, getAllInspection} from "../../../helpers/inspectionApi";
 import InspectionDictItem from "./InspectionDictItem";
+import {CancelButton} from "../../ui/StandardButton";
+import {useNavigate} from "react-router-dom";
 
 
 const columns: Column<Inspection>[] = [
@@ -20,7 +22,7 @@ const InspectionDict = () => {
     const [isViewMode, setIsViewMode] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
-
+    const navigate = useNavigate();
     const handleView = (item: Inspection) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -82,9 +84,9 @@ const InspectionDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Test dict</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Rodzaje kontroli</h1>
 
-            <div className="w-full justify-content-between flex">
+            <div className="w-full justify-content-between flex mb-2">
                 <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
                     Dodaj nowy
                 </Button>
@@ -98,6 +100,11 @@ const InspectionDict = () => {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
+            <CancelButton
+                type='button'
+                className='mt-3'
+                onClick={() => navigate(-1)} // Go back to the previous screen
+            >Powrót</CancelButton>
             <InspectionDictItem
                 refresh={getInspections}
                 show={openModal}

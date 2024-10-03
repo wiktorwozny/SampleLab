@@ -5,6 +5,8 @@ import DictionaryTable from "../../ui/DictionaryTable";
 import ClientDictItem from "./ClientDictItem";
 import {Button} from "react-bootstrap";
 import {AlertContext} from "../../../contexts/AlertsContext";
+import {CancelButton} from "../../ui/StandardButton";
+import {useNavigate} from 'react-router-dom'; // Import useNavigate
 
 const formatAddress = (address: number | string | Address): string => {
     if (typeof address === 'object' && address !== null && 'street' in address && 'zipCode' in address && 'city' in address) {
@@ -34,6 +36,8 @@ const ClientDict = () => {
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
 
+    const navigate = useNavigate(); // Use the useNavigate hook
+
     const handleView = (item: Client) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -57,7 +61,6 @@ const ClientDict = () => {
         setIsAddMode(true);
         setIsEditMode(false);
     };
-
 
     const handleDelete = async (item: Client) => {
         try {
@@ -96,19 +99,12 @@ const ClientDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Test dict</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Klienci</h1>
 
-            <div className="w-full justify-content-between flex">
+            <div className="w-full justify-content-between flex mb-2">
                 <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
                     Dodaj nowy
                 </Button>
-                {/*<div*/}
-                {/*    className="flex border relative mr-2 mb-2 p-2 border-black items-center hover:bg-gray-300 cursor-pointer"*/}
-                {/*>*/}
-                {/*    <div>Filtruj &nbsp;</div>*/}
-                {/*    <HiAdjustmentsHorizontal className="text-3xl"></HiAdjustmentsHorizontal>*/}
-                {/*</div>*/}
-
             </div>
 
             <DictionaryTable<Client>
@@ -118,6 +114,11 @@ const ClientDict = () => {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
+            <CancelButton
+                type='button'
+                className='mt-3'
+                onClick={() => navigate(-1)} // Go back to the previous screen
+            >Powrót</CancelButton>
             <ClientDictItem
                 refresh={getClients}
                 show={openModal}

@@ -27,15 +27,19 @@ public class ProductGroupService extends AbstractService implements ProductGroup
 
     @Override
     public Object insert(IModel model) {
-        return null;
+        final ProductGroupDto dto = (ProductGroupDto) model;
+        return productGroupRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final ProductGroupDto dto = (ProductGroupDto) model;
+        return productGroupRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        final ProductGroupDto dto = (ProductGroupDto) model;
+        productGroupRepository.deleteById(dto.getId());
     }
 }

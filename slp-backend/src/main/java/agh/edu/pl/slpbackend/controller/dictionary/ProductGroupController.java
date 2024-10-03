@@ -36,4 +36,14 @@ public class ProductGroupController extends AbstractController {
     public ResponseEntity<Void> add(@RequestBody ProductGroupDto productGroupDto) throws Exception {
         return add(productGroupDto, productGroupService);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<Void> edit(@RequestBody ProductGroupDto productGroupDto) throws Exception {
+        return edit(productGroupDto, productGroupService);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+        return delete(ProductGroupDto.builder().id(id).build(), productGroupService);
+    }
 }
