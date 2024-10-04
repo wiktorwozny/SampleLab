@@ -14,36 +14,48 @@ import BackupView from "./components/BackupView";
 import DictionariesView from "./components/DictionariesView";
 import LoginForm from './components/LoginForm';
 import RegisterPage from './pages/RegisterPage';
+import NoPermitionPage from './pages/NoPermitionPage';
+import PrivateRoute from './components/PrivateRoute';
+import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
 
 
 function App() {
     return (
-        <div className="App flex relative h-fit">
+        <div className="App flex relative h-fit w-full">
             <AlertsContext>
-                <BrowserRouter>
-                    <Sidebar/>
-                    <div className='relative w-full min-h-screen'>
-                        <div className='fixed w-full top-2 z-2'>
-                            <AlertComponent/>
+                {/* <div className='fixed w-full top-2 z-2 justify-center'>
+                    <AlertComponent/>
+                </div> */}
+                <CheckIsLogin>
+                    <BrowserRouter>
+                        <Sidebar/>
+                        <div className='relative w-full min-h-screen'>
+                            <div className='fixed w-full top-2 z-2 justify-center'>
+                                <AlertComponent/>
+                            </div>
+                            <Routes>
+                                <Route path='/' element={<SampleListPage/>}/>
+                                <Route path='/addSample' element={<SampleForm/>}/>
+                                <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
+                                <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
+                                <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
+                                <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
+                                <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId' element={<ExaminationForm/>}/>
+                                <Route path='/backup' element={<BackupView/>}/>
+                                <Route path='/dictionary' element={<DictionariesView/>}/>
+                                <Route path='/login' element={<LoginForm/>}/>
+                                <Route path='/register' element={
+                                    <PrivateRoute>
+                                        <RegisterPage/>
+                                    </PrivateRoute>
+                                }/>
+                                <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
+                            </Routes>
                         </div>
-                        <Routes>
-                            <Route path='/' element={<SampleListPage/>}/>
-                            <Route path='/addSample' element={<SampleForm/>}/>
-                            <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
-                            <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
-                            <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                            <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
-                            <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId' element={<ExaminationForm/>}/>
-                            <Route path='/backup' element={<BackupView/>}/>
-                            <Route path='/dictionary' element={<DictionariesView/>}/>
-                            <Route path='/login' element={<LoginForm/>}/>
-                            <Route path='/register' element={<RegisterPage/>}/>
-                            <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
-                        </Routes>
-                    </div>
-                </BrowserRouter>
-                
+                    </BrowserRouter>
+                </CheckIsLogin>
+                {/* <NoPermitionPage/> */}
                 {/* <ReportDataForm/> */}
             </AlertsContext>
         </div>

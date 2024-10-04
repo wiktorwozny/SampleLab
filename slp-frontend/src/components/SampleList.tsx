@@ -12,6 +12,7 @@ import {
 import {FormProvider, useForm} from 'react-hook-form';
 import {ProgressStateEnum, ProgressStateEnumDesc} from "../utils/enums";
 import {ProgressFormSelect} from "./ui/ProgressFormSelect";
+import { checkResponse } from "../utils/checkResponse";
 import {DisableButton} from "./ui/StandardButton";
 
 
@@ -51,6 +52,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                     setIsLoading(false)
                 }
             } catch (err) {
+                checkResponse(err);
                 console.log(err);
             }
         }

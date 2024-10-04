@@ -9,6 +9,7 @@ import {CancelButton, StandardButton} from "./ui/StandardButton";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
 import {getSampleById} from "../helpers/sampleApi";
+import { checkResponse } from "../utils/checkResponse";
 
 type ExaminationFormFields = {
     signage: string,
@@ -71,6 +72,7 @@ const ExaminationForm: FC<{}> = () => {
                     }
                 } catch (err) {
                     console.log(err);
+                    checkResponse(err);
                 }
             };
 
@@ -86,6 +88,7 @@ const ExaminationForm: FC<{}> = () => {
                     }
                 } catch (err) {
                     console.log(err);
+                    checkResponse(err);
                 }
             }
 
@@ -101,6 +104,7 @@ const ExaminationForm: FC<{}> = () => {
                     }
                 } catch (err) {
                     console.log(err);
+                    checkResponse(err);
                 }
             }
 
@@ -146,6 +150,7 @@ const ExaminationForm: FC<{}> = () => {
                 console.log(response);
             } catch (err) {
                 console.log(err);
+                checkResponse(err);
             }
         } else {
             values = {
@@ -159,6 +164,7 @@ const ExaminationForm: FC<{}> = () => {
                 console.log(response);
             } catch (err) {
                 console.log(err);
+                checkResponse(err);
             }
         }
 

@@ -1,9 +1,9 @@
 import axios from "axios"
-import { backendUrl } from "../utils/urls"
+import { backendUrl, Header } from "../utils/urls"
 const url = "product-group/"
 
 const getAllGroup = () =>{
-    return axios.get(backendUrl+url+"list")
+    return axios.get(backendUrl+url+"list", Header())
 }
 
 export {

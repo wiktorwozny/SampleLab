@@ -11,7 +11,7 @@ const LoginForm = () => {
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
     const {setAlertDetails} = useContext(AlertContext)
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const loginFunction = async (values: any) => {
         try {
@@ -19,10 +19,14 @@ const LoginForm = () => {
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 console.log("udalo ci się zalogować")
+                console.log(response.data)
                 setAlertDetails({type: "success", isAlert: true, message: "Udało ci się pomyślnie zalogować"})
-                navigate("/")
+                localStorage.setItem('role', response.data.user.role);
+                localStorage.setItem('token', response.data.token);
+                window.dispatchEvent(new Event('change'));
+                // navigate("/")
             }
-        } catch (err:any) {
+        } catch (err: any) {
             if(err?.response?.data?.message === "User not found" || err?.response?.data?.message === "Wrong password") {
                 setAlertDetails({type: "error", isAlert: true, message: "Błędny e-mail lub hasło"})
             } else {

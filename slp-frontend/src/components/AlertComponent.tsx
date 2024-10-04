@@ -18,9 +18,9 @@ const AlertComponent = () => {
             }
         }
     },[alertDetails])
-    return (<Collapse in = {alertDetails.isAlert} className="w-full">
+    return (<Collapse in = {alertDetails.isAlert} className="w-full flex justify-center">
         <Alert
-            className="w-fit relative m-auto"
+            className="w-fit relative mx-auto"
             ref={alertRef}
             severity={alertDetails.type}
             action={

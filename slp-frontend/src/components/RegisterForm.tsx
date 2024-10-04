@@ -7,6 +7,7 @@ import { RoleEnumDesc } from '../utils/enums';
 import { registerRequest } from '../helpers/userApi';
 import { useContext } from 'react';
 import {AlertContext} from '../contexts/AlertsContext';
+import { checkResponse } from '../utils/checkResponse';
 
 type Props = {
     setPassword: (password: string) => void
@@ -32,6 +33,7 @@ const RegisterForm = ({setPassword}: Props) => {
                 setAlertDetails({isAlert:true, type:"error", message: "Nie udało się stworzyć konta. Spróbuj później"})
             }
             console.log(err)
+            checkResponse(err);
         }
     }
 
