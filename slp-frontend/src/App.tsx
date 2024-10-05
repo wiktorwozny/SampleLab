@@ -23,9 +23,9 @@ function App() {
     return (
         <div className="App flex relative h-fit w-full">
             <AlertsContext>
-                {/* <div className='fixed w-full top-2 z-2 justify-center'>
+                <div className='fixed w-full top-2 z-2 justify-center'>
                     <AlertComponent/>
-                </div> */}
+                </div>
                 <CheckIsLogin>
                     <BrowserRouter>
                         <Sidebar/>

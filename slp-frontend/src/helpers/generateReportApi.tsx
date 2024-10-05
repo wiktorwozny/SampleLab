@@ -7,7 +7,7 @@ const generateReportForSample = (sampleId: number | undefined) => {
     if (sampleId !== undefined) {
         return axios.get(backendUrl + url + `sample-report/${sampleId}`, {
             responseType: 'blob',
-            ...Header
+            ...Header()
         });
     }
     return null;
