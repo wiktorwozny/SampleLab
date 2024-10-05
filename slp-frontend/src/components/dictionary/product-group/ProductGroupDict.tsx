@@ -1,43 +1,29 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {deleteClient, getAllClients} from "../../../helpers/clientApi";
-import {Address, Client, Column} from "../../../utils/types";
-import DictionaryTable from "../../ui/DictionaryTable";
-import ClientDictItem from "./ClientDictItem";
-import {Button} from "react-bootstrap";
+import {Column, ProductGroup} from "../../../utils/types";
+import React, {useContext, useEffect, useState} from "react";
 import {AlertContext} from "../../../contexts/AlertsContext";
+import {Button} from "react-bootstrap";
+import DictionaryTable from "../../ui/DictionaryTable";
 import {CancelButton} from "../../ui/StandardButton";
-import {useNavigate} from 'react-router-dom'; // Import useNavigate
+import {useNavigate} from "react-router-dom";
+import {deleteGroup, getAllGroup} from "../../../helpers/groupApi";
+import ProductGroupDictItem from "./ProductGroupDictItem";
 
-const formatAddress = (address: number | string | Address): string => {
-    if (typeof address === 'object' && address !== null && 'street' in address && 'zipCode' in address && 'city' in address) {
-        return `ul.${address.street}, ${address.zipCode}, ${address.city}`;
-    }
-    return '';
-};
 
-const columns: Column<Client>[] = [
+const columns: Column<ProductGroup>[] = [
     {header: 'ID', accessor: 'id'},
     {header: 'Name', accessor: 'name'},
-    {header: 'WIJHARS Code', accessor: 'wijharsCode'},
-    {
-        header: 'Address',
-        accessor: 'address',
-        render: (value) => value ? formatAddress(value) : '',
-    },
 ];
 
-const ClientDict = () => {
-    const [clientsList, setClientsList] = useState<Client[]>([]);
+const ProductGroupDict = () => {
+    const [productGroupList, setProductGroupList] = useState<ProductGroup[]>([]);
     const {setAlertDetails} = useContext(AlertContext);
     const [openModal, setOpenModal] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<Client | null>(null);
+    const [selectedItem, setSelectedItem] = useState<ProductGroup | null>(null);
     const [isViewMode, setIsViewMode] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
-
-    const navigate = useNavigate(); // Use the useNavigate hook
-
-    const handleView = (item: Client) => {
+    const navigate = useNavigate();
+    const handleView = (item: ProductGroup) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
         setIsViewMode(true);
@@ -45,7 +31,7 @@ const ClientDict = () => {
         setIsEditMode(false);
     };
 
-    const handleEdit = (item: Client) => {
+    const handleEdit = (item: ProductGroup) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
         setIsViewMode(false);
@@ -61,13 +47,13 @@ const ClientDict = () => {
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: Client) => {
+    const handleDelete = async (item: ProductGroup) => {
         try {
-            let response = await deleteClient(item?.id)
+            let response = await deleteGroup(item?.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
-                getClients();
+                getProductGroups();
                 handleClose();
             }
         } catch (err) {
@@ -80,35 +66,36 @@ const ClientDict = () => {
         setOpenModal(false);
     }
 
-    const copyObject = (item: Client): Client => {
+    const copyObject = (item: ProductGroup): ProductGroup => {
         return JSON.parse(JSON.stringify(item));
     };
 
-    const getClients = () => {
-        getAllClients().then((res) => {
+    const getProductGroups = () => {
+        getAllGroup().then((res) => {
             if (res.status === 200) {
-                setClientsList(res.data);
+                setProductGroupList(res.data);
             }
         })
     };
 
     useEffect(() => {
-        getClients();
+        getProductGroups();
     }, []);
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Klienci</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Grupy produktów</h1>
 
             <div className="w-full justify-content-between flex mb-2">
                 <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
                     Dodaj nowy
                 </Button>
+
             </div>
 
-            <DictionaryTable<Client>
+            <DictionaryTable<ProductGroup>
                 columns={columns}
-                data={clientsList}
+                data={productGroupList}
                 onView={handleView}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
@@ -118,8 +105,8 @@ const ClientDict = () => {
                 className='mt-3'
                 onClick={() => navigate(-1)} // Go back to the previous screen
             >Powrót</CancelButton>
-            <ClientDictItem
-                refresh={getClients}
+            <ProductGroupDictItem
+                refresh={getProductGroups}
                 show={openModal}
                 handleClose={handleClose}
                 item={selectedItem}
@@ -128,7 +115,6 @@ const ClientDict = () => {
                 isEdit={isEditMode}
             />
         </div>
-    );
-};
-
-export default ClientDict;
+    )
+}
+export default ProductGroupDict

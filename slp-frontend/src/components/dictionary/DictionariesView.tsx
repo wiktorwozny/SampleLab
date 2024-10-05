@@ -11,6 +11,7 @@ const DictionariesView: React.FC = () => {
         {label: 'Standardy próbek', onClick: () => navigate('/dictionary/samplingStandardDict')},
         {label: 'Kontrole', onClick: () => navigate('/dictionary/inspectionDict')},
         {label: 'Kody', onClick: () => navigate('/dictionary/codeDict')},
+        {label: 'Grupy productów', onClick: () => navigate('/dictionary/productGroupDict')},
     ];
 
     return (

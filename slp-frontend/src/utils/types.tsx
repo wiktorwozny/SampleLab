@@ -65,6 +65,13 @@ export type ProductGroup = {
     samplingStandards?: SamplingStandards[]
 }
 
+export type ProductGroupSave = {
+    id: number,
+    name: string,
+    indications?: number[],
+    samplingStandards?: number[]
+}
+
 export type ReportData = {
     id: number,
     manufacturerName: string,
