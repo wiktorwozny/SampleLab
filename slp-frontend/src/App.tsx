@@ -17,6 +17,7 @@ import RegisterPage from './pages/RegisterPage';
 import NoPermitionPage from './pages/NoPermitionPage';
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
+import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
                                         <RegisterPage/>
                                     </PrivateRoute>
                                 }/>
+                                <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
                             </Routes>
                         </div>
                     </BrowserRouter>
