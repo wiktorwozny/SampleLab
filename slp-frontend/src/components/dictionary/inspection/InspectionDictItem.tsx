@@ -5,7 +5,7 @@ import {AlertContext} from "../../../contexts/AlertsContext";
 import {Button, Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
-import {addIndication, updateIndication} from "../../../helpers/indicationApi";
+import {addInspection, updateInspection} from "../../../helpers/inspectionApi";
 
 interface InspectionDictItemProps {
     refresh: () => void;
@@ -49,7 +49,7 @@ const InspectionDictItem: React.FC<InspectionDictItemProps> = ({
 
     const handleEdit = (formData: any) => {
         try {
-            updateIndication(formData).then((response) => {
+            updateInspection(formData).then((response) => {
                 if (response.status === 201 || response.status === 200) {
                     setAlertDetails({isAlert: true, message: "Edytowano definicję", type: "success"})
                     refresh();
@@ -64,7 +64,7 @@ const InspectionDictItem: React.FC<InspectionDictItemProps> = ({
 
     const handleAdd = (formData: any) => {
         try {
-            addIndication(formData).then((response) => {
+            addInspection(formData).then((response) => {
                 if (response.status === 201 || response.status === 200) {
                     setAlertDetails({isAlert: true, message: "Dodano nową definicję", type: "success"})
                     refresh();

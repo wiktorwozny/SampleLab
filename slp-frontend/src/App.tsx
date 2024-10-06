@@ -11,10 +11,7 @@ import Sidebar from "./components/Sidebar";
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
 import BackupView from "./components/BackupView";
-import DictionariesView from "./components/DictionariesView";
-import LoginForm from './components/LoginForm';
-import RegisterPage from './pages/RegisterPage';
-import NoPermitionPage from './pages/NoPermitionPage';
+
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
@@ -49,8 +46,10 @@ function App() {
                                 <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
                                 <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
                                 <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                                <Route path='/sample/manageExaminations/:sampleId/newExamination' element={<ExaminationForm/>}/>
-                                <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId' element={<ExaminationForm/>}/>
+                                <Route path='/sample/manageExaminations/:sampleId/newExamination'
+                                       element={<ExaminationForm/>}/>
+                                <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
+                                       element={<ExaminationForm/>}/>
                                 <Route path='/backup' element={<BackupView/>}/>
                                 <Route path='/dictionary' element={<DictionariesView/>}/>
                                 <Route path='/dictionary/clientDict' element={<ClientDict/>}/>
@@ -71,37 +70,6 @@ function App() {
                     </BrowserRouter>
                 </CheckIsLogin>
                 {/* <NoPermitionPage/> */}
-                <BrowserRouter>
-                    <Sidebar/>
-                    <div className='relative w-full min-h-screen'>
-                        <div className='fixed w-full top-2 z-2'>
-                            <AlertComponent/>
-                        </div>
-                        <Routes>
-                            <Route path='/' element={<SampleListPage/>}/>
-                            <Route path='/addSample' element={<SampleForm/>}/>
-                            <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
-                            <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
-                            <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                            <Route path='/sample/manageExaminations/:sampleId/newExamination'
-                                   element={<ExaminationForm/>}/>
-                            <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
-                                   element={<ExaminationForm/>}/>
-                            <Route path='/backup' element={<BackupView/>}/>
-                            <Route path='/dictionary' element={<DictionariesView/>}/>
-                            <Route path='/dictionary/clientDict' element={<ClientDict/>}/>
-                            <Route path='/dictionary/indicationDict' element={<IndicationDict/>}/>
-                            <Route path='/dictionary/codeDict' element={<CodeDict/>}/>
-                            <Route path='/dictionary/inspectionDict' element={<InspectionDict/>}/>
-                            <Route path='/dictionary/samplingStandardDict' element={<SamplingStandardDict/>}/>
-                            <Route path='/dictionary/productGroupDict' element={<ProductGroupDict/>}/>
-                            <Route path='/login' element={<LoginForm/>}/>
-                            <Route path='/register' element={<RegisterPage/>}/>
-                            <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
-                        </Routes>
-                    </div>
-                </BrowserRouter>
-
                 {/* <ReportDataForm/> */}
             </AlertsContext>
         </div>
