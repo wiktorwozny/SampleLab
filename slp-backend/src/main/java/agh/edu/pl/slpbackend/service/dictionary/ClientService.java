@@ -28,15 +28,19 @@ public class ClientService extends AbstractService implements ClientMapper {
 
     @Override
     public Object insert(IModel model) {
-        return null;
+        final ClientDto dto = (ClientDto) model;
+        return clientRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final ClientDto dto = (ClientDto) model;
+        return clientRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        final ClientDto dto = (ClientDto) model;
+        clientRepository.deleteById(dto.getId());
     }
 }

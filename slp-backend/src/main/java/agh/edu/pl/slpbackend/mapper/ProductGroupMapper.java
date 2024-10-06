@@ -14,7 +14,7 @@ public interface ProductGroupMapper {
                 .build();
     }
 
-    default ProductGroup toDto(final ProductGroupDto dto) {
+    default ProductGroup toModel(final ProductGroupDto dto) {
         return ProductGroup.builder()
                 .id(dto.getId())
                 .name(dto.getName())

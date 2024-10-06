@@ -28,15 +28,19 @@ public class InspectionService extends AbstractService implements InspectionMapp
 
     @Override
     public Object insert(IModel model) {
-        return null;
+        final InspectionDto dto = (InspectionDto) model;
+        return inspectionRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final InspectionDto dto = (InspectionDto) model;
+        return inspectionRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        final InspectionDto dto = (InspectionDto) model;
+        inspectionRepository.deleteById(dto.getId());
     }
 }

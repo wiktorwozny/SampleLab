@@ -37,13 +37,13 @@ public class CodeController extends AbstractController {
         return add(codeDto, codeService);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Void> edit(@RequestBody CodeDto codeDto) throws Exception {
         return edit(codeDto, codeService);
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody CodeDto codeDto) throws Exception {
-        return delete(codeDto, codeService);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
+        return delete(CodeDto.builder().id(id).build(), codeService);
     }
 }

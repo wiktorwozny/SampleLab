@@ -1,10 +1,7 @@
 package agh.edu.pl.slpbackend.dto;
 
-import agh.edu.pl.slpbackend.model.Inspection;
 import agh.edu.pl.slpbackend.service.iface.IModel;
-import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,17 +10,16 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@ModelClass(Inspection.class)
-public class InspectionDto implements IModel, Serializable {
+public class ProductGroupSaveDto implements IModel, Serializable {
 
     @Serial
-    private static final long serialVersionUID = -1144966894315267793L;
+    private static final long serialVersionUID = -6720720397053849550L;
 
     @Id
     @ModelFieldName("id")
@@ -31,4 +27,12 @@ public class InspectionDto implements IModel, Serializable {
 
     @ModelFieldName("name")
     private String name;
+
+    @ModelFieldName("indications")
+    private List<Long> indications;
+
+    @ModelFieldName("samplingStandards")
+    private List<Long> samplingStandards;
 }
+
+

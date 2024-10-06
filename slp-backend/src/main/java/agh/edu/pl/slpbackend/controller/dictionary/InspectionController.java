@@ -37,4 +37,14 @@ public class InspectionController extends AbstractController {
     public ResponseEntity<Inspection> add(@RequestBody InspectionDto inspectionDto) throws Exception {
         return new ResponseEntity<>(add(inspectionDto, inspectionService).getStatusCode()); //TODO nie wiem, trzeba przetestować
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<Void> edit(@RequestBody InspectionDto inspectionDto) throws Exception {
+        return edit(inspectionDto, inspectionService);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+        return delete(InspectionDto.builder().id(id).build(), inspectionService);
+    }
 }

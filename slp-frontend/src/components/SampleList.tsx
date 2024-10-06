@@ -10,7 +10,7 @@ import {
 } from "react-icons/md";
 
 import {FormProvider, useForm} from 'react-hook-form';
-import {ProgressStateEnum, ProgressStateEnumDesc} from "../utils/enums";
+import {ProgressStateEnumDesc} from "../utils/enums";
 import {ProgressFormSelect} from "./ui/ProgressFormSelect";
 import { checkResponse } from "../utils/checkResponse";
 import {DisableButton} from "./ui/StandardButton";
@@ -198,7 +198,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                 <br/>
             </div>}
             {isLoading && <div className="text-2xl">Loading...</div>}
-            {!isLoading && numberOfPages == 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
+            {!isLoading && numberOfPages === 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
         </div>
     )
 }
