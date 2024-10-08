@@ -81,7 +81,7 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
     private void modifySheet(Sheet sheet, org.apache.poi.ss.usermodel.Workbook workbook) {
 
         if (uncertaintyExists) {
-            Cell resultCell = sheet.getRow(1).getCell(3);
+            Cell resultCell = sheet.getRow(0).getCell(3);
             resultCell.setCellValue(resultCell.getStringCellValue() + " ± niepewność pomiaru/ [niepewność pomiaru]");
         }
 
@@ -138,9 +138,9 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
             Row newRow = sheet.createRow(sheet.getLastRowNum() + 1);
             createCellAtIndexWithValue(newRow, 0, String.valueOf(i + 1), workbook);
             createCellAtIndexWithValue(newRow, 1, examination.getIndication().getName(), workbook);
-            createCellAtIndexWithValue(newRow, 2, "PN-NE ISO 123:123", workbook);
-            createCellAtIndexWithValue(newRow, 3, uncertaintyExists ? "16,7 " + examination.getUncertainty() : "16,7", workbook);
-            createCellAtIndexWithValue(newRow, 4, "[giet]", workbook);
+            createCellAtIndexWithValue(newRow, 2, examination.getIndication().getNorm(), workbook);
+            createCellAtIndexWithValue(newRow, 3, uncertaintyExists ? "16,7 ± " + examination.getUncertainty() : "16,7", workbook);
+            createCellAtIndexWithValue(newRow, 4, examination.getIndication().getUnit(), workbook);
             int colNum = 5;
 
             if (pattern[0]) {
