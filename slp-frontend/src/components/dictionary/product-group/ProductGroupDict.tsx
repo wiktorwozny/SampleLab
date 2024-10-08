@@ -11,7 +11,7 @@ import ProductGroupDictItem from "./ProductGroupDictItem";
 
 const columns: Column<ProductGroup>[] = [
     {header: 'ID', accessor: 'id'},
-    {header: 'Name', accessor: 'name'},
+    {header: 'Nazwa', accessor: 'name'},
 ];
 
 const ProductGroupDict = () => {

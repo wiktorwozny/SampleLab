@@ -11,7 +11,7 @@ import {useNavigate} from "react-router-dom";
 
 const columns: Column<SamplingStandards>[] = [
     {header: 'ID', accessor: 'id'},
-    {header: 'Name', accessor: 'name'},
+    {header: 'Nazwa', accessor: 'name'},
 ];
 
 const SamplingStandardDict = () => {

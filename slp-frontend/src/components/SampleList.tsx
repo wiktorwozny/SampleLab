@@ -112,7 +112,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             onClick={() => updateSortParams("admissionDate")}>Data przyjęcia
                         </th>
                         <th scope="col" className={activeColumn === 'progressStatus' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("progressStatus")}>Progres
+                            onClick={() => updateSortParams("progressStatus")}>Postęp
                         </th>
                     </tr>
                     </thead>
@@ -197,7 +197,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                 </div>
                 <br/>
             </div>}
-            {isLoading && <div className="text-2xl">Loading...</div>}
+            {isLoading && <div className="text-2xl">Ładowanie...</div>}
             {!isLoading && numberOfPages === 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
         </div>
     )

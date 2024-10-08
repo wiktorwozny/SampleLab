@@ -10,10 +10,10 @@ import {useNavigate} from "react-router-dom";
 
 const columns: Column<Indication>[] = [
     {header: 'ID', accessor: 'id'},
-    {header: 'Name', accessor: 'name'},
-    {header: 'Norm', accessor: 'norm'},
-    {header: 'Unit', accessor: 'unit'},
-    {header: 'Laboratory', accessor: 'laboratory'}
+    {header: 'Nazwa', accessor: 'name'},
+    {header: 'Metoda', accessor: 'norm'},
+    {header: 'Jednostka', accessor: 'unit'},
+    {header: 'Laboratorium', accessor: 'laboratory'}
 ];
 
 const IndicationDict = () => {

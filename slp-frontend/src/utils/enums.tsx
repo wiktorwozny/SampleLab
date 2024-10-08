@@ -1,15 +1,15 @@
 import { ProgressState } from "./types";
 import { Role } from "./types";
 export enum ProgressStateEnum {
-    TODO = 'TODO',
-    IN_PROGRESS = 'IN_PROGRESS',
-    DONE = 'DONE'
+    TODO = 'Do zrobienia',
+    IN_PROGRESS = 'W trakcie',
+    DONE = 'Gotowe'
 }
 
 export const ProgressStateEnumDesc: ProgressState[] = [
-    {value: ProgressStateEnum.TODO, label: 'To do'},
-    {value: ProgressStateEnum.IN_PROGRESS, label: 'In progress'},
-    {value: ProgressStateEnum.DONE, label: 'Done'}
+    {value: ProgressStateEnum.TODO, label: 'Do zrobienia'},
+    {value: ProgressStateEnum.IN_PROGRESS, label: 'W trakcie'},
+    {value: ProgressStateEnum.DONE, label: 'Gotowe'}
 ];
 
 export enum RoleEnum {

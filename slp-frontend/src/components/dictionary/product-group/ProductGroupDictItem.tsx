@@ -191,16 +191,16 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                         {!isView && (
                             <div className="flex space-x-4 mt-4">
                                 <Button variant="primary" onClick={() => setShowIndicationsModal(true)}>
-                                    Wybierz Indikacje
+                                    Wybierz oznaczenia
                                 </Button>
                                 <Button variant="primary" onClick={() => setShowSamplingStandardsModal(true)}>
-                                    Wybierz Standardy Próbkowania
+                                    Wybierz normy pobrania
                                 </Button>
                             </div>
                         )}
 
                         <>
-                            <h5 className="mt-6 mb-2 text-lg font-semibold">Indikacje</h5>
+                            <h5 className="mt-6 mb-2 text-lg font-semibold">Oznaczenia</h5>
                             <div className="max-h-96 overflow-y-auto">
                                 <table className="min-w-full table-auto border-collapse border border-gray-300">
                                     <thead>
@@ -221,7 +221,7 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                                 </table>
                             </div>
 
-                            <h5 className="mt-6 mb-2 text-lg font-semibold">Standardy Próbkowania</h5>
+                            <h5 className="mt-6 mb-2 text-lg font-semibold">Normy pobrania</h5>
                             <div className="max-h-96 overflow-y-auto">
                                 <table className="min-w-full table-auto border-collapse border border-gray-300">
                                     <thead>

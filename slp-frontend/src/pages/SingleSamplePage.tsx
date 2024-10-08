@@ -57,13 +57,13 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Do analizy: </span>
+            <span className="font-bold">Analiza odwoławcza: </span>
             {sample?.analysis === true ? "Tak" : "Nie"}
         </Div>
 
         <Div className="flex justify-between">
             <div>
-                <span className="font-bold">Nazwa Klient:</span> {`${sample?.client.name}`}
+                <span className="font-bold">Nazwa Klienta:</span> {`${sample?.client.name}`}
             </div>
             <div>
                 <span
@@ -77,7 +77,7 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Data zakonczenia badan: </span>
+            <span className="font-bold">Data zakończenia badań: </span>
             {`${sample?.examinationExpectedEndDate}`}
         </Div>
 
@@ -92,22 +92,22 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Inspekcja: </span>
+            <span className="font-bold">Kontrola: </span>
             {`${sample?.inspection?.name}`}
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Norma: </span>
+            <span className="font-bold">Norma pobrania próbki: </span>
             {`${sample?.samplingStandard?.name}`}
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Wielkość: </span>
+            <span className="font-bold">Wielkość próbki: </span>
             {`${sample?.size}`}
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Status: </span>
+            <span className="font-bold">Stan próbki: </span>
             {`${sample?.state}`}
         </Div>
 

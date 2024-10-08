@@ -17,10 +17,10 @@ const formatAddress = (address: number | string | Address): string => {
 
 const columns: Column<Client>[] = [
     {header: 'ID', accessor: 'id'},
-    {header: 'Name', accessor: 'name'},
-    {header: 'WIJHARS Code', accessor: 'wijharsCode'},
+    {header: 'Nazwa', accessor: 'name'},
+    {header: 'Kod WIJHARS', accessor: 'wijharsCode'},
     {
-        header: 'Address',
+        header: 'Adres',
         accessor: 'address',
         render: (value) => value ? formatAddress(value) : '',
     },
