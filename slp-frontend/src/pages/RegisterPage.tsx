@@ -7,7 +7,7 @@ const RegisterPage = () => {
     return(<div className="w-full h-screen items-center flex">
         {!password ? <RegisterForm setPassword={setPassword}/>:
             <div className="w-full justify-center items-center text-3xl">
-                <h2>Twoje hasło to: <span className="text-red-500 font-bold">{password}</span></h2>
+                <h2>Hasło nowego użytkownika to: <span className="text-red-500 font-bold">{password}</span></h2>
             </div>}
     </div>)
 }

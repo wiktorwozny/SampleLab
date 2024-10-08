@@ -18,8 +18,8 @@ export const ProgressFormSelect = (
 
         const onChangeHandler = async (field: ControllerRenderProps<FieldValues, any>, sampleId: number, option: ProgressState) => {
             try {
-                console.log(option.value);
-                let response = await updateStatus(sampleId, String(option.value))
+                console.log(option);
+                let response = await updateStatus(sampleId, option.label)
                 if (response.status === 200 || response.status === 201) {
                     setSamples((prev: SummarySample[]) => {
                         // Znajdź indeks elementu, który chcesz zmienić

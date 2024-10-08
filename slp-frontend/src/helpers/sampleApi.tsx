@@ -17,7 +17,7 @@ const addReportDataToSample = (sampleId: string | undefined, reportData: ReportD
 
 const updateStatus = (sampleId: number, status: string) => {
     console.log(String(status));
-    return axios.put(backendUrl + url + `status/${sampleId}/${status}`, Header())
+    return axios.put(backendUrl + url + `status/${sampleId}/${status}`, {}, Header())
 }
 
 const getSampleById = (sampleId: string | undefined) => {
