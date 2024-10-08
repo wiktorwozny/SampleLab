@@ -37,6 +37,7 @@ const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, 
                         keyValue="codes"
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
+                        value={`${el}`}
                     />))}
                 </div>
             </div>
@@ -51,6 +52,7 @@ const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, 
                         keyValue="clients"
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
+                        value={`${el}`}
                     />))}
                 </div>
             </div>
@@ -65,6 +67,7 @@ const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, 
                         keyValue="groups"
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
+                        value={`${el}`}
                     />))}
                 </div>
             </div>
