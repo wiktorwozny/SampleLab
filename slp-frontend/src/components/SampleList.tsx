@@ -10,7 +10,7 @@ import {
 } from "react-icons/md";
 
 import {FormProvider, useForm} from 'react-hook-form';
-import {ProgressStateEnum, ProgressStateEnumDesc} from "../utils/enums";
+import {ProgressStateEnumDesc} from "../utils/enums";
 import {ProgressFormSelect} from "./ui/ProgressFormSelect";
 import { checkResponse } from "../utils/checkResponse";
 import {DisableButton} from "./ui/StandardButton";
@@ -112,7 +112,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             onClick={() => updateSortParams("admissionDate")}>Data przyjęcia
                         </th>
                         <th scope="col" className={activeColumn === 'progressStatus' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("progressStatus")}>Progres
+                            onClick={() => updateSortParams("progressStatus")}>Postęp
                         </th>
                     </tr>
                     </thead>
@@ -197,8 +197,8 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                 </div>
                 <br/>
             </div>}
-            {isLoading && <div className="text-2xl">Loading...</div>}
-            {!isLoading && numberOfPages == 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
+            {isLoading && <div className="text-2xl">Ładowanie...</div>}
+            {!isLoading && numberOfPages === 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
         </div>
     )
 }

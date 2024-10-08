@@ -142,7 +142,7 @@ const SampleForm: FC<{}> = () => {
     }
 
     return (<div className='flex flex-col justify-center items-center w-full'>
-        <h2 className="text-center font-bold my-3 text-2xl">Formularz dodawnia próbki</h2>
+        <h2 className="text-center font-bold my-3 text-2xl">Dodawanie próbki</h2>
         <FormProvider {...method}>
             <form className="w-4/5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
                 <div className='flex-col'>
@@ -163,7 +163,7 @@ const SampleForm: FC<{}> = () => {
                             {errors.code && errors.code.message &&
                                 <p className="text-red-600">{`${errors.code.message}`}</p>}
 
-                            <FormLabel>Inspekcja</FormLabel>
+                            <FormLabel>Kontrola</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
                                 options={inspections.map(inspection => ({value: JSON.stringify(inspection), label: inspection.name}))}
@@ -269,7 +269,7 @@ const SampleForm: FC<{}> = () => {
                             {errors.group && errors.group.message &&
                                 <p className="text-red-600">{`${errors.group.message}`}</p>}
 
-                            <FormLabel>Wybierz normę pobrania próbki</FormLabel>
+                            <FormLabel>Norma pobrania próbki</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
                                 options={samplingStandard.map(standard => ({

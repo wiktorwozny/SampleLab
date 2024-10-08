@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.service;
+package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.SamplingStandardDto;
 import agh.edu.pl.slpbackend.mapper.SamplingStandardMapper;
@@ -27,15 +27,19 @@ public class SamplingStandardService extends AbstractService implements Sampling
 
     @Override
     public Object insert(IModel model) {
-        return null;
+        final SamplingStandardDto dto = (SamplingStandardDto) model;
+        return samplingStandardRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
-        return null;
+        final SamplingStandardDto dto = (SamplingStandardDto) model;
+        return samplingStandardRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        final SamplingStandardDto dto = (SamplingStandardDto) model;
+        samplingStandardRepository.deleteById(dto.getId());
     }
 }

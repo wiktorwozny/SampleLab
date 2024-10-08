@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
                     <li className="my-1.5"><a
                         className="text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
                         onClick={() => navigate('/dictionary')}
-                    >Słowniki
+                    >Edycja danych
                     </a>
                     </li>
 

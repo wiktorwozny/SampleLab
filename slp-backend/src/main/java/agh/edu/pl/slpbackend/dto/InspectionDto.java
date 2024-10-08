@@ -1,7 +1,6 @@
 package agh.edu.pl.slpbackend.dto;
 
 import agh.edu.pl.slpbackend.model.Inspection;
-import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
@@ -14,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
@@ -33,16 +31,4 @@ public class InspectionDto implements IModel, Serializable {
 
     @ModelFieldName("name")
     private String name;
-
-    @ModelFieldName("norm")
-    private String norm;
-
-    @ModelFieldName("unit")
-    private String unit;
-
-    @ModelFieldName("laboratory")
-    private String laboratory;
-
-    @ModelFieldName("groups")
-    private List<ProductGroup> groups;
 }

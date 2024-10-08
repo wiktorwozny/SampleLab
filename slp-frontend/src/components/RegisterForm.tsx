@@ -38,7 +38,7 @@ const RegisterForm = ({setPassword}: Props) => {
     }
 
     return(<div className="w-full flex items-center flex-col relative justify-center h-screen">
-        <h2 className="font-bold my-3 text-2xl">Formularz Rejestracji</h2>
+        <h2 className="font-bold my-3 text-2xl">Zarejestruj się</h2>
         <FormProvider {...method}>
             <form className='flex flex-col w-1/3 mt-3' onSubmit={handleSubmit(registerFunction)}>
                 <FormLabel className='text-start'>Pełne imie</FormLabel>

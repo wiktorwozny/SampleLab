@@ -1,5 +1,6 @@
 import axios from "axios";
-import { backendUrl, Header } from "../utils/urls";
+import {backendUrl, Header} from "../utils/urls";
+import {Indication} from "../utils/types";
 
 const url = 'indication/'
 
@@ -17,7 +18,27 @@ const getIndicationById = (indicationId: string | undefined) => {
     return null;
 }
 
+const getAllIndications = () => {
+    return axios.get(backendUrl + url + "list", Header());
+}
+
+const updateIndication = (item: Indication) => {
+    return axios.put(backendUrl + url + 'update', item, Header());
+}
+
+const addIndication = (item: Indication) => {
+    return axios.post(backendUrl + url + "save", item, Header());
+}
+
+const deleteIndication = (id: number | null) => {
+    return axios.delete(backendUrl + url + `delete/${id}`, Header());
+}
+
 export {
     getIndicationsForSample,
-    getIndicationById
+    getIndicationById,
+    getAllIndications,
+    updateIndication,
+    addIndication,
+    deleteIndication
 }

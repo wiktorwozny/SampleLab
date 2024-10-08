@@ -1,8 +1,8 @@
-package agh.edu.pl.slpbackend.controller;
+package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SamplingStandardDto;
-import agh.edu.pl.slpbackend.service.SamplingStandardService;
+import agh.edu.pl.slpbackend.service.dictionary.SamplingStandardService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +35,16 @@ public class SamplingStandardController extends AbstractController {
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody SamplingStandardDto samplingStandardDto) throws Exception {
         return add(samplingStandardDto, samplingStandardService);
+    }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<Void> edit(@RequestBody SamplingStandardDto samplingStandardDto) throws Exception {
+        return edit(samplingStandardDto, samplingStandardService);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+        return delete(SamplingStandardDto.builder().id(id).build(), samplingStandardService);
     }
 }

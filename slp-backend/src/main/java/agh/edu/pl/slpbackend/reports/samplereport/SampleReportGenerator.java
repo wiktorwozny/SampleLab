@@ -89,14 +89,14 @@ public class SampleReportGenerator {
         Map<String, String> fieldsMap = new HashMap<>();
         fieldsMap.put("labName", "Moje Laboratorium");
         fieldsMap.put("city", "Moje Miasto");
-        fieldsMap.put("fullAddress", "Mój pełny adres 96 pod muchomorem");
-        fieldsMap.put("phoneNumber", "999 998 997");
-        fieldsMap.put("fax", "co to fax? XD");
+        fieldsMap.put("fullAddress", "Pełny adres 96 Warszawa");
+        fieldsMap.put("phoneNumber", "123 123 123");
+        fieldsMap.put("fax", "+12 123 123 123");
         fieldsMap.put("email", "laboratoryemail@email.com");
-        fieldsMap.put("sampleId", "jekieś IDK XDD");
+        fieldsMap.put("sampleId", String.valueOf(sample.getId()));
         fieldsMap.put("newDate", getCurrentTime());
         fieldsMap.put("counter", Integer.toString(1));
-        fieldsMap.put("country", "POLSKA GUROM");
+        fieldsMap.put("country", "Polska");
 
         String supplierOrSellerName = sample.getReportData().getSupplierName() != null
                 ? sample.getReportData().getSupplierName()
@@ -108,14 +108,14 @@ public class SampleReportGenerator {
         fieldsMap.put("samplingStandard", sample.getSamplingStandard().getName());
         fieldsMap.put("samplingDate", getCurrentTime());
         fieldsMap.put("mechanism", sample.getReportData().getMechanism());
-        fieldsMap.put("batchSize", "[rozmiar partii]");
-        fieldsMap.put("batchNumber", "[numer partii]");
+        fieldsMap.put("batchSize", sample.getReportData().getBatchSizeProd() != null ? sample.getReportData().getBatchSizeProd() : sample.getReportData().getBatchSizeStorehouse());
+        fieldsMap.put("batchNumber", String.valueOf(sample.getReportData().getBatchNumber()));
         fieldsMap.put("productionDate", getCurrentTime());
         fieldsMap.put("expirationDate", formatLocalDate(sample.getExpirationDate()));
         fieldsMap.put("clientName", sample.getClient().getName());
         fieldsMap.put("clientAddress", formatAddress(sample.getClient().getAddress()));
         fieldsMap.put("admissionDate", formatLocalDate(sample.getAdmissionDate()));
-        fieldsMap.put("sampleDesc", "Lorem ipsum");
+        fieldsMap.put("sampleDesc", "");
         fieldsMap.put("sampleSize", sample.getSize());
         fieldsMap.put("sampleState", sample.getState());
 

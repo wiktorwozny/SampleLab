@@ -36,4 +36,14 @@ public class ClientController extends AbstractController {
     public ResponseEntity<Void> add(@RequestBody ClientDto clientDto) throws Exception {
         return add(clientDto, clientService);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<Void> edit(@RequestBody ClientDto clientDto) throws Exception {
+        return edit(clientDto, clientService);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+        return delete(ClientDto.builder().id(id).build(), clientService);
+    }
 }

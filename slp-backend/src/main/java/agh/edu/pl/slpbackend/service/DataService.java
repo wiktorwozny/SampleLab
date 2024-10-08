@@ -6,6 +6,7 @@ import agh.edu.pl.slpbackend.dto.ProductGroupDto;
 import agh.edu.pl.slpbackend.dto.filters.Filters;
 import agh.edu.pl.slpbackend.service.dictionary.ClientService;
 import agh.edu.pl.slpbackend.service.dictionary.CodeService;
+import agh.edu.pl.slpbackend.service.dictionary.ProductGroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
