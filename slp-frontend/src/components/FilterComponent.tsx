@@ -79,6 +79,7 @@ const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, 
                         keyValue="progressStatuses"
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
+                        value={`${el.value}`}
                     />))}
                 </div>
             </div>

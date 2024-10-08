@@ -6,15 +6,16 @@ interface Props {
     label: string;
     keyValue: FilterKey;
     setSelectedFilters:any;
-    selectedFilters:FiltersData
+    selectedFilters:FiltersData;
+    value: string;
 }
-export const ChipFilter:React.FC<Props> = ({label, keyValue, setSelectedFilters, selectedFilters})=> {
+export const ChipFilter:React.FC<Props> = ({label, keyValue, setSelectedFilters, selectedFilters, value})=> {
     
     const [isSelected, setIsSelected] = useState<boolean>(false);
     useEffect(()=>{
         // console.log(selectedFilters)
         // console.log(selectedFilters[keyValue])
-        if(selectedFilters[keyValue].includes(label)){
+        if(selectedFilters[keyValue].includes(value)){
             setIsSelected(true);
         }
     },[])
@@ -23,12 +24,12 @@ export const ChipFilter:React.FC<Props> = ({label, keyValue, setSelectedFilters,
         if(isSelected==true){
             setSelectedFilters((prev: FiltersData) => ({
                 ...prev,
-                [keyValue]: prev[keyValue].filter((el: string) => el !== label)
+                [keyValue]: prev[keyValue].filter((el: string) => el !== value)
             }));
         }else{
             setSelectedFilters((prev: FiltersData) => ({
                 ...prev,
-                [keyValue]: [...prev[keyValue], label]
+                [keyValue]: [...prev[keyValue], value]
             }));
         }
         setIsSelected(prev=>!prev)
