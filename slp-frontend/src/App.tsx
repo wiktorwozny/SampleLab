@@ -15,6 +15,7 @@ import BackupView from "./components/BackupView";
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
+import { useState } from 'react';
 import DictionariesView from "./components/dictionary/DictionariesView";
 import LoginForm from "./components/LoginForm";
 import RegisterPage from "./pages/RegisterPage";
@@ -25,15 +26,16 @@ import InspectionDict from "./components/dictionary/inspection/InspectionDict";
 import SamplingStandardDict from "./components/dictionary/sampling-standard/SamplingStandardDict";
 import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 
-
 function App() {
+    const [isToken, setIsToken] = useState<boolean>(false);
+
     return (
         <div className="App flex relative h-fit">
             <AlertsContext>
-                {/* <div className='fixed w-full top-2 z-2 justify-center'>
-                    <AlertComponent/>
-                </div> */}
-                <CheckIsLogin>
+                {!isToken&&<div className='fixed w-full top-2 z-2 justify-center'>
+                    <AlertComponent isToken={isToken}/>
+                </div>}
+                <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
                     <BrowserRouter>
                         <Sidebar/>
                         <div className='relative w-full min-h-screen'>

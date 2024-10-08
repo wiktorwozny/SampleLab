@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { AlertContext } from "../contexts/AlertsContext";
 import { useContext, useEffect } from "react";
 import { useRef, RefObject } from "react";
-const AlertComponent = () => {
+const AlertComponent = ({isToken = true}:any) => {
     const {alertDetails, setAlertDetails} = useContext(AlertContext);
     const alertRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
     useEffect(()=>{
@@ -20,7 +20,7 @@ const AlertComponent = () => {
     },[alertDetails])
     return (<Collapse in = {alertDetails.isAlert} className="w-full flex justify-center">
         <Alert
-            className="w-fit relative mx-auto"
+            className={`w-fit ${isToken? "relative":""} mx-auto`}
             ref={alertRef}
             severity={alertDetails.type}
             action={

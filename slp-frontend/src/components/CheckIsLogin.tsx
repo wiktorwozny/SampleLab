@@ -1,10 +1,8 @@
 import LoginForm from "./LoginForm"
 import { useEffect, useState } from "react"
-const CheckIsLogin = ({ children }:any):any => {
-    const [isToken, setIsToken] = useState<boolean>(false);
+const CheckIsLogin = ({ children , isToken, setIsToken}:any):any => {
 
     const handleStorage = () => {
-        console.log('cos')
         if(localStorage.getItem('token')){
           setIsToken(true);
         } else {
