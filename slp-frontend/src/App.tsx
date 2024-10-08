@@ -18,16 +18,19 @@ import NoPermitionPage from './pages/NoPermitionPage';
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
-
+import { useState } from 'react';
+import { set } from 'react-hook-form';
 
 function App() {
+    const [isToken, setIsToken] = useState<boolean>(false);
+
     return (
         <div className="App flex relative h-fit w-full">
             <AlertsContext>
-                <div className='fixed w-full top-2 z-2 justify-center'>
-                    <AlertComponent/>
-                </div>
-                <CheckIsLogin>
+                {!isToken&&<div className='fixed w-full top-2 z-2 justify-center'>
+                    <AlertComponent isToken={isToken}/>
+                </div>}
+                <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
                     <BrowserRouter>
                         <Sidebar/>
                         <div className='relative w-full min-h-screen'>
