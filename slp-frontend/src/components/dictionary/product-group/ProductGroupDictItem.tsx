@@ -36,28 +36,36 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
     const {reset, handleSubmit, register, formState: {errors}} = method
     const {setAlertDetails} = useContext(AlertContext);
 
-    // State for selected indications and sampling standards
+
     const [selectedIndications, setSelectedIndications] = useState<number[]>(item?.indications?.map(i => i.id) || []);
     const [selectedSamplingStandards, setSelectedSamplingStandards] = useState<number[]>(item?.samplingStandards?.map(s => s.id) || []);
 
-    // Modals visibility state
+    // Local lists to display selected items
+    const [selectedIndicationsList, setSelectedIndicationsList] = useState<Indication[]>(item?.indications || []);
+    const [selectedSamplingStandardsList, setSelectedSamplingStandardsList] = useState<SamplingStandards[]>(item?.samplingStandards || []);
+
     const [showIndicationsModal, setShowIndicationsModal] = useState(false);
     const [showSamplingStandardsModal, setShowSamplingStandardsModal] = useState(false);
+
 
     useEffect(() => {
         if (item !== null) {
             reset(item);
             setSelectedIndications(item?.indications?.map(i => i.id) || []);
             setSelectedSamplingStandards(item?.samplingStandards?.map(s => s.id) || []);
+            setSelectedIndicationsList(item?.indications || []);
+            setSelectedSamplingStandardsList(item?.samplingStandards || []);
         } else {
             resetForm();
         }
-    }, [item, reset]);
+    }, [item]);
 
     const resetForm = () => {
         reset({id: '', name: ''});
         setSelectedIndications([]);
         setSelectedSamplingStandards([]);
+        setSelectedIndicationsList([]);
+        setSelectedSamplingStandardsList([]);
     };
 
     const handleEdit = (formData: any) => {
@@ -132,6 +140,18 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
         resetForm();
     };
 
+    const handleSaveIndications = (selected: number[]) => {
+        setSelectedIndications(selected);
+        const selectedIndicationsData = indicationsList.filter(indication => selected.includes(indication.id));
+        setSelectedIndicationsList(selectedIndicationsData);  // Update local list for display
+    };
+
+    const handleSaveSamplingStandards = (selected: number[]) => {
+        setSelectedSamplingStandards(selected);
+        const selectedSamplingStandardsData = samplingStandardsList.filter(standard => selected.includes(standard.id));
+        setSelectedSamplingStandardsList(selectedSamplingStandardsData);  // Update local list for display
+    };
+
     return (
         <Modal show={show} onHide={handleClose}>
             <FormProvider {...method}>
@@ -179,52 +199,50 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                             </div>
                         )}
 
-                        {/* View Mode */}
-                        {!isAdd && (
-                            <>
-                                <h5 className="mt-6 mb-2 text-lg font-semibold">Indikacje</h5>
-                                <div className="max-h-96 overflow-y-auto">
-                                    <table className="min-w-full table-auto border-collapse border border-gray-300">
-                                        <thead>
-                                        <tr className="bg-gray-100">
-                                            <th className="p-2 border border-gray-300 text-left">Nazwa</th>
+                        <>
+                            <h5 className="mt-6 mb-2 text-lg font-semibold">Indikacje</h5>
+                            <div className="max-h-96 overflow-y-auto">
+                                <table className="min-w-full table-auto border-collapse border border-gray-300">
+                                    <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="p-2 border border-gray-300 text-left">Nazwa</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {selectedIndicationsList?.map((option, index) => (
+                                        <tr
+                                            key={option.id}
+                                            className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                                        >
+                                            <td className="p-2 border border-gray-300">{option.name}</td>
                                         </tr>
-                                        </thead>
-                                        <tbody>
-                                        {item?.indications?.map((option, index) => (
-                                            <tr
-                                                key={option.id}
-                                                className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-                                            >
-                                                <td className="p-2 border border-gray-300">{option.name}</td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                <h5 className="mt-6 mb-2 text-lg font-semibold">Standardy Próbkowania</h5>
-                                <div className="max-h-96 overflow-y-auto">
-                                    <table className="min-w-full table-auto border-collapse border border-gray-300">
-                                        <thead>
-                                        <tr className="bg-gray-100">
-                                            <th className="p-2 border border-gray-300 text-left">Nazwa</th>
+                            <h5 className="mt-6 mb-2 text-lg font-semibold">Standardy Próbkowania</h5>
+                            <div className="max-h-96 overflow-y-auto">
+                                <table className="min-w-full table-auto border-collapse border border-gray-300">
+                                    <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="p-2 border border-gray-300 text-left">Nazwa</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {selectedSamplingStandardsList?.map((option, index) => (
+                                        <tr
+                                            key={option.id}
+                                            className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                                        >
+                                            <td className="p-2 border border-gray-300">{option.name}</td>
                                         </tr>
-                                        </thead>
-                                        <tbody>
-                                        {item?.samplingStandards?.map((option, index) => (
-                                            <tr
-                                                key={option.id}
-                                                className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-                                            >
-                                                <td className="p-2 border border-gray-300">{option.name}</td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </>
-                        )}
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
+
                     </Modal.Body>
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
@@ -245,15 +263,17 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                 selectedOptions={selectedIndications}
                 show={showIndicationsModal}
                 handleClose={() => setShowIndicationsModal(false)}
-                handleSave={setSelectedIndications}
+                handleSave={handleSaveIndications}
             />
+
+            {/* Modal for selecting Sampling Standards */}
             <ModalSelection
                 title="Wybierz Standardy Próbkowania"
                 options={samplingStandardsList}
                 selectedOptions={selectedSamplingStandards}
                 show={showSamplingStandardsModal}
                 handleClose={() => setShowSamplingStandardsModal(false)}
-                handleSave={setSelectedSamplingStandards}
+                handleSave={handleSaveSamplingStandards}
             />
         </Modal>
     );
