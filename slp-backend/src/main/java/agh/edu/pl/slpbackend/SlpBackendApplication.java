@@ -7,7 +7,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class SlpBackendApplication {
 
     public static void main(String[] args) {
-        loadEnvVariables();
+//        loadEnvVariables();
         SpringApplication.run(SlpBackendApplication.class, args);
     }
     private static void loadEnvVariables() {
