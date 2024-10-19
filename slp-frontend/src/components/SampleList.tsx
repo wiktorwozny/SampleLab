@@ -9,15 +9,14 @@ import {
     MdKeyboardDoubleArrowRight
 } from "react-icons/md";
 
-import {FormProvider, useForm} from 'react-hook-form';
-import {ProgressStateEnumDesc} from "../utils/enums";
-import {ProgressFormSelect} from "./ui/ProgressFormSelect";
-import { checkResponse } from "../utils/checkResponse";
+import {useForm} from 'react-hook-form';
+import {ProgressStateEnum, ProgressStateMap} from "../utils/enums";
+import {checkResponse} from "../utils/checkResponse";
 import {DisableButton} from "./ui/StandardButton";
 
 
 const SampleList: React.FC<any> = ({selectedFilters}) => {
-    const progressEnumDesc = ProgressStateEnumDesc;
+    const progressEnumDesc = ProgressStateMap;
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
     const navigate = useNavigate()
@@ -119,16 +118,17 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                     <tbody>
                     {samples.map(sample => (
                         <tr
-                            key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)
-                        }
+                            key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)}
                         >
-                            <td style={{ padding: 5, textAlign: 'center', width: 35, height: 35 }} onClick={(e) => e.stopPropagation()}>
+                            <td
+                                style={{padding: 5, textAlign: 'center', width: 35, height: 35}}
+                                onClick={(e) => e.stopPropagation()}>
                                 <input
                                     type="checkbox"
                                     checked={isSampleSelected(sample.id)}
                                     onChange={() => handleCheckboxChange(sample.id)}
                                     onClick={(e) => e.stopPropagation()}
-                                    style={{ width: '80%', height: '80%' }}
+                                    style={{width: '80%', height: '80%'}}
                                 />
                             </td>
                             <td>{sample.id}</td>
@@ -137,27 +137,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             <td>{sample.assortment}</td>
                             <td>{sample.clientName}</td>
                             <td>{sample.admissionDate.toString()}</td>
-                            <td className="w-64 h-max"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                }}
-                            >
-                                <FormProvider {...method}>
-                                    <ProgressFormSelect
-                                        className="shadow-none h-max"
-                                        options={progressEnumDesc.map(desc => ({value: desc.value, label: desc.label}))}
-                                        sample={sample}
-                                        defaultValue={
-                                            progressEnumDesc.filter((obj) => obj.value === sample.progressStatus)
-                                        }
-                                        setSamples={setSamples}
-                                        {...register("analysis", {})}
-                                    />
-                                    {errors.analysis && errors.analysis.message &&
-                                        <p className="text-red-600">{`${errors.analysis.message}`}</p>}
-
-                                </FormProvider>
-                            </td>
+                            <td className={(sample.progressStatus === ProgressStateEnum.DONE ? '!bg-green-100' : '!bg-red-100')}>{progressEnumDesc.get(sample.progressStatus)}</td>
                         </tr>))}
                     </tbody>
                 </table>
@@ -191,7 +171,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                                                     onClick={() => updatePageNumber(numberOfPages - 1)}/>
                     </div>
 
-                    <button className="opacity-0 px-3 py-1 rounded" style={{ cursor: 'default' }}>
+                    <button className="opacity-0 px-3 py-1 rounded" style={{cursor: 'default'}}>
                         Wprowadź dodatkowe dane
                     </button>
                 </div>
