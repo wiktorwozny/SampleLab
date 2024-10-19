@@ -7,6 +7,7 @@ import {deleteSamplingStandard, getAllSamplingStandard} from "../../../helpers/s
 import SamplingStandardDictItem from "./SamplingStandardDictItem";
 import {CancelButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
+import ConfirmPopup from "../../ui/ConfirmPopup";
 
 
 const columns: Column<SamplingStandards>[] = [
@@ -23,6 +24,9 @@ const SamplingStandardDict = () => {
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<SamplingStandards | null>(null);
+
     const handleView = (item: SamplingStandards) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -47,9 +51,9 @@ const SamplingStandardDict = () => {
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: SamplingStandards) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteSamplingStandard(item?.id)
+            let response = await deleteSamplingStandard(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
@@ -61,6 +65,16 @@ const SamplingStandardDict = () => {
             setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
         }
     };
+
+    const confirmDelete = (item: SamplingStandards) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+        setItemToDelete(null);
+    }
 
     const handleClose = () => {
         setOpenModal(false);
@@ -98,7 +112,7 @@ const SamplingStandardDict = () => {
                 data={samplingStandardsList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
@@ -113,6 +127,12 @@ const SamplingStandardDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     )

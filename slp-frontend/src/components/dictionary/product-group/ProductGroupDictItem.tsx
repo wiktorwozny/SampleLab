@@ -8,7 +8,8 @@ import {Input} from "../../ui/Input";
 import {getAllIndications} from "../../../helpers/indicationApi";
 import {addGroup, updateGroup} from "../../../helpers/groupApi";
 import {getAllSamplingStandard} from "../../../helpers/samplingStandardApi";
-import {ModalSelection} from "../../ui/ModalSelection"; // Import modal component
+import {ModalSelection} from "../../ui/ModalSelection";
+import {StandardButton} from "../../ui/StandardButton"; // Import modal component
 
 interface ProductGroupDictItemProps {
     refresh: () => void;
@@ -246,13 +247,16 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
-                            <Button type="submit" variant="primary">
+                            <StandardButton type={"submit"}
+                                            className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                                 Zapisz
-                            </Button>
+                            </StandardButton>
                         )}
-                        <Button variant="secondary" onClick={handleCancel}>
+                        <StandardButton type={"reset"}
+                                        className="bg-gray-600 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                                        onClick={handleCancel}>
                             Anuluj
-                        </Button>
+                        </StandardButton>
                     </Modal.Footer>
                 </form>
             </FormProvider>
@@ -266,7 +270,6 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                 handleSave={handleSaveIndications}
             />
 
-            {/* Modal for selecting Sampling Standards */}
             <ModalSelection
                 title="Wybierz Standardy Próbkowania"
                 options={samplingStandardsList}

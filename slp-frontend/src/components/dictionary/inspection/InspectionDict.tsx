@@ -7,6 +7,7 @@ import {deleteInspection, getAllInspection} from "../../../helpers/inspectionApi
 import InspectionDictItem from "./InspectionDictItem";
 import {CancelButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
+import ConfirmPopup from "../../ui/ConfirmPopup";
 
 
 const columns: Column<Inspection>[] = [
@@ -23,6 +24,10 @@ const InspectionDict = () => {
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
+
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<Inspection | null>(null);
+
     const handleView = (item: Inspection) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -40,16 +45,16 @@ const InspectionDict = () => {
     };
 
     const handleAdd = () => {
-        setSelectedItem(null);  // No item selected since we're adding a new client
+        setSelectedItem(null);
         setOpenModal(true);
         setIsViewMode(false);
         setIsAddMode(true);
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: Inspection) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteInspection(item?.id)
+            let response = await deleteInspection(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
@@ -61,6 +66,16 @@ const InspectionDict = () => {
             setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
         }
     };
+
+    const confirmDelete = (item: Inspection) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+        setItemToDelete(null);
+    }
 
     const handleClose = () => {
         setOpenModal(false);
@@ -98,7 +113,7 @@ const InspectionDict = () => {
                 data={inspectionList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
@@ -113,6 +128,12 @@ const InspectionDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     )
