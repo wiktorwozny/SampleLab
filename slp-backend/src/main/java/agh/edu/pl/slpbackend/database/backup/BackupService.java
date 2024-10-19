@@ -5,15 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Service
@@ -181,5 +180,133 @@ public class BackupService {
 
     }
 
+    // Nowe metody importu danych
 
+    // Import SQL z pliku ZIP
+    public void importDatabaseFromSQL(MultipartFile zipFile) throws IOException, InterruptedException {
+        String psqlPath = "\"C:\\Program Files\\PostgreSQL\\16\\bin\\psql.exe\"";
+        String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
+        String port = "5432";
+        String database = "SampleLabDB";
+        String user = "postgres";
+        String password = "12345678";
+
+        // Rozpakowanie pliku ZIP
+        try (ZipInputStream zis = new ZipInputStream(zipFile.getInputStream())) {
+            ZipEntry zipEntry;
+            while ((zipEntry = zis.getNextEntry()) != null) {
+                if (zipEntry.getName().endsWith(".sql")) {
+                    // Tworzenie procesu do importu pliku SQL
+                    ProcessBuilder pb = new ProcessBuilder(psqlPath,
+                            "--host=" + host,
+                            "--port=" + port,
+                            "--username=" + user,
+                            "--dbname=" + database,
+                            "--file=-");  // Dane będą wczytane z wejścia (stdin)
+                    pb.environment().put("PGPASSWORD", password);
+                    pb.redirectErrorStream(true);
+
+                    Process process = pb.start();
+                    try (OutputStream os = process.getOutputStream()) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = zis.read(buffer)) != -1) {
+                            os.write(buffer, 0, length);
+                        }
+                    }
+
+                    int exitCode = process.waitFor();
+                    if (exitCode != 0) {
+                        throw new IOException("SQL import process failed with exit code " + exitCode);
+                    }
+                }
+                zis.closeEntry();
+            }
+        }
+    }
+
+    // Import CSV z pliku ZIP
+    public void importDatabaseFromCSV(MultipartFile zipFile) throws IOException {
+        String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
+        String port = "5432";
+        String database = "SampleLabDB";
+        String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
+        String user = "postgres";
+        String password = "12345678";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             ZipInputStream zis = new ZipInputStream(zipFile.getInputStream())) {
+
+            ZipEntry zipEntry;
+            while ((zipEntry = zis.getNextEntry()) != null) {
+                if (zipEntry.getName().endsWith(".csv")) {
+                    importCSVToTable(conn, zis, zipEntry.getName());
+                }
+                zis.closeEntry();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IOException("Error importing CSV files to database.", e);
+        }
+    }
+
+    private void importCSVToTable(Connection conn, InputStream csvInputStream, String fileName) throws SQLException, IOException {
+        String tableName = fileName.replace(".csv", "");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(csvInputStream));
+        String line;
+        List<String> columnNames = new ArrayList<>();
+
+        if ((line = reader.readLine()) != null) {
+            String[] headers = line.split(",");
+            StringBuilder createTableQuery = new StringBuilder("CREATE TABLE IF NOT EXISTS " + tableName + " (");
+
+            for (String header : headers) {
+                columnNames.add(header.trim());
+                createTableQuery.append(header.trim()).append(" TEXT, ");
+            }
+
+            createTableQuery.setLength(createTableQuery.length() - 2);
+            createTableQuery.append(");");
+
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute(createTableQuery.toString());
+            }
+        }
+
+        StringBuilder insertQuery = new StringBuilder("INSERT INTO " + tableName + " (");
+        insertQuery.append(String.join(",", columnNames));
+        insertQuery.append(") VALUES (");
+        insertQuery.append("?, ".repeat(columnNames.size()));
+        insertQuery.setLength(insertQuery.length() - 2);
+        insertQuery.append(");");
+
+        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery.toString())) {
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                for (int i = 0; i < values.length; i++) {
+                    pstmt.setString(i + 1, values[i].trim());
+                }
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        }
+    }
+
+    // Główna metoda do importu danych
+    public void importBackup(MultipartFile zipFile, BackupModeEnum backupMode) throws IOException, InterruptedException {
+        switch (backupMode) {
+            case FULL_BACKUP, DATA_ONLY -> {
+                importDatabaseFromSQL(zipFile);
+            }
+            case CSV -> {
+                importDatabaseFromCSV(zipFile);
+            }
+            default -> throw new IllegalArgumentException("Unsupported backup mode: " + backupMode);
+        }
+    }
 }
+
+
+
+

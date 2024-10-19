@@ -12,7 +12,7 @@ public enum BackupModeEnum {
             case "FULL_BACKUP" -> BackupModeEnum.FULL_BACKUP;
             case "DATA_ONLY" -> BackupModeEnum.DATA_ONLY;
             case "CSV" -> BackupModeEnum.CSV;
-            default -> null;
+            default -> throw new IllegalArgumentException("Invalid backup mode: " + value);
         };
     }
 
