@@ -1,16 +1,14 @@
 import {FC, useContext, useEffect, useState} from 'react'
 import {Input} from './ui/Input';
 import {FormSelect} from './ui/Select';
-import {FormProvider, useForm} from 'react-hook-form';
+import {FormProvider, set, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
 import {CancelButton, StandardButton} from './ui/StandardButton';
 import {getAllCodes} from '../helpers/codeApi';
 import {getAllClients} from '../helpers/clientApi';
 import {getAllInspection} from '../helpers/inspectionApi';
 import {getAllGroup} from '../helpers/groupApi';
-import {getAllSamplingStandard} from '../helpers/samplingStandardApi';
-import {getAllReportData} from '../helpers/reportDataApi';
-import {Client, Code, Inspection, ProductGroup, ReportData, SamplingStandards} from '../utils/types';
+import {Client, Code, Inspection, ProductGroup, Assortment, SamplingStandards} from '../utils/types';
 import {addSample} from '../helpers/samplingApi';
 import {useNavigate} from 'react-router-dom';
 import {AlertContext} from '../contexts/AlertsContext';
@@ -19,16 +17,14 @@ import { checkResponse } from '../utils/checkResponse';
 const SampleForm: FC<{}> = () => {
 
     const method = useForm();
-    const {handleSubmit, register, formState: {errors}} = method
-    const [message, setMessage] = useState<String>("")
-    const [codes, setCodes] = useState<Code []>([])
-    const [clients, setClients] = useState<Client []>([])
-    const [inspections, setInspections] = useState<Inspection []>([])
-    const [productGroup, setProductGroup] = useState<ProductGroup []>([])
-    const [samplingStandard, setSamplingStandard] = useState<SamplingStandards []>([])
-    const [reportData, setReportData] = useState<ReportData []>([])
-    const navigate = useNavigate()
+    const {handleSubmit, register, watch, setValue, formState: {errors}} = method;
+    const [codes, setCodes] = useState<Code []>([]);
+    const [clients, setClients] = useState<Client []>([]);
+    const [inspections, setInspections] = useState<Inspection []>([]);
+    const [groups, setGroups] = useState<ProductGroup []>([]);
+    const navigate = useNavigate();
     const {setAlertDetails} = useContext(AlertContext);
+    const chosenGroup: string = watch("group");
 
     useEffect(() => {
         const getCodes = async () => {
@@ -75,33 +71,7 @@ const SampleForm: FC<{}> = () => {
                 let response = await getAllGroup();
                 console.log(response.data)
                 if (response.status === 200) {
-                    setProductGroup(response.data)
-                }
-            } catch (err) {
-                console.log(err)
-                checkResponse(err);
-            }
-        }
-
-        const getSamplingStandard = async () => {
-            try {
-                let response = await getAllSamplingStandard();
-                console.log(response.data)
-                if (response.status === 200) {
-                    setSamplingStandard(response.data)
-                }
-            } catch (err) {
-                console.log(err)
-                checkResponse(err);
-            }
-        }
-
-        const getReportData = async () => {
-            try {
-                let response = await getAllReportData();
-                console.log(response.data)
-                if (response.status === 200) {
-                    setReportData(response.data)
+                    setGroups(response.data)
                 }
             } catch (err) {
                 console.log(err)
@@ -113,10 +83,12 @@ const SampleForm: FC<{}> = () => {
         getClients()
         getInspections()
         getProductGroup()
-        getSamplingStandard()
-        getReportData()
-
     }, [])
+
+    useEffect(() => {
+        setValue("assortment", null)
+        setValue("samplingStandard", null)
+    }, [chosenGroup])
 
     const submit = async (values: any) => {
         values.code = JSON.parse(values.code)
@@ -218,24 +190,7 @@ const SampleForm: FC<{}> = () => {
                                 <p className="text-red-600">{`${errors.examinationExpectedEndDate.message}`}</p>}
                         </div>
                         <div className='w-1/4'>
-                            <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
-                            <FormLabel>Asortyment</FormLabel>
-                            <Input {...register("assortment", {
-                                required: {
-                                    value: true,
-                                    message: "Pole wymagane"
-                                }
-                            })}
-                            />
-                            {errors.assortment && errors.assortment.message &&
-                                <p className="text-red-600">{`${errors.assortment.message}`}</p>}
-                            <div className='flex items-center justify-between'>
-                                <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza odwoławcza</label>
-                                <Checkbox
-                                    {...register("analysis", {})}
-                                />
-                            </div>
-                            
+                        <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
                             {/* <FormSelect
                                 className="my-custom-class"
                                 options={[{value: "true", label: "Tak"}, {value: "false", label: "Nie"}]}
@@ -246,19 +201,11 @@ const SampleForm: FC<{}> = () => {
                                     }
                                 })}
                             /> */}
-                            
-
-                            <FormLabel>Stan próbki</FormLabel>
-                            <Input {...register("state", {
-                            })}
-                            />
-                            {errors.state && errors.state.message &&
-                                <p className="text-red-600">{`${errors.state.message}`}</p>}
 
                             <FormLabel>Grupa</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
-                                options={productGroup.map(group => ({value: JSON.stringify(group), label: group.name}))}
+                                options={groups.map(group => ({value: JSON.stringify(group), label: group.name}))}
                                 {...register("group", {
                                     required: {
                                         value: true,
@@ -269,10 +216,29 @@ const SampleForm: FC<{}> = () => {
                             {errors.group && errors.group.message &&
                                 <p className="text-red-600">{`${errors.group.message}`}</p>}
 
+                            <FormLabel>Asortyment</FormLabel>
+                            <FormSelect
+                                isDisabled={!chosenGroup}
+                                className="my-custom-class"
+                                options={JSON.parse(chosenGroup ? chosenGroup : "{}")?.assortments?.map((assortment: Assortment) => ({
+                                    value: JSON.stringify(assortment),
+                                    label: assortment.name
+                                }))}
+                                {...register("assortment", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                            />
+                            {errors.assortment && errors.assortment.message &&
+                                <p className="text-red-600">{`${errors.assortment.message}`}</p>}
+
                             <FormLabel>Norma pobrania próbki</FormLabel>
                             <FormSelect
+                                isDisabled={!chosenGroup}
                                 className="my-custom-class"
-                                options={samplingStandard.map(standard => ({
+                                options={JSON.parse(chosenGroup ? chosenGroup : "{}")?.samplingStandards?.map((standard: SamplingStandards) => ({
                                     value: JSON.stringify(standard),
                                     label: standard.name
                                 }))}
@@ -286,6 +252,11 @@ const SampleForm: FC<{}> = () => {
                             {errors.samplingStandard && errors.samplingStandard.message &&
                                 <p className="text-red-600">{`${errors.samplingStandard.message}`}</p>}
 
+                            <FormLabel>Stan próbki</FormLabel>
+                            <Input {...register("state", {})}/>
+                            {errors.state && errors.state.message &&
+                                <p className="text-red-600">{`${errors.state.message}`}</p>}
+
                             <FormLabel>Wielkość próbki</FormLabel>
                             <Input {...register("size", {
                                 required: {
@@ -296,6 +267,13 @@ const SampleForm: FC<{}> = () => {
                             />
                             {errors.size && errors.size.message &&
                                 <p className="text-red-600">{`${errors.size.message}`}</p>}
+
+                            <div className='flex items-center justify-between'>
+                                <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza odwoławcza</label>
+                                <Checkbox
+                                    {...register("analysis", {})}
+                                />
+                            </div>
                         </div>
                         <div className='w-1/4'>
                             <h2 className='font-bold text-2xl'>Dane Klienta</h2>

@@ -177,7 +177,7 @@ const ReportDataForm: FC<{}> = ({}) => {
 
     return (<div className='flex flex-col justify-center items-center w-full'>
         <h2 className="text-center font-bold mt-10 text-2xl">Dodawanie dodatkowych informacji</h2>
-        <h3 className="text-center font-bold my-3 text-2xl">dla próbki numer {sampleId}: {sample?.assortment}</h3>
+        <h3 className="text-center font-bold my-3 text-2xl">dla próbki numer {sampleId}: {sample?.assortment.name}</h3>
         <FormProvider {...method}>
             <form className="w-100 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
 

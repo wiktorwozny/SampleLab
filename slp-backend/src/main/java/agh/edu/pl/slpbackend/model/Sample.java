@@ -23,7 +23,6 @@ public class Sample implements Serializable {
     @Serial
     private static final long serialVersionUID = -41275705394682306L;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -34,7 +33,8 @@ public class Sample implements Serializable {
     @ManyToOne
     private Client client;
 
-    private String assortment;
+    @ManyToOne
+    private Assortment assortment;
 
     private LocalDate admissionDate;
 
@@ -52,9 +52,6 @@ public class Sample implements Serializable {
 
     @ManyToOne
     private Inspection inspection;
-
-    @ManyToOne
-    private ProductGroup group;
 
     @ManyToOne
     private SamplingStandard samplingStandard;

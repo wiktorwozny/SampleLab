@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ModelClass(User.class)
 public class UserDto implements IModel {
+
     private String name;
     private String email;
     private RoleEnum role;

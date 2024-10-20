@@ -31,16 +31,11 @@ public class IndicationDto implements IModel {
     private String name;
 
     @ModelFieldName("norm")
-    private String norm;
+    private String method;
 
     @ModelFieldName("unit")
     private String unit;
 
     @ModelFieldName("laboratory")
     private String laboratory;
-
-    @ModelFieldName("groups")
-    private List<ProductGroup> groups;
-
-
 }

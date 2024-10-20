@@ -24,7 +24,7 @@ import IndicationDict from "./components/dictionary/indication/IndicationDict";
 import CodeDict from "./components/dictionary/code/CodeDict";
 import InspectionDict from "./components/dictionary/inspection/InspectionDict";
 import SamplingStandardDict from "./components/dictionary/sampling-standard/SamplingStandardDict";
-import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
+// import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 
 function App() {
     const [isToken, setIsToken] = useState<boolean>(false);
@@ -59,7 +59,7 @@ function App() {
                                 <Route path='/dictionary/codeDict' element={<CodeDict/>}/>
                                 <Route path='/dictionary/inspectionDict' element={<InspectionDict/>}/>
                                 <Route path='/dictionary/samplingStandardDict' element={<SamplingStandardDict/>}/>
-                                <Route path='/dictionary/productGroupDict' element={<ProductGroupDict/>}/>
+                                {/* <Route path='/dictionary/productGroupDict' element={<ProductGroupDict/>}/> */}
                                 <Route path='/login' element={<LoginForm/>}/>
                                 <Route path='/register' element={
                                     <PrivateRoute>

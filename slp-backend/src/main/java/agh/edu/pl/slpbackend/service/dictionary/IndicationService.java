@@ -4,7 +4,6 @@ import agh.edu.pl.slpbackend.dto.IndicationDto;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
 import agh.edu.pl.slpbackend.model.Indication;
-import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.IndicationRepository;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
@@ -27,7 +26,7 @@ public class IndicationService extends AbstractService implements IndicationMapp
 
     public List<IndicationDto> selectAll() {
         List<Indication> indicationList = indicationRepository.findAll();
-        return indicationList.stream().map(this::toDto).collect(Collectors.toList());
+        return indicationList.stream().map(this::toDto).toList();
     }
 
     @Override
@@ -47,10 +46,9 @@ public class IndicationService extends AbstractService implements IndicationMapp
         final Sample sample = sampleRepository.findById(SampleId)
                 .orElseThrow(SampleNotFoundException::new);
 
-        final ProductGroup productGroup = sample.getGroup();
-        List<Indication> indications = productGroup.getIndications();
+        List<Indication> indications = sample.getAssortment().getIndications();
 
-        return indications.stream().map(this::toDto).collect(Collectors.toList());
+        return indications.stream().map(this::toDto).toList();
     }
 
     @Override

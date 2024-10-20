@@ -8,7 +8,7 @@ interface CustomSelectProps extends Omit<SelectProps, 'options'> {
 }
 
 export const FormSelect = (
-    ({className = '', options, name, onChange, onBlur, ...props}: any) => {
+    ({className = '', options, name, onChange, onBlur, isDisabled = false, ...props}: any) => {
         const {control} = useFormContext();
         return (
             <Controller
@@ -24,6 +24,7 @@ export const FormSelect = (
                         onChange={(selectedOption: any) => {
                             field.onChange(selectedOption.value);
                         }}
+                        isDisabled={isDisabled}
                         {...props}
                     />
                 )}
