@@ -118,3 +118,4 @@
 //     )
 // }
 // export default ProductGroupDict
+export {}
