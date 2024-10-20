@@ -73,21 +73,21 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     }
 
     public FilterResponse filter(FilterRequest request) {
-        Specification<Sample> specification = hasFieldIn("code", "id", request.filters().codes())
-                .and(hasFieldIn("client", "name", request.filters().clients()))
-                .and(hasFieldIn("group", "name", request.filters().groups()))
-                .and(hasFieldIn("progressStatus", null, request.filters().progressStatuses()));
+        Specification<Sample> specification = hasFieldIn(List.of("code", "id"), request.filters().codes())
+                .and(hasFieldIn(List.of("client", "name"), request.filters().clients()))
+                .and(hasFieldIn(List.of("assortment", "group", "name"), request.filters().groups()))
+                .and(hasFieldIn(List.of("progressStatus"), request.filters().progressStatuses()));
 
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
-        PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()).and(Sort.by("id")));
+        PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()).and(Sort.by(direction, "id")));
 
         Page<Sample> page = sampleRepository.findAll(specification, pageRequest);
         List<SummarySample> samples = page.stream()
                 .map(sample -> new SummarySample(
                         sample.getId(),
                         sample.getCode().getId(),
-                        sample.getGroup().getName(),
-                        sample.getAssortment(),
+                        sample.getAssortment().getGroup().getName(),
+                        sample.getAssortment().getName(),
                         sample.getClient().getName(),
                         sample.getAdmissionDate(),
                         sample.getProgressStatus()))
@@ -100,13 +100,19 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return sampleRepository.count();
     }
 
-    private Specification<Sample> hasFieldIn(String fieldName, String attribute, List<?> values) {
+    private Specification<Sample> hasFieldIn(List<String> attributes, List<?> values) {
         if (values == null || values.isEmpty()) {
             return (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
         }
-        if (attribute == null) {
-            return (root, query, criteriaBuilder) -> root.get(fieldName).in(values);
-        }
-        return (root, query, criteriaBuilder) -> root.get(fieldName).get(attribute).in(values);
+
+        return (root, query, criteriaBuilder) -> {
+            var path = root.get(attributes.get(0));
+
+            for (int i = 1; i < attributes.size(); i++) {
+                path = path.get(attributes.get(i));
+            }
+
+            return path.in(values);
+        };
     }
 }

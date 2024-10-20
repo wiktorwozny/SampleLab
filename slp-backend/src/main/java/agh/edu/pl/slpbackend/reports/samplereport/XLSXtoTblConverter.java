@@ -138,7 +138,7 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
             Row newRow = sheet.createRow(sheet.getLastRowNum() + 1);
             createCellAtIndexWithValue(newRow, 0, String.valueOf(i + 1), workbook);
             createCellAtIndexWithValue(newRow, 1, examination.getIndication().getName(), workbook);
-            createCellAtIndexWithValue(newRow, 2, examination.getIndication().getNorm(), workbook);
+            createCellAtIndexWithValue(newRow, 2, examination.getIndication().getMethod(), workbook);
             createCellAtIndexWithValue(newRow, 3, uncertaintyExists ? "16,7 ± " + examination.getUncertainty() : "16,7", workbook);
             createCellAtIndexWithValue(newRow, 4, examination.getIndication().getUnit(), workbook);
             int colNum = 5;

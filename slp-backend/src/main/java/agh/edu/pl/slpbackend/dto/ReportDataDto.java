@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.dto;
 
 import agh.edu.pl.slpbackend.model.Address;
 import agh.edu.pl.slpbackend.model.Client;
+import agh.edu.pl.slpbackend.model.ReportData;
 import agh.edu.pl.slpbackend.model.User;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ModelClass(Client.class)
+@ModelClass(ReportData.class)
 public class ReportDataDto implements IModel, Serializable {
 
     @Serial

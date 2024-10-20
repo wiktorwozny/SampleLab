@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.dto;
 
+import agh.edu.pl.slpbackend.model.Address;
 import agh.edu.pl.slpbackend.model.Client;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
@@ -21,7 +22,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ModelClass(Client.class)
+@ModelClass(Address.class)
 public class AddressDto implements IModel, Serializable {
     @Serial
     private static final long serialVersionUID = 8372629405428016723L;
