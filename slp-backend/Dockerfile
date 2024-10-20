@@ -1,5 +1,5 @@
 # Etap 1: Budowanie aplikacji
-FROM maven:3.8.8-eclipse-temurin-21 AS build
+FROM maven:3.9.4-eclipse-temurin-21 AS build
 
 # Ustawienie katalogu roboczego w kontenerze
 WORKDIR /app
