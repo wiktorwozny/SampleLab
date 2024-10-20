@@ -7,6 +7,7 @@ import DictionaryTable from "../../ui/DictionaryTable";
 import IndicationDictItem from "./IndicationDictItem";
 import {CancelButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
+import ConfirmPopup from "../../ui/ConfirmPopup";
 
 const columns: Column<Indication>[] = [
     {header: 'ID', accessor: 'id'},
@@ -26,6 +27,10 @@ const IndicationDict = () => {
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<Indication | null>(null);
+
+
     const handleView = (item: Indication) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -51,9 +56,9 @@ const IndicationDict = () => {
     };
 
 
-    const handleDelete = async (item: Indication) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteIndication(item?.id)
+            let response = await deleteIndication(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
@@ -66,9 +71,20 @@ const IndicationDict = () => {
         }
     };
 
+    const confirmDelete = (item: Indication) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+    }
+
     const handleClose = () => {
         setOpenModal(false);
+        setItemToDelete(null);
     }
+
 
     const copyObject = (item: Indication): Indication => {
         return JSON.parse(JSON.stringify(item));
@@ -102,13 +118,14 @@ const IndicationDict = () => {
                 data={indicationList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
                 className='mt-3'
                 onClick={() => navigate(-1)} // Go back to the previous screen
             >Powrót</CancelButton>
+
             <IndicationDictItem
                 refresh={getIndications}
                 show={openModal}
@@ -117,6 +134,12 @@ const IndicationDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     )

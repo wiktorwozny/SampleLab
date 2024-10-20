@@ -7,6 +7,7 @@ import DictionaryTable from "../../ui/DictionaryTable";
 import CodeDictItem from "./CodeDictItem";
 import {CancelButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
+import ConfirmPopup from "../../ui/ConfirmPopup";
 
 
 const columns: Column<Code>[] = [
@@ -18,11 +19,14 @@ const CodeDict = () => {
     const [codeList, setCodeList] = useState<Code[]>([]);
     const {setAlertDetails} = useContext(AlertContext);
     const [openModal, setOpenModal] = useState(false);
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Code | null>(null);
     const [isViewMode, setIsViewMode] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
+    const [itemToDelete, setItemToDelete] = useState<Code | null>(null);
+
     const handleView = (item: Code) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -47,24 +51,34 @@ const CodeDict = () => {
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: Code) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteCode(item?.id)
-            console.log(response)
-            if (response.status === 201 || response.status === 200) {
-                setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
+            const response = await deleteCode(itemToDelete!.id);
+            if (response.status === 200 || response.status === 201) {
+                setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"});
                 getCodes();
                 handleClose();
             }
         } catch (err) {
-            console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            console.error(err);
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
         }
     };
+
+    const confirmDelete = (item: Code) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+        setItemToDelete(null);
+    }
 
     const handleClose = () => {
         setOpenModal(false);
     }
+
 
     const copyObject = (item: Code): Code => {
         return JSON.parse(JSON.stringify(item));
@@ -98,13 +112,14 @@ const CodeDict = () => {
                 data={codeList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
                 className='mt-3'
                 onClick={() => navigate(-1)} // Go back to the previous screen
             >Powrót</CancelButton>
+
             <CodeDictItem
                 refresh={getCodes}
                 show={openModal}
@@ -113,6 +128,12 @@ const CodeDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     )
