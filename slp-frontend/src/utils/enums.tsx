@@ -1,5 +1,5 @@
-import { ProgressState } from "./types";
-import { Role } from "./types";
+import {ProgressState, Role} from "./types";
+
 export enum ProgressStateEnum {
     TODO = 'TODO',
     IN_PROGRESS = 'IN_PROGRESS',
@@ -11,6 +11,13 @@ export const ProgressStateEnumDesc: ProgressState[] = [
     {value: ProgressStateEnum.IN_PROGRESS, label: 'W trakcie'},
     {value: ProgressStateEnum.DONE, label: 'Gotowe'}
 ];
+
+export const ProgressStateMap = new Map<ProgressStateEnum, string>([
+    [ProgressStateEnum.TODO, 'Do zrobienia'],
+    [ProgressStateEnum.IN_PROGRESS, 'W trakcie'],
+    [ProgressStateEnum.DONE, 'Gotowe'],
+]);
+
 
 export enum RoleEnum {
     WORKER = "WORKER",

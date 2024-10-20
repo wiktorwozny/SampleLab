@@ -34,10 +34,9 @@ export type SamplingStandards = {
 export type Indication = {
     id: number,
     name: string,
-    norm: string,
+    method: string,
     unit: string,
     laboratory: string,
-    // groups: ProductGroup []
 }
 
 export type Examination = {
@@ -61,15 +60,15 @@ export type Examination = {
 export type ProductGroup = {
     id: number,
     name: string,
-    indications?: Indication[],
     samplingStandards?: SamplingStandards[]
+    assortments?: Assortment[]
 }
 
-export type ProductGroupSave = {
+export type Assortment = {
     id: number,
     name: string,
-    indications?: number[],
-    samplingStandards?: number[]
+    group: ProductGroup,
+    indications: Indication[]
 }
 
 export type ReportData = {
@@ -99,7 +98,7 @@ export type Sample = {
     id: number,
     code: Code,
     client: Client,
-    assortment: string,
+    assortment: Assortment,
     admissionDate: Date,
     expirationDate: Date,
     expirationComment: string,
@@ -108,7 +107,6 @@ export type Sample = {
     state: string,
     analysis: boolean,
     inspection: Inspection,
-    group: ProductGroup,
     samplingStandard: SamplingStandards,
     reportData: ReportData
     progressStatus: ProgressStateEnum

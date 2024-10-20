@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ProductGroupDto;
-import agh.edu.pl.slpbackend.dto.ProductGroupSaveDto;
 import agh.edu.pl.slpbackend.service.dictionary.ProductGroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product-group") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@RequestMapping("/product-group")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProductGroupController extends AbstractController {
 
@@ -34,13 +33,13 @@ public class ProductGroupController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody ProductGroupSaveDto productGroupSaveDto) throws Exception {
-        return add(productGroupSaveDto, productGroupService);
+    public ResponseEntity<Void> add(@RequestBody ProductGroupDto productGroupDto) throws Exception {
+        return add(productGroupDto, productGroupService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody ProductGroupSaveDto productGroupSaveDto) throws Exception {
-        return edit(productGroupSaveDto, productGroupService);
+    public ResponseEntity<Void> edit(@RequestBody ProductGroupDto productGroupDto) throws Exception {
+        return edit(productGroupDto, productGroupService);
     }
 
     @DeleteMapping("/delete/{id}")

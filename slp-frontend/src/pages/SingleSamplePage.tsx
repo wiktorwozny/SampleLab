@@ -56,11 +56,6 @@ const SingleSamplePage = () => {
             {`${sample?.admissionDate}`}
         </Div>
 
-        <Div className="text-start">
-            <span className="font-bold">Analiza odwoławcza: </span>
-            {sample?.analysis === true ? "Tak" : "Nie"}
-        </Div>
-
         <Div className="flex justify-between">
             <div>
                 <span className="font-bold">Nazwa Klienta:</span> {`${sample?.client.name}`}
@@ -72,8 +67,18 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
+            <span className="font-bold">Grupa: </span>
+            {`${sample?.assortment.group.name}`}
+        </Div>
+
+        <Div className="text-start">
             <span className="font-bold">Asortyment: </span>
-            {`${sample?.assortment}`}
+            {`${sample?.assortment.name}`}
+        </Div>
+
+        <Div className="text-start">
+            <span className="font-bold">Norma pobrania próbki: </span>
+            {`${sample?.samplingStandard?.name}`}
         </Div>
 
         <Div className="text-start">
@@ -87,18 +92,8 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Grupa: </span>
-            {`${sample?.group.name}`}
-        </Div>
-
-        <Div className="text-start">
             <span className="font-bold">Kontrola: </span>
             {`${sample?.inspection?.name}`}
-        </Div>
-
-        <Div className="text-start">
-            <span className="font-bold">Norma pobrania próbki: </span>
-            {`${sample?.samplingStandard?.name}`}
         </Div>
 
         <Div className="text-start">
@@ -109,6 +104,11 @@ const SingleSamplePage = () => {
         <Div className="text-start">
             <span className="font-bold">Stan próbki: </span>
             {`${sample?.state}`}
+        </Div>
+
+        <Div className="text-start">
+            <span className="font-bold">Analiza odwoławcza: </span>
+            {sample?.analysis === true ? "Tak" : "Nie"}
         </Div>
 
         <div className="flex justify-between w-3/4 p-3">
