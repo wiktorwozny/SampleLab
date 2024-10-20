@@ -27,7 +27,7 @@ public class SampleControllerTest {
         return SampleDto.builder()
                 .code(null)
                 .client(null)
-                .assortment("test")
+                .assortment(null)
                 .admissionDate(LocalDate.now())
                 .expirationComment("test")
                 .examinationExpectedEndDate(LocalDate.now())

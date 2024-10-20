@@ -99,10 +99,10 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             onClick={() => updateSortParams("code.id")}>Kod próbki
                         </th>
                         <th scope="col" className={activeColumn === 'group.name' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("group.name")}>Grupa
+                            onClick={() => updateSortParams("assortment.group.name")}>Grupa
                         </th>
                         <th scope="col" className={activeColumn === 'assortment' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("assortment")}>Asortyment
+                            onClick={() => updateSortParams("assortment.name")}>Asortyment
                         </th>
                         <th scope="col" className={activeColumn === 'client.name' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("client.name")}>Nazwa klienta

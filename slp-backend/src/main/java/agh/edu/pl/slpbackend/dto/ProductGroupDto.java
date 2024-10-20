@@ -1,10 +1,13 @@
 package agh.edu.pl.slpbackend.dto;
 
+import agh.edu.pl.slpbackend.model.Assortment;
 import agh.edu.pl.slpbackend.model.Indication;
+import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.SamplingStandard;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -21,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ModelClass(ProductGroupDto.class)
+@ModelClass(ProductGroup.class)
 public class ProductGroupDto implements IModel, Serializable {
 
     @Serial
@@ -34,9 +37,11 @@ public class ProductGroupDto implements IModel, Serializable {
     @ModelFieldName("name")
     private String name;
 
-    @ModelFieldName("indications")
-    private List<Indication> indications;
-
     @ModelFieldName("samplingStandards")
+    @JsonIgnoreProperties("groups")
     private List<SamplingStandard> samplingStandards;
+
+    @ModelFieldName("assortments")
+    @JsonIgnoreProperties({"group", "indications"})
+    private List<Assortment> assortments;
 }

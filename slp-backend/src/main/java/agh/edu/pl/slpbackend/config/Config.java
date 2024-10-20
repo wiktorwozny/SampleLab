@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.config;
 
+import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.enums.RoleEnum;
 import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.repository.*;
@@ -19,10 +20,10 @@ public class Config {
             final ClientRepository clientRepository,
             final InspectionRepository inspectionRepository,
             final SamplingStandardRepository samplingStandardRepository,
-            final IndicationRepository indicationRepository,
             final ProductGroupRepository groupRepository,
             final ExaminationRepository examinationRepository,
-            final UserRepository userRepository) {
+            final UserRepository userRepository,
+            final AssortmentRepository assortmentRepository) {
         return args -> {
             if (sampleRepository.count() == 0) {
                 //code
@@ -115,44 +116,74 @@ public class Config {
                         .build();
                 samplingStandardRepository.saveAll(List.of(samplingStandard1, samplingStandard2, samplingStandard3));
 
-                //indication
-                Indication indication1 = Indication.builder()
-                        .name("Wilgotność")
-                        .norm("PN-EN ISO 712:2012")
-                        .unit("g/100g")
-                        .laboratory("FCh")
-                        .build();
-
-                Indication indication2 = Indication.builder()
-                        .name("Ocena organoleptyczna - mąka i kasza")
-                        .norm("PN-A-74013:1964")
-                        .unit(null)
-                        .laboratory("FCh")
-                        .build();
-
-                Indication indication3 = Indication.builder()
-                        .name("Liczba opadania")
-                        .norm("PN-EN ISO 3093:2007")
-                        .unit(null)
-                        .laboratory("PCR")
-                        .build();
-
-                indicationRepository.saveAll(List.of(indication1, indication2, indication3));
-
                 //group
                 ProductGroup group1 = ProductGroup.builder()
                         .name("Przetwory zbożowe")
                         .samplingStandards(List.of(samplingStandard1, samplingStandard2, samplingStandard3))
-                        .indications(List.of(indication1, indication2))
                         .build();
 
                 ProductGroup group2 = ProductGroup.builder()
                         .name("Świeże owoce i warzywa")
                         .samplingStandards(List.of(samplingStandard1, samplingStandard2))
-                        .indications(List.of(indication1, indication3))
                         .build();
 
                 groupRepository.saveAll(List.of(group1, group2));
+
+                //assortment
+                var indication11 = Indication.builder()
+                        .name("Wilgotność")
+                        .method("PN-EN ISO 712:2012")
+                        .unit("g/100g")
+                        .laboratory("FCh")
+                        .build();
+
+                var indication12 = Indication.builder()
+                        .name("Ocena organoleptyczna - mąka i kasza")
+                        .method("PN-A-74013:1964")
+                        .unit(null)
+                        .laboratory("FCh")
+                        .build();
+
+                Assortment assortment1 = Assortment.builder()
+                        .name("Kasza")
+                        .group(group1)
+                        .indications(List.of(indication11, indication12))
+                        .build();
+
+                var indication21 = Indication.builder()
+                        .name("Wilgotność")
+                        .method("PN-EN ISO 665:2020-09")
+                        .unit("g/100g")
+                        .laboratory("FCh")
+                        .build();
+
+                var indication22 = Indication.builder()
+                        .name("Liczba opadania")
+                        .method("PN-EN ISO 3093:2007")
+                        .unit(null)
+                        .laboratory("PCR")
+                        .build();
+
+                Assortment assortment2 = Assortment.builder()
+                        .name("Winogrona")
+                        .group(group2)
+                        .indications(List.of(indication21, indication22))
+                        .build();
+
+                var indication31 = Indication.builder()
+                        .name("Wilgotność")
+                        .method("PN-A-74108:1996 pkt 3.3.2")
+                        .unit("g/100g")
+                        .laboratory("FCh")
+                        .build();
+
+                Assortment assortment3 = Assortment.builder()
+                        .name("Pomidory")
+                        .group(group2)
+                        .indications(List.of(indication31))
+                        .build();
+
+                assortmentRepository.saveAll(List.of(assortment1, assortment2, assortment3));
 
                 //sample
                 Address address1 = Address.builder()
@@ -178,7 +209,7 @@ public class Config {
                 Sample sample1 = Sample.builder()
                         .code(code1)
                         .client(client1)
-                        .assortment("Kasza")
+                        .assortment(assortment1)
                         .admissionDate(LocalDate.now())
                         .expirationDate(LocalDate.now().plusYears(3))
                         .expirationComment("Po otwarciu spożyć w ciągu 5 dni")
@@ -187,9 +218,9 @@ public class Config {
                         .state("Bez zastrzeżeń")
                         .analysis(true)
                         .inspection(inspection1)
-                        .group(group1)
                         .samplingStandard(samplingStandard2)
                         .reportData(reportData1)
+                        .progressStatus(ProgressStatusEnum.DONE)
                         .build();
 
                 Address address2 = Address.builder()
@@ -215,7 +246,7 @@ public class Config {
                 Sample sample2 = Sample.builder()
                         .code(code2)
                         .client(client2)
-                        .assortment("Winogrona")
+                        .assortment(assortment2)
                         .admissionDate(LocalDate.now())
                         .expirationDate(LocalDate.now().plusDays(10))
                         .expirationComment(null)
@@ -224,15 +255,15 @@ public class Config {
                         .state("Bez zastrzeżeń")
                         .analysis(true)
                         .inspection(inspection2)
-                        .group(group2)
                         .samplingStandard(samplingStandard1)
                         .reportData(reportData2)
+                        .progressStatus(ProgressStatusEnum.TODO)
                         .build();
 
                 Sample sample3 = Sample.builder()
                         .code(code3)
                         .client(client2)
-                        .assortment("Pomidory")
+                        .assortment(assortment3)
                         .admissionDate(LocalDate.now())
                         .expirationDate(LocalDate.now().plusDays(7))
                         .expirationComment(null)
@@ -241,9 +272,9 @@ public class Config {
                         .state("Bez zastrzeżeń")
                         .analysis(false)
                         .inspection(inspection3)
-                        .group(group2)
                         .samplingStandard(samplingStandard2)
                         .reportData(null)
+                        .progressStatus(ProgressStatusEnum.TODO)
                         .build();
 
                 sampleRepository.saveAll(List.of(sample1, sample2, sample3));
@@ -251,7 +282,7 @@ public class Config {
                 //examination
                 Examination examination1 = Examination.builder()
                         .sample(sample1)
-                        .indication(indication1)
+                        .indication(indication11)
                         .signage("oznakowanie")
                         .nutritionalValue("wartość odżywcza")
                         .specification("specyfikacja")
@@ -268,7 +299,7 @@ public class Config {
 
                 Examination examination2 = Examination.builder()
                         .sample(sample1)
-                        .indication(indication2)
+                        .indication(indication12)
                         .signage("oznakowanie")
                         .nutritionalValue("wartość odżywcza")
                         .specification("specyfikacja")
