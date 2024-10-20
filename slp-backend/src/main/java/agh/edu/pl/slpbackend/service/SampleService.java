@@ -48,7 +48,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
     public Object insert(IModel model) {
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
-        sample.setProgressStatus(ProgressStatusEnum.TODO);
+        sample.setProgressStatus(ProgressStatusEnum.IN_PROGRESS);
         return sampleRepository.save(sample);
     }
 

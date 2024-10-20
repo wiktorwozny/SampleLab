@@ -1,9 +1,12 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
+import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.model.Examination;
+import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
+import agh.edu.pl.slpbackend.repository.SampleRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class ExaminationService extends AbstractService implements ExaminationMapper {
 
     private final ExaminationRepository examinationRepository;
+    private final SampleRepository sampleRepository;
 
     public List<ExaminationDto> selectAll() {
         List<Examination> examinationList = examinationRepository.findAll();
@@ -56,14 +60,37 @@ public class ExaminationService extends AbstractService implements ExaminationMa
 
         final ExaminationDto examinationDto = (ExaminationDto) model;
         final Examination examination = toModel(examinationDto);
-        return examinationRepository.save(examination);
+        final Object res = examinationRepository.save(examination);
+
+        updateSampleProgress(examination.getSample().getId());
+
+        return res;
     }
 
     @Override
     public Object update(IModel model) {
         final ExaminationDto examinationDto = (ExaminationDto) model;
         final Examination examination = toModel(examinationDto);
-        return examinationRepository.save(examination);
+
+        final Object res = examinationRepository.save(examination);
+
+        updateSampleProgress(examination.getSample().getId());
+
+        return res;
+    }
+
+    private void updateSampleProgress(final long sampleId) {
+
+        final Sample sample = sampleRepository.findById(sampleId).orElseThrow();
+        final List<Examination> examinationList = sample.getExaminations();
+        boolean completed = false;
+        for (Examination examination : examinationList) {
+            completed = (examination.getResult() != null && !examination.getResult().isEmpty());
+        }
+
+        sample.setProgressStatus(completed ? ProgressStatusEnum.DONE : ProgressStatusEnum.IN_PROGRESS);
+
+        sampleRepository.save(sample);
     }
 
     @Override
