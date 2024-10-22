@@ -21,7 +21,7 @@ const columns: Column<Assortment>[] = [
         }
     },
     {
-        header: 'Metody pobrania', accessor: 'indications', render: (value) => {
+        header: 'Wskazania', accessor: 'indications', render: (value) => {
             if (Array.isArray(value)) {
                 return value.map((indication: Indication) => indication.name).join(' ,  ');
             }

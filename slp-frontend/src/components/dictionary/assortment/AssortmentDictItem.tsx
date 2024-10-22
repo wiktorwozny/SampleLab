@@ -167,11 +167,11 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                         {errors.group && <p className="text-red-600">{`${errors.group.message}`}</p>}
 
 
-                        <h5 className="mt-6 mb-2 text-lg font-semibold">Metody pobrania</h5>
+                        <h5 className="mt-6 mb-2 text-lg font-semibold">Wskazania</h5>
                         {!isView && (
                             <div className="flex space-x-4 my-2">
                                 <Button variant="primary" onClick={() => setShowIndicationModal(true)}>
-                                    Wybierz metody pobrania
+                                    Wybierz metody wspazania
                                 </Button>
                             </div>
                         )}
