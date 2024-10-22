@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import SampleForm from './components/SampleForm';
 import ReportDataForm from './components/ReportDataForm';
@@ -15,7 +15,6 @@ import BackupView from "./components/BackupView";
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
-import { useState } from 'react';
 import DictionariesView from "./components/dictionary/DictionariesView";
 import LoginForm from "./components/LoginForm";
 import RegisterPage from "./pages/RegisterPage";
@@ -24,6 +23,9 @@ import IndicationDict from "./components/dictionary/indication/IndicationDict";
 import CodeDict from "./components/dictionary/code/CodeDict";
 import InspectionDict from "./components/dictionary/inspection/InspectionDict";
 import SamplingStandardDict from "./components/dictionary/sampling-standard/SamplingStandardDict";
+import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
+import AssortmentDict from "./components/dictionary/assortment/AssortmentDict";
+
 // import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 
 function App() {
@@ -32,7 +34,7 @@ function App() {
     return (
         <div className="App flex relative h-fit">
             <AlertsContext>
-                {!isToken&&<div className='fixed w-full top-2 z-2 justify-center'>
+                {!isToken && <div className='fixed w-full top-2 z-2 justify-center'>
                     <AlertComponent isToken={isToken}/>
                 </div>}
                 <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
@@ -59,7 +61,8 @@ function App() {
                                 <Route path='/dictionary/codeDict' element={<CodeDict/>}/>
                                 <Route path='/dictionary/inspectionDict' element={<InspectionDict/>}/>
                                 <Route path='/dictionary/samplingStandardDict' element={<SamplingStandardDict/>}/>
-                                {/* <Route path='/dictionary/productGroupDict' element={<ProductGroupDict/>}/> */}
+                                <Route path='/dictionary/productGroupDict' element={<ProductGroupDict/>}/>
+                                <Route path='/dictionary/assortmentDict' element={<AssortmentDict/>}/>
                                 <Route path='/login' element={<LoginForm/>}/>
                                 <Route path='/register' element={
                                     <PrivateRoute>

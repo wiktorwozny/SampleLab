@@ -1,34 +1,48 @@
-import {Column, ProductGroup} from "../../../utils/types";
 import React, {useContext, useEffect, useState} from "react";
+import {Assortment, Column, Indication, ProductGroup} from "../../../utils/types";
 import {AlertContext} from "../../../contexts/AlertsContext";
+import {useNavigate} from "react-router-dom";
 import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
 import {CancelButton} from "../../ui/StandardButton";
-import {useNavigate} from "react-router-dom";
-import {deleteGroup, getAllGroup} from "../../../helpers/groupApi";
-import ProductGroupDictItem from "./ProductGroupDictItem";
 import ConfirmPopup from "../../ui/ConfirmPopup";
+import {deleteAssortment, getAllAssortments} from "../../../helpers/assortmentApi";
+import AssortmentDictItem from "./AssortmentDictItem";
 
-
-const columns: Column<ProductGroup>[] = [
+const columns: Column<Assortment>[] = [
     {header: 'ID', accessor: 'id'},
     {header: 'Nazwa', accessor: 'name'},
+    {
+        header: 'Grupa', accessor: 'group', render: (value) => {
+            if (typeof value === 'object' && value !== null && 'name' in value) {
+                return (value as ProductGroup).name;
+            }
+            return '';
+        }
+    },
+    {
+        header: 'Metody pobrania', accessor: 'indications', render: (value) => {
+            if (Array.isArray(value)) {
+                return value.map((indication: Indication) => indication.name).join(' ,  ');
+            }
+            return '';
+        }
+    },
 ];
 
-const ProductGroupDict = () => {
-    const [productGroupList, setProductGroupList] = useState<ProductGroup[]>([]);
+const AssortmentDict = () => {
+    const [assortmentList, setAssortmentList] = useState<Assortment[]>([]);
     const {setAlertDetails} = useContext(AlertContext);
     const [openModal, setOpenModal] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<ProductGroup | null>(null);
+    const [selectedItem, setSelectedItem] = useState<Assortment | null>(null);
     const [isViewMode, setIsViewMode] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
     const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<ProductGroup | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<Assortment | null>(null);
 
-
-    const handleView = (item: ProductGroup) => {
+    const handleView = (item: Assortment) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
         setIsViewMode(true);
@@ -36,7 +50,7 @@ const ProductGroupDict = () => {
         setIsEditMode(false);
     };
 
-    const handleEdit = (item: ProductGroup) => {
+    const handleEdit = (item: Assortment) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
         setIsViewMode(false);
@@ -54,11 +68,11 @@ const ProductGroupDict = () => {
 
     const handleDelete = async () => {
         try {
-            let response = await deleteGroup(itemToDelete!.id)
+            let response = await deleteAssortment(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
-                getProductGroups();
+                getAssortmentsList();
                 handleClose();
             }
         } catch (err) {
@@ -67,7 +81,7 @@ const ProductGroupDict = () => {
         }
     };
 
-    const confirmDelete = (item: ProductGroup) => {
+    const confirmDelete = (item: Assortment) => {
         setItemToDelete(item);
         setOpenConfirmPopup(true);
     };
@@ -81,20 +95,21 @@ const ProductGroupDict = () => {
         setOpenModal(false);
     }
 
-    const copyObject = (item: ProductGroup): ProductGroup => {
+    const copyObject = (item: Assortment): Assortment => {
         return JSON.parse(JSON.stringify(item));
     };
 
-    const getProductGroups = () => {
-        getAllGroup().then((res) => {
+    const getAssortmentsList = () => {
+        getAllAssortments().then((res) => {
             if (res.status === 200) {
-                setProductGroupList(res.data);
+                setAssortmentList(res.data);
             }
         })
     };
 
+
     useEffect(() => {
-        getProductGroups();
+        getAssortmentsList();
     }, []);
 
     return (
@@ -108,9 +123,9 @@ const ProductGroupDict = () => {
 
             </div>
 
-            <DictionaryTable<ProductGroup>
+            <DictionaryTable<Assortment>
                 columns={columns}
-                data={productGroupList}
+                data={assortmentList}
                 onView={handleView}
                 onEdit={handleEdit}
                 onDelete={confirmDelete}
@@ -120,8 +135,9 @@ const ProductGroupDict = () => {
                 className='mt-3'
                 onClick={() => navigate(-1)} // Go back to the previous screen
             >Powrót</CancelButton>
-            <ProductGroupDictItem
-                refresh={getProductGroups}
+
+            <AssortmentDictItem
+                refresh={getAssortmentsList}
                 show={openModal}
                 handleClose={handleClose}
                 item={selectedItem}
@@ -137,5 +153,6 @@ const ProductGroupDict = () => {
             />
         </div>
     )
+
 }
-export default ProductGroupDict
+export default AssortmentDict

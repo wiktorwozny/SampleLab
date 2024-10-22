@@ -6,7 +6,7 @@ import {Div} from "../components/ui/Div";
 import {DisableButton, StandardButton} from "../components/ui/StandardButton";
 import {generateReportForSample} from "../helpers/generateReportApi";
 import {ProgressStateEnum} from "../utils/enums";
-import { checkResponse } from "../utils/checkResponse";
+import {checkResponse} from "../utils/checkResponse";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
@@ -118,10 +118,11 @@ const SingleSamplePage = () => {
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
-            <StandardButton type="button" onClick={(e) => {
+            <DisableButton
+                disabled={sample?.progressStatus !== ProgressStateEnum.DONE} type="button" onClick={(e) => {
                 e.stopPropagation();
                 generateReport(Number(sampleId));
-            }}>Generuj raport</StandardButton>
+            }}>Generuj raport</DisableButton>
         </div>
     </div>)
 }

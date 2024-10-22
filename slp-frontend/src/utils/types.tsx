@@ -71,6 +71,19 @@ export type Assortment = {
     indications: Indication[]
 }
 
+export type ProductGroupSave = {
+    id: number,
+    name: string,
+    samplingStandards?: number[]
+}
+
+export type AssortmentSave = {
+    id: number,
+    name: string,
+    group: number,
+    indications: number[]
+}
+
 export type ReportData = {
     id: number,
     manufacturerName: string,
