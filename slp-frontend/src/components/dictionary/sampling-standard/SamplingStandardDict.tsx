@@ -98,7 +98,7 @@ const SamplingStandardDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Standardy póbek</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Standardy pobrania póbek</h1>
 
             <div className="w-full justify-content-between flex mb-2">
                 <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>

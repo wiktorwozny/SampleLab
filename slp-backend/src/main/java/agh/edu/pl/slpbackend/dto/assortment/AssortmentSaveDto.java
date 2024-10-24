@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.dto.assortment;
 
 import agh.edu.pl.slpbackend.model.Assortment;
+import agh.edu.pl.slpbackend.model.Indication;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
@@ -33,5 +34,5 @@ public class AssortmentSaveDto implements IModel, Serializable {
     private Long group;
 
     @ModelFieldName("indications")
-    private List<Long> indications;
+    private List<Indication> indications;
 }

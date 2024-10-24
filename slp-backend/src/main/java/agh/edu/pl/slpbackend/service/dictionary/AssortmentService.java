@@ -3,8 +3,8 @@ package agh.edu.pl.slpbackend.service.dictionary;
 import agh.edu.pl.slpbackend.dto.assortment.AssortmentDto;
 import agh.edu.pl.slpbackend.dto.assortment.AssortmentSaveDto;
 import agh.edu.pl.slpbackend.mapper.AssortmentMapper;
+import agh.edu.pl.slpbackend.mapper.IndicationMapper;
 import agh.edu.pl.slpbackend.model.Assortment;
-import agh.edu.pl.slpbackend.model.Indication;
 import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.repository.AssortmentRepository;
 import agh.edu.pl.slpbackend.repository.IndicationRepository;
@@ -15,14 +15,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @AllArgsConstructor
-public class AssortmentService extends AbstractService implements AssortmentMapper {
+public class AssortmentService extends AbstractService implements AssortmentMapper, IndicationMapper {
     private final AssortmentRepository assortmentRepository;
     private final IndicationRepository indicationRepository;
     private final ProductGroupRepository productGroupRepository;
@@ -36,14 +35,14 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
     @Override
     public Object insert(IModel model) {
         final AssortmentSaveDto dto = (AssortmentSaveDto) model;
-        final Assortment assortment = toModel(createObjectToSave(dto));
+        final Assortment assortment = toModel(createObjectToSave(dto, false));
         return assortmentRepository.save(assortment);
     }
 
     @Override
     public Object update(IModel model) {
         final AssortmentSaveDto dto = (AssortmentSaveDto) model;
-        return assortmentRepository.save(toModel(createObjectToSave(dto)));
+        return assortmentRepository.save(toModel(createObjectToSave(dto, true)));
     }
 
     @Override
@@ -52,24 +51,25 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
         assortmentRepository.deleteById(dto.getId());
     }
 
-    private AssortmentDto createObjectToSave(AssortmentSaveDto dto) {
+    private AssortmentDto createObjectToSave(AssortmentSaveDto dto, final boolean isEdit) {
+
         final AssortmentDto dtoToSave = new AssortmentDto();
         dtoToSave.setId(dto.getId());
         dtoToSave.setName(dto.getName());
 
+
+        if (isEdit) {
+            final Assortment assortment = assortmentRepository.findById(dto.getId()).orElseThrow();
+            assortment.getIndications().forEach(indication -> indicationRepository.deleteById(indication.getId()));
+        }
+
         final ProductGroup group = productGroupRepository.findById(dto.getGroup()).orElseThrow();
         dtoToSave.setGroup(group);
 
-        final List<Indication> indicationsList = new ArrayList<>();
-        dto.getIndications().forEach(indicationId -> createIndicationsListToSave(indicationId, indicationsList));
+        dto.getIndications().forEach(indication -> indication.setId(null));
 
-        dtoToSave.setIndications(indicationsList);
-
+        dtoToSave.setIndications(dto.getIndications());
         return dtoToSave;
     }
 
-    private void createIndicationsListToSave(final Long id, final List<Indication> indicationList) {
-        final Indication indication = indicationRepository.findById(id).orElseThrow();
-        indicationList.add(indication);
-    }
 }

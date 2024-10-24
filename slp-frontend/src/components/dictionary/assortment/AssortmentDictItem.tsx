@@ -4,12 +4,13 @@ import {AlertContext} from "../../../contexts/AlertsContext";
 import {Button, Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
-import {ModalSelection} from "../../ui/ModalSelection";
-import {getAllIndications} from "../../../helpers/indicationApi";
 import {addAssortment, updateAssortment} from "../../../helpers/assortmentApi";
 import {getAllGroup} from "../../../helpers/groupApi";
 import SearchableDropdown from "../../ui/SearchableDropdown";
 import {Assortment, Indication, ProductGroup} from "../../../utils/types";
+import IndicationForAssortmentDictItem from "./IndicationForAssortmentDictItem";
+import {FaTrashCan} from "react-icons/fa6";
+import {StandardButton} from "../../ui/StandardButton";
 
 interface AssortmentDictItemProps {
     refresh: () => void;
@@ -34,20 +35,17 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     const {reset, handleSubmit, register, formState: {errors}, setValue} = method;
     const {setAlertDetails} = useContext(AlertContext);
 
-    const [indicationList, setIndicationList] = useState<Indication[]>([]);
-    const [selectedIndication, setSelectedIndication] = useState<number[]>(item?.indications?.map(s => s.id) || []);
     const [selectedIndicationList, setSelectedIndicationList] = useState<Indication[]>(item?.indications || []);
     const [showIndicationModal, setShowIndicationModal] = useState(false);
     const [productGroupList, setProductGroupList] = useState<ProductGroup[]>([]);
     const [selectedProductGroup, setSelectedProductGroup] = useState<number | null>(item?.group?.id || null);
 
-    // Używamy useEffect do ustawienia wartości formularza na podstawie przekazanego item
+
     useEffect(() => {
         if (item !== null) {
-            reset(item); // Resetowanie formularza z danymi
-            setSelectedIndication(item?.indications?.map(s => s.id) || []);
+            reset(item);
             setSelectedIndicationList(item?.indications || []);
-            setSelectedProductGroup(item?.group?.id || null); // Ustawienie grupy produktów na podstawie item
+            setSelectedProductGroup(item?.group?.id || null);
         } else {
             resetForm();
         }
@@ -55,13 +53,12 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
 
     const resetForm = () => {
         reset({id: '', name: '', group: ''});
-        setSelectedIndication([]);
         setSelectedIndicationList([]);
-        setSelectedProductGroup(null); // Resetowanie wybranej grupy produktów
+        setSelectedProductGroup(null);
     };
 
     const handleEdit = (formData: any) => {
-        formData.indications = selectedIndication;
+        formData.indications = selectedIndicationList;
         formData.group = selectedProductGroup;
         try {
             updateAssortment(formData).then((response) => {
@@ -77,7 +74,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     };
 
     const handleAdd = (formData: any) => {
-        formData.indications = selectedIndication;
+        formData.indications = selectedIndicationList;
         formData.group = selectedProductGroup;
         console.log(formData);
         try {
@@ -93,18 +90,6 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
         }
     };
 
-    const getIndications = () => {
-        getAllIndications().then((res) => {
-            if (res.status === 200) {
-                setIndicationList(res.data);
-            }
-        });
-    };
-
-    useEffect(() => {
-        getIndications();
-    }, []);
-
     const submit = (formData: any) => {
         if (isEdit) {
             handleEdit(formData);
@@ -119,12 +104,6 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
         resetForm();
     };
 
-    const handleSaveIndication = (selected: number[]) => {
-        setSelectedIndication(selected);
-        const selectedIndicationData = indicationList.filter(standard => selected.includes(standard.id));
-        setSelectedIndicationList(selectedIndicationData);
-    };
-
     const getProductGroupList = () => {
         getAllGroup().then((res) => {
             if (res.status === 200) {
@@ -136,6 +115,15 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     useEffect(() => {
         getProductGroupList();
     }, []);
+
+    const addNewIndicationToList = (newIndication: Indication) => {
+        setSelectedIndicationList((prevList) => [...prevList, newIndication]);
+    };
+
+    const removeIndicationFromList = (id: number) => {
+        setSelectedIndicationList((prevList) => prevList.filter((indication) => indication.id !== id));
+    };
+
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -168,25 +156,40 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
 
 
                         <h5 className="mt-6 mb-2 text-lg font-semibold">Wskazania</h5>
-                        {!isView && (
-                            <div className="flex space-x-4 my-2">
-                                <Button variant="primary" onClick={() => setShowIndicationModal(true)}>
-                                    Wybierz metody wspazania
-                                </Button>
-                            </div>
-                        )}
+
                         <div className="max-h-96 overflow-y-auto">
                             <table className="min-w-full table-auto border-collapse border border-gray-300">
                                 <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="p-2 border border-gray-300 text-left">Nazwa</th>
+                                    <th className="p-2 border border-gray-300 text-left flex justify-content-between">
+                                        <h6>Nazwa</h6>
+                                        {!isView && (
+                                            <div className="flex space-x-4 my-2">
+                                                <StandardButton type={"button"}
+                                                                onClick={() => setShowIndicationModal(true)}>
+                                                    Dodaj nowy
+                                                </StandardButton>
+                                            </div>
+                                        )}
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {selectedIndicationList?.map((option, index) => (
                                     <tr key={option.id}
                                         className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                                        <td className="p-2 border border-gray-300">{option.name}</td>
+                                        <td className="p-2 border border-gray-300 flex justify-content-between">
+                                            <p>{option.name}</p>
+                                            {!isView && (
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() => removeIndicationFromList(option.id)}
+                                                    className="p-1"
+                                                >
+                                                    <FaTrashCan/>
+                                                </Button>
+                                            )}
+                                        </td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -196,20 +199,18 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
 
                     </Modal.Body>
                     <Modal.Footer>
-                        {(isEdit || isAdd) && <Button type="submit" variant="primary">Zapisz</Button>}
+                        {(isEdit || isAdd) && <StandardButton type="submit">Zapisz</StandardButton>}
                         <Button variant="secondary" onClick={handleCancel}>Anuluj</Button>
                     </Modal.Footer>
                 </form>
             </FormProvider>
 
-            <ModalSelection
-                title="Wybierz Standardy Próbkowania"
-                options={indicationList}
-                selectedOptions={selectedIndication}
+            <IndicationForAssortmentDictItem
                 show={showIndicationModal}
                 handleClose={() => setShowIndicationModal(false)}
-                handleSave={handleSaveIndication}
+                addNewIndication={addNewIndicationToList}
             />
+
         </Modal>
     );
 };
