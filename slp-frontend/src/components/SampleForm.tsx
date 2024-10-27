@@ -96,6 +96,7 @@ const SampleForm: FC<{}> = () => {
         values.inspection = JSON.parse(values.inspection)
         values.group = JSON.parse(values.group)
         values.samplingStandard = JSON.parse(values.samplingStandard)
+        values.assortment = JSON.parse(values.assortment);
         // values.reportData = JSON.parse(values.reportData)
         // values.analysis = values.analysis === "true" ? true : false;
         console.log(values.analysis)
@@ -219,6 +220,7 @@ const SampleForm: FC<{}> = () => {
                             <FormLabel>Asortyment</FormLabel>
                             <FormSelect
                                 isDisabled={!chosenGroup}
+                                chosenGroup={chosenGroup}
                                 className="my-custom-class"
                                 options={JSON.parse(chosenGroup ? chosenGroup : "{}")?.assortments?.map((assortment: Assortment) => ({
                                     value: JSON.stringify(assortment),
@@ -237,6 +239,7 @@ const SampleForm: FC<{}> = () => {
                             <FormLabel>Norma pobrania próbki</FormLabel>
                             <FormSelect
                                 isDisabled={!chosenGroup}
+                                chosenGroup={chosenGroup}
                                 className="my-custom-class"
                                 options={JSON.parse(chosenGroup ? chosenGroup : "{}")?.samplingStandards?.map((standard: SamplingStandards) => ({
                                     value: JSON.stringify(standard),
