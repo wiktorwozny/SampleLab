@@ -131,6 +131,7 @@ export type FilterRequest = {
     pageNumber: number,
     pageSize: number,
     filters: FiltersData
+    fuzzySearch: string;
 }
 
 export type ProgressState = {

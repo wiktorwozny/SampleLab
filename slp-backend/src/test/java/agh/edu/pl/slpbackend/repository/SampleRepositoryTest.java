@@ -38,11 +38,6 @@ public class SampleRepositoryTest {
         //@formatter:on
     }
 
-    @Test
-    public void insert() {
-
-
-    }
 
     @Test
     public void findAll() {
@@ -61,4 +56,5 @@ public class SampleRepositoryTest {
         assertEquals(count1 + 1, count2);
 
     }
+
 }
