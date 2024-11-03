@@ -17,7 +17,8 @@ const ChangePasswordForm = () => {
         // naviagte("/")
     }
 
-    return(<div className="w-full h-screen z-10 absolute flex justify-center items-center bg-white">
+    return(<div className="w-full h-screen z-10 absolute flex justify-center items-center bg-white relative">
+        <h2 className="text-3xl font-bold absolute top-10">Formularz zmiany hasła</h2>
         <form onSubmit={handleSubmit(submit)} className="w-1/3">
             <FormLabel className='text-start w-full'>Podaj aktualne hasło</FormLabel>
             <Input
