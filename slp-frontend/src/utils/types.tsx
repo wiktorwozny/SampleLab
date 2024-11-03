@@ -86,11 +86,14 @@ export type ReportData = {
     batchNumber: number,
     batchSizeProd: string,
     batchSizeStorehouse: string,
+    sampleCollector: string,
     samplePacking: string,
     sampleCollectionSite: string,
     jobNumber: number,
     mechanism: string,
     deliveryMethod: string,
+    collectionDate: Date,
+    protocolNumber: string,
     sampleId: number
 }
 

@@ -3,9 +3,9 @@ import { backendUrl, Header } from "../utils/urls";
 
 const url = 'generate-report/'
 
-const generateReportForSample = (sampleId: number | undefined) => {
-    if (sampleId !== undefined) {
-        return axios.get(backendUrl + url + `sample-report/${sampleId}`, {
+const generateReportForSample = (sampleId: number | undefined, reportType: string | undefined) => {
+    if (sampleId !== undefined && reportType !== undefined) {
+        return axios.get(backendUrl + url + `sample-report/${sampleId}/${reportType}`, {
             responseType: 'blob',
             ...Header()
         });

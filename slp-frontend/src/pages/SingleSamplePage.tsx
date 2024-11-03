@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {getSampleById} from "../helpers/sampleApi";
 import {Sample} from "../utils/types";
@@ -7,10 +7,12 @@ import {DisableButton, StandardButton} from "../components/ui/StandardButton";
 import {generateReportForSample} from "../helpers/generateReportApi";
 import {ProgressStateEnum} from "../utils/enums";
 import { checkResponse } from "../utils/checkResponse";
+import {Dropdown} from "react-bootstrap";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
     const [sample, setSample] = useState<Sample>();
+    const [openReportDropdown, setOpenReportDropdown] = useState(false);
 
     const navigate = useNavigate()
 
@@ -30,9 +32,9 @@ const SingleSamplePage = () => {
         getSample()
     }, [sampleId])
 
-    const generateReport = async (sampleId: number) => {
+    const generateReport = async (sampleId: number, reportType: string) => {
         try {
-            let response = await generateReportForSample(sampleId);
+            let response = await generateReportForSample(sampleId, reportType);
             console.log(response);
 
             if (response != null) {
@@ -118,10 +120,18 @@ const SingleSamplePage = () => {
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
-            <StandardButton type="button" onClick={(e) => {
-                e.stopPropagation();
-                generateReport(Number(sampleId));
-            }}>Generuj raport</StandardButton>
+
+            <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic" className="p-2 bg-sky-500 rounded self-center text-white hover:bg-sky-600 border-0">
+                    Generuj raport
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F4")}>Raport F-4</Dropdown.Item>
+                    <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F5")}>Raport F-5</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+
         </div>
     </div>)
 }
