@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.methods;
+package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.model.Assortment;
 import agh.edu.pl.slpbackend.model.Indication;
@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,9 +27,8 @@ public class MethodService {
     private final SamplingStandardRepository samplingStandardRepository;
 
     @Transactional
-    public void importMethods() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/metody_v2.xlsm");
-             Workbook workbook = new XSSFWorkbook(inputStream)) {
+    public void importMethods(InputStream inputStream) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
 
             Sheet groupListSheet = workbook.getSheet("grupy");
 
@@ -115,8 +113,6 @@ public class MethodService {
                     groupRepository.save(group);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
