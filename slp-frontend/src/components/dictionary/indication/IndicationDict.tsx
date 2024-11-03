@@ -12,7 +12,7 @@ import ConfirmPopup from "../../ui/ConfirmPopup";
 const columns: Column<Indication>[] = [
     {header: 'ID', accessor: 'id'},
     {header: 'Nazwa', accessor: 'name'},
-    {header: 'Metoda', accessor: 'norm'},
+    {header: 'Metoda', accessor: 'method'},
     {header: 'Jednostka', accessor: 'unit'},
     {header: 'Laboratorium', accessor: 'laboratory'}
 ];

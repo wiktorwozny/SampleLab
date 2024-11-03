@@ -130,17 +130,17 @@ const IndicationDictItem: React.FC<IndicationDictItemProps> = ({
                         />
                         {errors.name && errors.name.message &&
                             <p className="text-red-600">{`${errors.name.message}`}</p>}
-                        <FormLabel>Norma</FormLabel>
+                        <FormLabel>Metoda</FormLabel>
                         <Input type="text" disabled={isView}
-                               placeholder="Norma" {...register("norm", {
+                               placeholder="Norma" {...register("method", {
                             required: {
                                 value: true,
                                 message: "Pole wymagane"
                             }
                         })}
                         />
-                        {errors.norm && errors.norm.message &&
-                            <p className="text-red-600">{`${errors.norm.message}`}</p>}
+                        {errors.method && errors.method.message &&
+                            <p className="text-red-600">{`${errors.method.message}`}</p>}
 
                         <FormLabel>Jednostka</FormLabel>
                         <Input

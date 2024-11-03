@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.config;
 
 import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.enums.RoleEnum;
+import agh.edu.pl.slpbackend.methods.MethodService;
 import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.repository.*;
 import org.springframework.boot.CommandLineRunner;
@@ -23,7 +24,8 @@ public class Config {
             final ProductGroupRepository groupRepository,
             final ExaminationRepository examinationRepository,
             final UserRepository userRepository,
-            final AssortmentRepository assortmentRepository) {
+            final AssortmentRepository assortmentRepository,
+            final MethodService methodService) {
         return args -> {
             if (sampleRepository.count() == 0) {
                 //code
@@ -328,6 +330,8 @@ public class Config {
 
                 userRepository.saveAll(List.of(admin, worker));
             }
+
+            methodService.importMethods();
         };
     }
 }

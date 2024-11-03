@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface SampleRepository extends JpaRepository<Sample, Long>, JpaSpecificationExecutor<Sample> {
     Optional<Sample> findByReportDataId(Long id);
+
 }

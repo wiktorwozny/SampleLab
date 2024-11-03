@@ -1,28 +1,28 @@
 import axios from "axios"
 import {backendUrl, Header} from "../utils/urls"
-import {ProductGroupSave} from "../utils/types";
+import {Assortment} from "../utils/types";
 
-const url = "product-group/"
+const url = "assortment/"
 
-const getAllGroup = () => {
+const getAllAssortments = () => {
     return axios.get(backendUrl + url + "list", Header())
 }
-const updateGroup = (item: ProductGroupSave) => {
+const updateAssortment = (item: Assortment) => {
     return axios.put(backendUrl + url + 'update', item, Header());
 }
 
-const addGroup = (item: ProductGroupSave) => {
+const addAssortment = (item: Assortment) => {
     return axios.post(backendUrl + url + 'save', item, Header());
 }
 
-const deleteGroup = (id: number | null) => {
+const deleteAssortment = (id: number | null) => {
     return axios.delete(backendUrl + url + `delete/${id}`, Header());
 }
 
 export {
-    getAllGroup,
-    updateGroup,
-    addGroup,
-    deleteGroup
+    getAllAssortments,
+    updateAssortment,
+    addAssortment,
+    deleteAssortment
 }
 

@@ -1,9 +1,9 @@
 package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupDto;
-import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupSaveDto;
-import agh.edu.pl.slpbackend.service.dictionary.ProductGroupService;
+import agh.edu.pl.slpbackend.dto.assortment.AssortmentDto;
+import agh.edu.pl.slpbackend.dto.assortment.AssortmentSaveDto;
+import agh.edu.pl.slpbackend.service.dictionary.AssortmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +13,16 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product-group")
+@RequestMapping("/assortment")
 @CrossOrigin(origins = "http://localhost:3000")
-public class ProductGroupController extends AbstractController {
+public class AssortmentController extends AbstractController {
 
-    private final ProductGroupService productGroupService;
+    private final AssortmentService assortmentService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProductGroupDto>> list() {
+    public ResponseEntity<List<AssortmentDto>> list() {
         try {
-            List<ProductGroupDto> list = productGroupService.selectAll();
+            List<AssortmentDto> list = assortmentService.selectAll();
 
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -34,17 +34,17 @@ public class ProductGroupController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody ProductGroupSaveDto productGroupSaveDto) throws Exception {
-        return add(productGroupSaveDto, productGroupService);
+    public ResponseEntity<Void> add(@RequestBody AssortmentSaveDto assortmentSaveDto) throws Exception {
+        return add(assortmentSaveDto, assortmentService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody ProductGroupSaveDto productGroupSaveDto) throws Exception {
-        return edit(productGroupSaveDto, productGroupService);
+    public ResponseEntity<Void> edit(@RequestBody AssortmentSaveDto assortmentSaveDto) throws Exception {
+        return edit(assortmentSaveDto, assortmentService);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
-        return delete(ProductGroupDto.builder().id(id).build(), productGroupService);
+        return delete(AssortmentDto.builder().id(id).build(), assortmentService);
     }
 }

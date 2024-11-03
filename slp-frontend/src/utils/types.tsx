@@ -71,6 +71,19 @@ export type Assortment = {
     indications: Indication[]
 }
 
+export type ProductGroupSave = {
+    id: number,
+    name: string,
+    samplingStandards?: number[]
+}
+
+export type AssortmentSave = {
+    id: number,
+    name: string,
+    group: number,
+    indications: number[]
+}
+
 export type ReportData = {
     id: number,
     manufacturerName: string,
@@ -121,6 +134,7 @@ export type FilterRequest = {
     pageNumber: number,
     pageSize: number,
     filters: FiltersData
+    fuzzySearch: string;
 }
 
 export type ProgressState = {
