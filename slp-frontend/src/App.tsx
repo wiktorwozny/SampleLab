@@ -25,6 +25,7 @@ import InspectionDict from "./components/dictionary/inspection/InspectionDict";
 import SamplingStandardDict from "./components/dictionary/sampling-standard/SamplingStandardDict";
 import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 import AssortmentDict from "./components/dictionary/assortment/AssortmentDict";
+import ChangePasswordForm from './components/ChangePasswordForm';
 
 // import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 
@@ -70,6 +71,7 @@ function App() {
                                     </PrivateRoute>
                                 }/>
                                 <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
+                                <Route path='/changePassword' element={<ChangePasswordForm/>}/>
                             </Routes>
                         </div>
                     </BrowserRouter>
