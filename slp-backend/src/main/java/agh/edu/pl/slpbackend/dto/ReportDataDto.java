@@ -80,7 +80,7 @@ public class ReportDataDto implements IModel, Serializable {
     private String sampleCollectionSite;
 
     @ModelFieldName("sampleCollector")
-    private User sampleCollector;
+    private String sampleCollector;
 
     @ModelFieldName("jobNumber")
     private Integer jobNumber;
@@ -90,6 +90,12 @@ public class ReportDataDto implements IModel, Serializable {
 
     @ModelFieldName("deliveryMethod")
     private String deliveryMethod;
+
+    @ModelFieldName("collectionDate")
+    private LocalDate collectionDate;
+
+    @ModelFieldName("protocolNumber")
+    private String protocolNumber;
 
     private long sampleId;
 }
