@@ -25,8 +25,8 @@ import InspectionDict from "./components/dictionary/inspection/InspectionDict";
 import SamplingStandardDict from "./components/dictionary/sampling-standard/SamplingStandardDict";
 import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 import AssortmentDict from "./components/dictionary/assortment/AssortmentDict";
+import ImportMethodsForm from './components/ImportMethodsForm';
 
-// import ProductGroupDict from "./components/dictionary/product-group/ProductGroupDict";
 
 function App() {
     const [isToken, setIsToken] = useState<boolean>(false);
@@ -70,6 +70,7 @@ function App() {
                                     </PrivateRoute>
                                 }/>
                                 <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
+                                <Route path='/importMethods' element={<ImportMethodsForm/>}/>
                             </Routes>
                         </div>
                     </BrowserRouter>

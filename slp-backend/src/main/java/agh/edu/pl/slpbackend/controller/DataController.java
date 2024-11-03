@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/data")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DataController {
-    DataService dataService;
+
+    private final DataService dataService;
 
     @GetMapping("/filters")
     public ResponseEntity<Filters> getFilters() {
