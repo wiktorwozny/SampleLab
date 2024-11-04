@@ -102,7 +102,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                     <Input
                         placeholder="Szukaj..."
                         type="text"
-                        className="border border-gray-300 rounded w-[50ch] shadow-none !mb-0"
+                        className="border border-gray-300 rounded w-25 shadow-none !mb-0"
                         maxLength={50}
                         value={fuzzySearchValue}
                         onChange={(e) => setFuzzySearchValue(e.target.value)}
