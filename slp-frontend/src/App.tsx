@@ -72,6 +72,7 @@ function App() {
                                 }/>
                                 <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
                                 <Route path='/changePassword' element={<ChangePasswordForm/>}/>
+                                <Route path='/sample/edit/:sampleId' element={<SampleForm/>}/>
                             </Routes>
                         </div>
                     </BrowserRouter>

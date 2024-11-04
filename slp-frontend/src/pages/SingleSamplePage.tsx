@@ -118,6 +118,9 @@ const SingleSamplePage = () => {
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
+            <StandardButton type="button" onClick={() => {
+                navigate(`/sample/edit/${sampleId}`)
+            }}>Edytuj próbke</StandardButton>
             <DisableButton
                 disabled={sample?.progressStatus !== ProgressStateEnum.DONE} type="button" onClick={(e) => {
                 e.stopPropagation();

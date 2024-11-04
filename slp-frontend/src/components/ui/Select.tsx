@@ -19,7 +19,9 @@ export const FormSelect = (
             <Controller
                 name={name}
                 control={control}
-                render={({field}) => (
+                render={({field}) => {
+                    console.log(field)
+                    return(
                     <Select
                         className={`mb-2 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${className}`}
                         options={options}
@@ -28,12 +30,15 @@ export const FormSelect = (
                         onBlur={field.onBlur}
                         onChange={(selectedOption: any) => {
                             field.onChange(selectedOption? selectedOption.value: null);
+                            console.log(selectRef.current?.getValue())
+                            console.log(options)
                         }}
                         isDisabled={isDisabled}
                         ref={selectRef}
+                        value={{label:options?.filter((option:any)=>option.value===field.value)[0]?.label ,value:field.value}}
                         {...props}
                     />
-                )}
+                )}}
             />
         );
     }

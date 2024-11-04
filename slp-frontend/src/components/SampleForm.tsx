@@ -10,14 +10,15 @@ import {getAllInspection} from '../helpers/inspectionApi';
 import {getAllGroup} from '../helpers/groupApi';
 import {Client, Code, Inspection, ProductGroup, Assortment, SamplingStandards} from '../utils/types';
 import {addSample} from '../helpers/samplingApi';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {AlertContext} from '../contexts/AlertsContext';
 import { Checkbox } from '@mui/material';
 import { checkResponse } from '../utils/checkResponse';
+import { getSampleById } from '../helpers/sampleApi';
 const SampleForm: FC<{}> = () => {
 
     const method = useForm();
-    const {handleSubmit, register, watch, setValue, formState: {errors}} = method;
+    const {handleSubmit, register, watch, setValue, formState: {errors}, reset} = method;
     const [codes, setCodes] = useState<Code []>([]);
     const [clients, setClients] = useState<Client []>([]);
     const [inspections, setInspections] = useState<Inspection []>([]);
@@ -25,6 +26,31 @@ const SampleForm: FC<{}> = () => {
     const navigate = useNavigate();
     const {setAlertDetails} = useContext(AlertContext);
     const chosenGroup: string = watch("group");
+    const {sampleId} = useParams()
+
+    useEffect(() => {
+        const getSample = async () => {
+            try {
+                let reponse = await getSampleById(sampleId)
+                console.log(reponse?.data)
+                let sample = reponse?.data
+                sample.code = JSON.stringify(sample.code)
+                sample.client = JSON.stringify(sample.client)
+                sample.inspection = JSON.stringify(sample.inspection)
+                sample.group = JSON.stringify(sample.group)
+                sample.samplingStandard = JSON.stringify(sample.samplingStandard)
+                sample.assortment = JSON.stringify(sample.assortment);
+                reset(sample)
+            } catch(err){
+                console.log(err);
+                checkResponse(err);
+            }
+        }
+
+        if(sampleId) {
+            getSample();
+        }
+    },[])
 
     useEffect(() => {
         const getCodes = async () => {
