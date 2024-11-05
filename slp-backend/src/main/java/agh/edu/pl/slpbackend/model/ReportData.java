@@ -59,12 +59,15 @@ public class ReportData implements Serializable {
 
     private String sampleCollectionSite;
 
-    @ManyToOne
-    private User sampleCollector;
+    private String sampleCollector;
 
     private Integer jobNumber;
 
     private String mechanism;
 
     private String deliveryMethod;
+
+    private LocalDate collectionDate;
+
+    private String protocolNumber;
 }

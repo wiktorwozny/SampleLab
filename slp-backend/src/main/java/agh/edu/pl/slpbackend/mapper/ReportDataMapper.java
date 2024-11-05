@@ -27,6 +27,8 @@ public interface ReportDataMapper {
                 .jobNumber(model.getJobNumber())
                 .mechanism(model.getMechanism())
                 .deliveryMethod(model.getDeliveryMethod())
+                .collectionDate(model.getCollectionDate())
+                .protocolNumber(model.getProtocolNumber())
                 .build();
     }
 
@@ -52,6 +54,8 @@ public interface ReportDataMapper {
                 .jobNumber(dto.getJobNumber())
                 .mechanism(dto.getMechanism())
                 .deliveryMethod(dto.getDeliveryMethod())
+                .collectionDate(dto.getCollectionDate())
+                .protocolNumber(dto.getProtocolNumber())
                 .build();
     }
 

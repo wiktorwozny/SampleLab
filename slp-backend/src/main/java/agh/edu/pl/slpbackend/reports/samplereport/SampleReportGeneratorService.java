@@ -19,11 +19,11 @@ public class SampleReportGeneratorService {
     private final SampleRepository sampleRepository;
     private final SampleReportGenerator sampleReportGenerator;
 
-    public InputStreamResource generateReport(final Long sampleId) {
+    public InputStreamResource generateReport(final Long sampleId, String reportType) {
         final Sample sample = sampleRepository.findById(sampleId)
                 .orElseThrow(SampleNotFoundException::new);
 
-        sampleReportGenerator.setParameters(sample);
+        sampleReportGenerator.setParameters(sample, reportType);
 
         ByteArrayOutputStream byteArrayOutputStream = sampleReportGenerator.generateReport();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());

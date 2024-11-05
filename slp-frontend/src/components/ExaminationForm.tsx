@@ -1,9 +1,9 @@
-import {FC, useEffect, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {addExamination, getExaminationById, updateExamination} from "../helpers/examinationApi";
 import {FormProvider, useForm} from "react-hook-form";
 import {FormLabel} from "./ui/Labels";
-import {Input} from "./ui/Input";
+import {BigTextInput, Input} from "./ui/Input";
 import {FormSelect} from "./ui/Select";
 import {CancelButton, StandardButton} from "./ui/StandardButton";
 import {getIndicationById} from "../helpers/indicationApi";
@@ -146,6 +146,8 @@ const ExaminationForm: FC<{}> = () => {
             }
 
             try {
+                console.log("cipa");
+                console.log(values);
                 let response = await updateExamination(values);
                 console.log(response);
             } catch (err) {
@@ -177,7 +179,8 @@ const ExaminationForm: FC<{}> = () => {
         <FormProvider {...methods}>
             <form className="w-4/5 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
                 <div className='flex-col'>
-                    <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
+
+                    {!indication?.isOrganoleptic && <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
                         <div className='w-1/2'>
                             <FormLabel>Oznakowanie</FormLabel>
                             <Input {...register("signage")}
@@ -203,6 +206,7 @@ const ExaminationForm: FC<{}> = () => {
                                 }
                             })}
                             />
+                            {errors.samplesNumber && <p className="text-red-600">{`${errors.samplesNumber.message}`}</p>}
                         </div>
 
                         <div className='w-1/4 flex flex-col'>
@@ -241,7 +245,65 @@ const ExaminationForm: FC<{}> = () => {
                             <Input {...register("loq")}
                             />
                         </div>
-                    </div>
+                    </div>}
+
+                    {indication?.isOrganoleptic && <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
+
+                        <div className='w-1/2'>
+                            <FormLabel>Wymagania</FormLabel>
+                            <BigTextInput
+                                {...register("signage", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                                rows={4}
+                                style={{ resize: "none" }}
+                            />
+                            {errors.signage && <p className="text-red-600">{`${errors.signage.message}`}</p>}
+
+                            <FormLabel>Wynik badania</FormLabel>
+                            <BigTextInput
+                                {...register("result")}
+                                rows={4}
+                                style={{ resize: "none" }}
+                            />
+                        </div>
+
+                        <div className='w-1/4 flex flex-col'>
+                            <FormLabel>Liczba próbek do badania</FormLabel>
+                            <Input type="number" {...register("samplesNumber", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.samplesNumber && <p className="text-red-600">{`${errors.samplesNumber.message}`}</p>}
+
+                            <FormLabel>Data rozp. badania</FormLabel>
+                            <Input type="date" {...register("startDate")}
+                            />
+
+                            <FormLabel>Data zakoń. badania</FormLabel>
+                            <Input type="date" {...register("endDate")}
+                            />
+
+                            <FormLabel>Status metody</FormLabel>
+                            <FormSelect
+                                className="my-custom-class"
+                                options={Object.values(MethodStatuses).map(methodStatus => ({
+                                    value: methodStatus,
+                                    label: methodStatus,
+                                }))}
+                                {...register("methodStatus")}
+                            />
+
+                        </div>
+
+                    </div>}
+
                     <div className='flex justify-center gap-5'>
                         <CancelButton type='button' className='mt-3'
                                       onClick={() => navigate(`/sample/manageExaminations/${sampleId}`)}>Anuluj</CancelButton>
