@@ -26,9 +26,15 @@ const getSampleById = (sampleId: string | undefined) => {
     }
     return null;
 }
+
+const deleteSample = (sampleId: string) => {
+    return axios.delete(backendUrl + url + sampleId, Header())
+}
+
 export {
     updateStatus,
     getAllSamples,
     addReportDataToSample,
-    getSampleById
+    getSampleById,
+    deleteSample
 }

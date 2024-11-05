@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal} from "react-bootstrap";
-import {StandardButton} from "./StandardButton";
+import {CancelButton, StandardButton} from "./StandardButton";
 
 interface ConfirmPopupProps {
     show: boolean;
@@ -41,19 +41,19 @@ const ConfirmPopup: React.FC<ConfirmPopupProps> = ({
                     )}
                 <Modal.Footer>
                     <StandardButton
-                        type={"submit"}
-                        className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                        type={"button"}
+                        className="!bg-red-500 hover:!bg-red-600"
                         onClick={handleConfirm}
                     >
                         Usuń
                     </StandardButton>
-                    <StandardButton
+                    <CancelButton
                         type={"button"}
-                        className="bg-gray-600 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                        className="!border-red-500 hover:!bg-red-100 !text-red-500"
                         onClick={handleClose}
                     >
                         Anuluj
-                    </StandardButton>
+                    </CancelButton>
 
                 </Modal.Footer>
             </Modal.Body>
