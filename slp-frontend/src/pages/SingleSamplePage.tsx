@@ -145,9 +145,6 @@ const SingleSamplePage = () => {
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
-            <StandardButton type="button" className="!bg-red-500 hover:!bg-red-600" onClick={() => {
-                setIsPopupOpen(true);
-            }}>Usuń próbkę</StandardButton>
             <Dropdown>
                 <Dropdown.Toggle
                     disabled={sample?.progressStatus !== ProgressStateEnum.DONE}
@@ -169,6 +166,9 @@ const SingleSamplePage = () => {
                     <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F5")}>Raport F-5</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
+            <StandardButton type="button" className="!bg-red-500 hover:!bg-red-600" onClick={() => {
+                setIsPopupOpen(true);
+            }}>Usuń próbkę</StandardButton>
         </div>
 
         <ConfirmPopup
