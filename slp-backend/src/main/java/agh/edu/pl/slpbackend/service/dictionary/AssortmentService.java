@@ -56,6 +56,7 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
         final AssortmentDto dtoToSave = new AssortmentDto();
         dtoToSave.setId(dto.getId());
         dtoToSave.setName(dto.getName());
+        dtoToSave.setOrganolepticMethod(dto.getOrganolepticMethod());
 
 
         if (isEdit) {
@@ -66,7 +67,7 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
         final ProductGroup group = productGroupRepository.findById(dto.getGroup()).orElseThrow();
         dtoToSave.setGroup(group);
 
-        dto.getIndications().forEach(indication -> indication.setId(null));
+//        dto.getIndications().forEach(indication -> indication.setId(null));
 
         dtoToSave.setIndications(dto.getIndications());
         return dtoToSave;

@@ -3,9 +3,7 @@ package agh.edu.pl.slpbackend.reports.samplereport;
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.reports.XLSXFilesHelper;
 import com.spire.doc.*;
-import com.spire.doc.documents.HorizontalAlignment;
 import com.spire.doc.documents.PageOrientation;
-import com.spire.doc.documents.VerticalAlignment;
 import com.spire.doc.fields.TextRange;
 import com.spire.xls.CellRange;
 import com.spire.xls.Workbook;
@@ -18,13 +16,12 @@ import org.docx4j.XmlUtils;
 import org.docx4j.wml.Tbl;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.zip.ZipFile;
 
 public class XLSXtoTblConverter extends XLSXFilesHelper {
 
@@ -34,11 +31,19 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
     private final boolean[] pattern;
     private final boolean uncertaintyExists;
     private final List<Examination> examinationList;
+    private List<Examination> basicExaminationList;
 
     public XLSXtoTblConverter(boolean[] pattern, boolean uncertaintyExists, List<Examination> examinationList) {
         this.pattern = pattern;
         this.uncertaintyExists = uncertaintyExists;
         this.examinationList = examinationList;
+
+        this.basicExaminationList = examinationList.stream()
+                .filter(exam -> exam.getIndication() != null && Boolean.FALSE.equals(exam.getIndication().isOrganoleptic()))
+                .collect(Collectors.toList());
+        this.basicExaminationList.sort(Comparator.comparing(Examination::getStartDate)
+                .thenComparing(Examination::getEndDate)
+                .thenComparing(exam -> exam.getIndication().getId()));
     }
 
     public Tbl convert() throws Exception {
@@ -102,18 +107,18 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
             if (!pattern[0]) {
                 copyCellValue(sheet.getRow(1).getCell(6), sheet.getRow(1).getCell(5));
                 mergeCells(sheet, 1, 1, 5, 6);
-                for (int i = 0; i < examinationList.size(); i++) {
+                for (int i = 0; i < basicExaminationList.size(); i++) {
                     mergeCells(sheet, 2 + i, 2 + i, 5, 6);
                 }
             } else if (!pattern[1]) {
                 mergeCells(sheet, 1, 1, 5, 6);
-                for (int i = 0; i < examinationList.size(); i++) {
+                for (int i = 0; i < basicExaminationList.size(); i++) {
                     mergeCells(sheet, 2 + i, 2 + i, 5, 6);
                 }
 
             } else if (!pattern[2]) {
                 mergeCells(sheet, 1, 1, 6, 7);
-                for (int i = 0; i < examinationList.size(); i++) {
+                for (int i = 0; i < basicExaminationList.size(); i++) {
                     mergeCells(sheet, 2 + i, 2 + i, 6, 7);
                 }
             }
@@ -133,8 +138,8 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
     }
 
     private void addRowsToExaminationsTable(Sheet sheet, org.apache.poi.ss.usermodel.Workbook workbook) {
-        for (int i = 0; i < examinationList.size(); i++) {
-            Examination examination = examinationList.get(i);
+        for (int i = 0; i < basicExaminationList.size(); i++) {
+            Examination examination = basicExaminationList.get(i);
             Row newRow = sheet.createRow(sheet.getLastRowNum() + 1);
             createCellAtIndexWithValue(newRow, 0, String.valueOf(i + 1), workbook);
             createCellAtIndexWithValue(newRow, 1, examination.getIndication().getName(), workbook);
@@ -160,37 +165,6 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
                 createCellAtIndexWithValue(newRow, colNum, !examination.getNutritionalValue().equals("") ? examination.getNutritionalValue() : "-", workbook);
             }
         }
-    }
-
-    private String readXmlContentFromDocx(String docxFilePath) throws IOException {
-        try (ZipFile zipFile = new ZipFile(docxFilePath);
-             InputStream inputStream = zipFile.getInputStream(zipFile.getEntry("word/document.xml"));
-             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-
-            return bufferedReader.lines().collect(Collectors.joining("\n"));
-        }
-    }
-
-    private String extractTableXml(String xmlContent) {
-        int startIndex = xmlContent.indexOf("<w:tbl");
-
-        if (startIndex != -1) {
-            int endIndex = xmlContent.indexOf("</w:tbl>", startIndex);
-
-            if (endIndex != -1) {
-                endIndex += "</w:tbl>".length();
-                String tableXml = xmlContent.substring(startIndex, endIndex);
-
-                // I have to ensure that the namespace declaration is included, this spire library pretty bad xd
-                if (!tableXml.contains("xmlns:w=")) {
-                    tableXml = tableXml.replaceFirst("<w:tbl", "<w:tbl xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"");
-                }
-
-                return tableXml;
-            }
-        }
-
-        return null;
     }
 
     private void createDocxFileWithGeneratedTable() {
@@ -223,56 +197,6 @@ public class XLSXtoTblConverter extends XLSXFilesHelper {
         }
 
         doc.saveToFile(docxFilePath, FileFormat.Docx);
-    }
-
-    private void mergeCellsInDocxFile(Worksheet sheet, Table table) {
-        if (sheet.hasMergedCells()) {
-
-            CellRange[] ranges = sheet.getMergedCells();
-            for (CellRange range : ranges) {
-                int startRow = range.getRow();
-                int startColumn = range.getColumn();
-                int rowCount = range.getRowCount();
-                int columnCount = range.getColumnCount();
-
-                if (rowCount > 1 && columnCount > 1) {
-                    for (int j = startRow; j <= startRow + rowCount; j++) {
-                        table.applyHorizontalMerge(j - 1, startColumn - 1, startColumn - 1 + columnCount - 1);
-                    }
-                    table.applyVerticalMerge(startColumn - 1, startRow - 1, startRow - 1 + rowCount - 1);
-                }
-                if (rowCount > 1 && columnCount == 1) {
-                    table.applyVerticalMerge(startColumn - 1, startRow - 1, startRow - 1 + rowCount - 1);
-                }
-                if (columnCount > 1 && rowCount == 1) {
-                    table.applyHorizontalMerge(startRow - 1, startColumn - 1, startColumn - 1 + columnCount - 1);
-                }
-            }
-        }
-    }
-
-    private void copyStyle(TextRange wTextRange, CellRange xCell, TableCell wCell) {
-
-        wTextRange.getCharacterFormat().setTextColor(xCell.getStyle().getFont().getColor());
-        wTextRange.getCharacterFormat().setFontSize((float) xCell.getStyle().getFont().getSize());
-        wTextRange.getCharacterFormat().setFontName(xCell.getStyle().getFont().getFontName());
-        wTextRange.getCharacterFormat().setBold(xCell.getStyle().getFont().isBold());
-        wTextRange.getCharacterFormat().setItalic(xCell.getStyle().getFont().isItalic());
-
-        wCell.getCellFormat().setBackColor(xCell.getStyle().getColor());
-
-        switch (xCell.getHorizontalAlignment()) {
-            case Left -> wTextRange.getOwnerParagraph().getFormat().setHorizontalAlignment(HorizontalAlignment.Left);
-            case Center ->
-                    wTextRange.getOwnerParagraph().getFormat().setHorizontalAlignment(HorizontalAlignment.Center);
-            case Right -> wTextRange.getOwnerParagraph().getFormat().setHorizontalAlignment(HorizontalAlignment.Right);
-        }
-
-        switch (xCell.getVerticalAlignment()) {
-            case Bottom -> wCell.getCellFormat().setVerticalAlignment(VerticalAlignment.Bottom);
-            case Center -> wCell.getCellFormat().setVerticalAlignment(VerticalAlignment.Middle);
-            case Top -> wCell.getCellFormat().setVerticalAlignment(VerticalAlignment.Top);
-        }
     }
 
     public void cleanFiles() throws Exception {

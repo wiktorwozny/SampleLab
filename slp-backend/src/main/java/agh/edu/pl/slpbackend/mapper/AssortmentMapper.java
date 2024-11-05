@@ -11,6 +11,7 @@ public interface AssortmentMapper {
                 .name(dto.getName())
                 .group(dto.getGroup())
                 .indications(dto.getIndications())
+                .organolepticMethod(dto.getOrganolepticMethod())
                 .build();
     }
 
@@ -20,6 +21,7 @@ public interface AssortmentMapper {
                 .name(model.getName())
                 .group(model.getGroup())
                 .indications(model.getIndications())
+                .organolepticMethod(model.getOrganolepticMethod())
                 .build();
     }
 }

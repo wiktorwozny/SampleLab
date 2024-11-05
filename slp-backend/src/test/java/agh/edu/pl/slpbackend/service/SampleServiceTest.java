@@ -66,9 +66,17 @@ public class SampleServiceTest {
     }
 
     @Test
-    public void filter() {
+    public void filterByIndicationMethod() {
         final Filters filters = new Filters(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        final FilterRequest request = new FilterRequest("id", true, 0, 10, filters, "świe");
+        final FilterRequest request = new FilterRequest("id", true, 0, 10, filters, "PN-EN ISO 712:2012");
+        final FilterResponse response = sampleService.filter(request);
+        assertFalse(response.samples().isEmpty());
+    }
+
+    @Test
+    public void filterByIndicationName() {
+        final Filters filters = new Filters(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        final FilterRequest request = new FilterRequest("id", true, 0, 10, filters, "wilgotność");
         final FilterResponse response = sampleService.filter(request);
         assertFalse(response.samples().isEmpty());
     }

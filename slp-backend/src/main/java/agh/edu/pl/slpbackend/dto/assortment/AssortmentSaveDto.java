@@ -35,4 +35,7 @@ public class AssortmentSaveDto implements IModel, Serializable {
 
     @ModelFieldName("indications")
     private List<Indication> indications;
+
+    @ModelFieldName("organolepticMethod")
+    private String organolepticMethod;
 }

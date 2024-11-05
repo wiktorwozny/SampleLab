@@ -102,11 +102,6 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
         return new FilterResponse(page.getTotalPages(), samples);
     }
 
-//    public FilterResponse fuzzySearch(final String request) {
-//
-//
-//    }
-
     public long count() {
         return sampleRepository.count();
     }

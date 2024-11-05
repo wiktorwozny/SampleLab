@@ -14,9 +14,9 @@ public class SampleReportGeneratorController {
 
     private final SampleReportGeneratorService sampleReportGeneratorService;
 
-    @GetMapping("/sample-report/{sampleId}")
-    public ResponseEntity<InputStreamResource> generate(@PathVariable final Long sampleId) {
-        InputStreamResource resource = sampleReportGeneratorService.generateReport(sampleId);
+    @GetMapping("/sample-report/{sampleId}/{reportType}")
+    public ResponseEntity<InputStreamResource> generate(@PathVariable final Long sampleId, @PathVariable final String reportType) {
+        InputStreamResource resource = sampleReportGeneratorService.generateReport(sampleId, reportType);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
