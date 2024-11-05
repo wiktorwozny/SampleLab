@@ -318,10 +318,9 @@ const SampleForm: FC<{}> = () => {
                     /> */}
                         </div>
                     </div>
-                    <div className='flex justify-center p-3 gap-5'>
+                    <div className='flex justify-center p-3 gap-2'>
                         <CancelButton type='button' className='mt-3' onClick={() => navigate('/')}>Anuluj</CancelButton>
                         <StandardButton type="submit" className='mt-3'>Dodaj</StandardButton>
-
                     </div>
                 </div>
 

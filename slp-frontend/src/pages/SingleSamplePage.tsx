@@ -1,17 +1,21 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {getSampleById} from "../helpers/sampleApi";
+import {deleteSample, getSampleById} from "../helpers/sampleApi";
 import {Sample} from "../utils/types";
 import {Div} from "../components/ui/Div";
 import {DisableButton, StandardButton} from "../components/ui/StandardButton";
 import {generateReportForSample} from "../helpers/generateReportApi";
 import {ProgressStateEnum} from "../utils/enums";
+import ConfirmPopup from "../components/ui/ConfirmPopup";
+import { AlertContext } from "../contexts/AlertsContext";
 import { checkResponse } from "../utils/checkResponse";
 import {Dropdown} from "react-bootstrap";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
     const [sample, setSample] = useState<Sample>();
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const {setAlertDetails} = useContext(AlertContext);
     const [openReportDropdown, setOpenReportDropdown] = useState(false);
 
     const navigate = useNavigate()
@@ -49,6 +53,27 @@ const SingleSamplePage = () => {
         } catch (e) {
             console.log(e);
         }
+    }
+
+    const deleteSampleFunction = async () => {
+        if (sampleId === undefined) {
+            setAlertDetails({type: "error", isAlert: true, message: "Wystąpił błąd"})
+            navigate('/')
+            setIsPopupOpen(false)
+            return
+        }
+        try {
+            let response = await deleteSample(sampleId)
+            console.log(response)
+            if (response.status === 200) {
+                setAlertDetails({type: "success", isAlert: true, message: "Udało ci się usunąć próbkę"})
+                navigate('/')
+            }
+        } catch (err: any) {
+            console.log(err)
+            setAlertDetails({type: "error", isAlert: true, message: "Nie udało ci się usunąć próbki"})            
+        }
+        setIsPopupOpen(false)
     }
 
     return (<div className="flex flex-col justify-center items-center w-full">
@@ -113,14 +138,16 @@ const SingleSamplePage = () => {
             {sample?.analysis === true ? "Tak" : "Nie"}
         </Div>
 
-        <div className="flex justify-between w-3/4 p-3">
+        <div className="flex justify-center w-3/4 p-3 gap-2">
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/addReportData/${sampleId}`)
             }}>Dodaj dodatkowe informacje</StandardButton>
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
-
+            <StandardButton type="button" className="!bg-red-500 hover:!bg-red-600" onClick={() => {
+                setIsPopupOpen(true);
+            }}>Usuń próbkę</StandardButton>
             <Dropdown>
                 <Dropdown.Toggle
                     disabled={sample?.progressStatus !== ProgressStateEnum.DONE}
@@ -142,8 +169,14 @@ const SingleSamplePage = () => {
                     <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F5")}>Raport F-5</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
-
         </div>
+
+        <ConfirmPopup
+                onConfirm={deleteSampleFunction}
+                show={isPopupOpen}
+                handleClose={() => setIsPopupOpen(false)}
+                message="Czy na pewno chcesz usunąć próbkę wraz z wykonanymi badaniami?"
+            />
     </div>)
 }
 
