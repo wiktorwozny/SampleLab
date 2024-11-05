@@ -27,4 +27,6 @@ public class Assortment {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Indication> indications;
+
+    private String organolepticMethod;
 }

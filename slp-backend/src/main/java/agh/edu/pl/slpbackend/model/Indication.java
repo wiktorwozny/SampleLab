@@ -1,5 +1,6 @@
 package agh.edu.pl.slpbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,4 +32,7 @@ public class Indication implements Serializable {
     private String unit;
 
     private String laboratory;
+
+    @JsonProperty("isOrganoleptic")
+    private boolean isOrganoleptic;
 }

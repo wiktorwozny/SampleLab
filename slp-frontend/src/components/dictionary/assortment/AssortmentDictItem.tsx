@@ -52,7 +52,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     }, [item]);
 
     const resetForm = () => {
-        reset({id: '', name: '', group: ''});
+        reset({id: '', name: '', organolepticMethod: '', group: ''});
         setSelectedIndicationList([]);
         setSelectedProductGroup(null);
     };
@@ -60,6 +60,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     const handleEdit = (formData: any) => {
         formData.indications = selectedIndicationList;
         formData.group = selectedProductGroup;
+        console.log(formData);
         try {
             updateAssortment(formData).then((response) => {
                 if (response.status === 201 || response.status === 200) {
@@ -144,6 +145,11 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                                placeholder="Nazwa" {...register("name", {required: true})} />
                         {errors.name && <p className="text-red-600">{`${errors.name.message}`}</p>}
 
+                        <FormLabel>Metoda organoleptyczna</FormLabel>
+                        <Input type="text" disabled={isView}
+                               placeholder="Metoda organoleptyczna" {...register("organolepticMethod", {required: true})} />
+                        {errors.organolepticMethod && <p className="text-red-600">{`${errors.organolepticMethod.message}`}</p>}
+
                         <FormLabel>Grupa</FormLabel>
                         {/* Używamy SearchableDropdown z przekazanymi danymi */}
                         <SearchableDropdown
@@ -155,7 +161,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                         {errors.group && <p className="text-red-600">{`${errors.group.message}`}</p>}
 
 
-                        <h5 className="mt-6 mb-2 text-lg font-semibold">Wskazania</h5>
+                        <h5 className="mt-6 mb-2 text-lg font-semibold">Oznaczenia</h5>
 
                         <div className="max-h-96 overflow-y-auto">
                             <table className="min-w-full table-auto border-collapse border border-gray-300">

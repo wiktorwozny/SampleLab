@@ -36,6 +36,7 @@ public class SampleReportGenerator {
     private final ExaminationRepository examinationRepository;
     private Sample sample;
     private List<Examination> examinationList;
+    private List<Examination> basicExaminationList;
     private String reportTemplatePathName;
 
     public ByteArrayOutputStream generateReport() {
@@ -66,17 +67,29 @@ public class SampleReportGenerator {
             documentPart.variableReplace(fieldsMap);
             headerPart.variableReplace(fieldsMap);
 
+            // base examination table
             boolean[] pattern = getRequirementsPattern();
             XLSXtoTblConverter xlsXtoTblConverter = new XLSXtoTblConverter(pattern, uncertaintyExists, examinationList);
             Tbl convertedExaminationsTable = xlsXtoTblConverter.convert();
 
-            adjustExaminationsTableSize(convertedExaminationsTable, pattern);
-            addTableAtParagraph(documentPart, "EXAMINATIONS_TABLE", convertedExaminationsTable);
+            if (convertedExaminationsTable != null) {
+                adjustExaminationsTableSize(convertedExaminationsTable, pattern);
+                addTableAtParagraph(documentPart, "EXAMINATIONS_TABLE", convertedExaminationsTable);
+            }
+
+            // organoleptic examination table
+            XLSXorganolepticToTblConverter xlsXorganolepticToTblConverter = new XLSXorganolepticToTblConverter(examinationList, this.sample.getAssortment().getOrganolepticMethod());
+            Tbl convertedOrganolepticExaminationsTable = xlsXorganolepticToTblConverter.convert();
+
+            if (convertedOrganolepticExaminationsTable != null) {
+                addTableAtParagraph(documentPart, "ORGANOLEPTIC_TABLE", convertedOrganolepticExaminationsTable);
+            }
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Docx4J.save(wordMLPackage, byteArrayOutputStream);
 
             xlsXtoTblConverter.cleanFiles();
+            xlsXorganolepticToTblConverter.cleanFiles();
 
             return byteArrayOutputStream;
         } catch (Exception e) {
@@ -160,7 +173,32 @@ public class SampleReportGenerator {
         Map<String, List<Integer>> mergedExaminationsMap = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
+        LocalDate organolepticStartDate = null;
+        LocalDate organolepticEndDate = null;
+        boolean hasOrganoleptic = false;
+
         for (Examination examination : examinationList) {
+
+            if (examination.getIndication().isOrganoleptic()) {
+                hasOrganoleptic = true;
+                LocalDate startDate = examination.getStartDate();
+                LocalDate endDate = examination.getEndDate();
+
+                if (startDate != null) {
+                    organolepticStartDate = (organolepticStartDate == null || startDate.isBefore(organolepticStartDate))
+                            ? startDate
+                            : organolepticStartDate;
+                }
+
+                if (endDate != null) {
+                    organolepticEndDate = (organolepticEndDate == null || endDate.isAfter(organolepticEndDate))
+                            ? endDate
+                            : organolepticEndDate;
+                }
+
+                continue;
+            }
+
             LocalDate startDate = examination.getStartDate();
             LocalDate endDate = examination.getEndDate();
 
@@ -185,6 +223,11 @@ public class SampleReportGenerator {
                     .collect(Collectors.joining(","));
 
             addRowToTable(examinationsTimesTable, formatLocalDate(startDate), lpList, formatLocalDate(endDate), lpList);
+        }
+
+        if (hasOrganoleptic && organolepticStartDate != null && organolepticEndDate != null) {
+            String lpList = String.valueOf(lpCounter);
+            addRowToTable(examinationsTimesTable, formatLocalDate(organolepticStartDate), lpList, formatLocalDate(organolepticEndDate), lpList);
         }
     }
 
@@ -289,7 +332,7 @@ public class SampleReportGenerator {
         }
 
 
-        for (int i = 0; i < examinationList.size(); i++) {
+        for (int i = 0; i < basicExaminationList.size(); i++) {
             Tr row = (Tr) rowObjects.get(i + 2);
             for (int j = 0; j < widthsToSet.size(); j++) {
                 Tc cell = (Tc) ((JAXBElement) row.getContent().get(j)).getValue();
@@ -302,7 +345,7 @@ public class SampleReportGenerator {
         if (IntStream.range(0, pattern.length)
                 .filter(i -> pattern[i])
                 .count() == 2) {
-            for (int i = 0; i < examinationList.size() + 1; i++) {
+            for (int i = 0; i < basicExaminationList.size() + 1; i++) {
                 Tr row = (Tr) rowObjects.get(i + 1);
                 for (int j = 6; j < 8; j++) {
                     Tc cell = (Tc) ((JAXBElement) row.getContent().get(j)).getValue();
@@ -333,7 +376,7 @@ public class SampleReportGenerator {
 
         boolean[] pattern = new boolean[]{false, false, false};
 
-        examinationList.forEach(examination -> {
+        basicExaminationList.forEach(examination -> {
             if (!examination.getSignage().equals("")) {
                 pattern[0] = true;
             }
@@ -404,6 +447,9 @@ public class SampleReportGenerator {
     public void setParameters(Sample sample, String reportType) {
         this.sample = sample;
         this.examinationList = examinationRepository.findBySampleId(sample.getId());
+        this.basicExaminationList = examinationList.stream()
+                .filter(exam -> exam.getIndication() != null && Boolean.FALSE.equals(exam.getIndication().isOrganoleptic()))
+                .collect(Collectors.toList());
         if ("F5".equals(reportType)) {
             this.reportTemplatePathName = "report_templates/F-5_report_template.docx";
         } else {

@@ -122,7 +122,7 @@ const SingleSamplePage = () => {
             }}>Zarządzaj badaniami</StandardButton>
 
             <Dropdown>
-                <Dropdown.Toggle variant="primary" id="dropdown-basic" className="p-2 bg-sky-500 rounded self-center text-white hover:bg-sky-600 border-0">
+                <Dropdown.Toggle disabled={sample?.progressStatus !== ProgressStateEnum.DONE} variant="primary" id="dropdown-basic" className="p-2 bg-sky-500 rounded self-center text-white hover:bg-sky-600 border-0">
                     Generuj raport
                 </Dropdown.Toggle>
 

@@ -12,6 +12,7 @@ public interface IndicationMapper {
                 .method(model.getMethod())
                 .unit(model.getUnit())
                 .laboratory(model.getLaboratory())
+                .isOrganoleptic(model.isOrganoleptic())
                 .build();
     }
 
@@ -22,6 +23,7 @@ public interface IndicationMapper {
                 .method(dto.getMethod())
                 .unit(dto.getUnit())
                 .laboratory(dto.getLaboratory())
+                .isOrganoleptic(dto.isOrganoleptic())
                 .build();
     }
 }
