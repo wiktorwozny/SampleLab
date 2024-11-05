@@ -122,7 +122,18 @@ const SingleSamplePage = () => {
             }}>Zarządzaj badaniami</StandardButton>
 
             <Dropdown>
-                <Dropdown.Toggle disabled={sample?.progressStatus !== ProgressStateEnum.DONE} variant="primary" id="dropdown-basic" className="p-2 bg-sky-500 rounded self-center text-white hover:bg-sky-600 border-0">
+                <Dropdown.Toggle
+                    disabled={sample?.progressStatus !== ProgressStateEnum.DONE}
+                    variant="primary"
+                    id="dropdown-basic"
+                    className="p-2 rounded self-center text-white border-0"
+                    style={{
+                        backgroundColor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(229, 231, 235)' : 'rgb(14, 165, 233)',  // Grey when disabled, blue otherwise
+                        color: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(107, 114, 128)' : 'white',
+                        cursor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'not-allowed' : 'pointer',
+                        pointerEvents: sample?.progressStatus !== ProgressStateEnum.DONE ? 'none' : 'auto'
+                    }}
+                >
                     Generuj raport
                 </Dropdown.Toggle>
 

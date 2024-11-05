@@ -6,9 +6,11 @@ import agh.edu.pl.slpbackend.reports.XLSXFilesHelper;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,9 +41,24 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
         try (FileInputStream fileInputStream = new FileInputStream(templateFilePath);
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {
 
-            Sheet sheet = workbook.getSheetAt(0);
+            Sheet templateSheet = workbook.getSheetAt(0);
 
-            modifySheet(sheet, workbook);
+            Map<String, List<Examination>> examinationsByLab = examinationList.stream()
+                    .collect(Collectors.groupingBy(exam -> exam.getIndication().getLaboratory()));
+
+            for (Map.Entry<String, List<Examination>> entry : examinationsByLab.entrySet()) {
+                String labName = entry.getKey();
+                List<Examination> labExaminations = entry.getValue();
+
+                Sheet labSheet = workbook.createSheet(labName);
+                copySheet(templateSheet, labSheet);
+
+                modifySheet(labSheet, workbook);
+
+                fillExaminationsTable(labSheet, workbook, labExaminations);
+            }
+
+            workbook.removeSheetAt(0);
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             workbook.write(byteArrayOutputStream);
@@ -68,22 +86,22 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
         for (String cellReference: cellReferenceMap.keySet()) {
             changeCellWithCellReference(sheet, cellReference, cellReferenceMap.get(cellReference));
         }
-
-        fillExaminationsTable(sheet, workbook);
     }
 
-    private void fillExaminationsTable(Sheet sheet, Workbook workbook) {
+    private void fillExaminationsTable(Sheet sheet, Workbook workbook, List<Examination> labExaminations) {
 
-        for (int i = 0; i < examinationList.size(); i++) {
+        for (int i = 0; i < labExaminations.size(); i++) {
             int lastRowNum = sheet.getLastRowNum();
 
-            Examination examination = examinationList.get(i);
+            Examination examination = labExaminations.get(i);
             Row newMainRow = sheet.createRow(lastRowNum + 1);
             newMainRow.setHeight((short) 1000);
             createCellAtIndexWithValue(newMainRow, 0, Integer.toString(i), workbook);
             createCellAtIndexWithValue(newMainRow, 1, examination.getIndication().getName() + "[g]", workbook);
             createCellAtIndexWithValue(newMainRow, 2, "max 0, 1 - specyf", workbook);
-            createCellAtIndexWithValue(newMainRow, 3, "PN-A- 75101/17:1990", workbook);
+
+            String method = examination.getIndication().isOrganoleptic() ? sample.getAssortment().getOrganolepticMethod() : examination.getIndication().getMethod();
+            createCellAtIndexWithValue(newMainRow, 3, method, workbook);
 
             for (int j = 4; j < 9; j++) {
                 createCellAtIndexWithValue(newMainRow, j, "", workbook);
@@ -114,5 +132,45 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
     public void setParameters(Sample sample) {
         this.sample = sample;
         this.examinationList = examinationRepository.findBySampleId(sample.getId());
+    }
+
+    private void copySheet(Sheet templateSheet, Sheet newSheet) {
+        for (int i = 0; i <= templateSheet.getLastRowNum(); i++) {
+            Row templateRow = templateSheet.getRow(i);
+            Row newRow = newSheet.createRow(i);
+
+            if (templateRow != null) {
+                newRow.setHeight(templateRow.getHeight());
+                for (int j = 0; j < templateRow.getLastCellNum(); j++) {
+                    Cell templateCell = templateRow.getCell(j);
+                    Cell newCell = newRow.createCell(j);
+
+                    if (templateCell != null) {
+                        newCell.setCellStyle(templateCell.getCellStyle());
+                        switch (templateCell.getCellType()) {
+                            case STRING:
+                                newCell.setCellValue(templateCell.getStringCellValue());
+                                break;
+                            case NUMERIC:
+                                newCell.setCellValue(templateCell.getNumericCellValue());
+                                break;
+                            case BOOLEAN:
+                                newCell.setCellValue(templateCell.getBooleanCellValue());
+                                break;
+                            case FORMULA:
+                                newCell.setCellFormula(templateCell.getCellFormula());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < templateSheet.getNumMergedRegions(); i++) {
+            CellRangeAddress mergedRegion = templateSheet.getMergedRegion(i);
+            newSheet.addMergedRegion(mergedRegion);
+        }
     }
 }
