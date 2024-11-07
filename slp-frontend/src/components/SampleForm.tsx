@@ -26,20 +26,23 @@ const SampleForm: FC<{}> = () => {
     const navigate = useNavigate();
     const {setAlertDetails} = useContext(AlertContext);
     const chosenGroup: string = watch("group");
+    const analisys: boolean = watch("analysis");
+    const assortment: string = watch("assortment");
+    const samplingStandard: string = watch("samplingStandard")
     const {sampleId} = useParams()
 
     useEffect(() => {
         const getSample = async () => {
             try {
                 let reponse = await getSampleById(sampleId)
-                console.log(reponse?.data)
                 let sample = reponse?.data
                 sample.code = JSON.stringify(sample.code)
                 sample.client = JSON.stringify(sample.client)
                 sample.inspection = JSON.stringify(sample.inspection)
-                sample.group = JSON.stringify(sample.group)
+                sample.group = JSON.stringify(groups.filter(el=>sample.assortment.group.name===el.name)[0])
                 sample.samplingStandard = JSON.stringify(sample.samplingStandard)
                 sample.assortment = JSON.stringify(sample.assortment);
+                console.log(sample)
                 reset(sample)
             } catch(err){
                 console.log(err);
@@ -47,10 +50,10 @@ const SampleForm: FC<{}> = () => {
             }
         }
 
-        if(sampleId) {
+        if(sampleId&&codes.length&&clients.length&&inspections.length&&groups.length) {
             getSample();
         }
-    },[])
+    },[codes,clients,inspections,groups])
 
     useEffect(() => {
         const getCodes = async () => {
@@ -116,6 +119,14 @@ const SampleForm: FC<{}> = () => {
         setValue("samplingStandard", null)
     }, [chosenGroup])
 
+    // useEffect(()=>{
+    //     console.log(previousGroup)
+    // }, [previousGroup])
+
+    useEffect(()=>{
+        console.log(analisys)
+    },[analisys])
+
     const submit = async (values: any) => {
         values.code = JSON.parse(values.code)
         values.client = JSON.parse(values.client)
@@ -139,8 +150,11 @@ const SampleForm: FC<{}> = () => {
             checkResponse(err);
         }
     }
-
-    return (<div className='flex flex-col justify-center items-center w-full'>
+    const isReady = () =>{
+        console.log(assortment,samplingStandard)
+        return codes.length&&clients.length&&inspections.length&&groups.length;
+    }
+    return (isReady()?<div className='flex flex-col justify-center items-center w-full'>
         <h2 className="text-center font-bold my-3 text-2xl">Dodawanie próbki</h2>
         <FormProvider {...method}>
             <form className="w-4/5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
@@ -151,7 +165,7 @@ const SampleForm: FC<{}> = () => {
                             <FormLabel>Symbol próbki</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
-                                options={codes.map(code => ({value: JSON.stringify(code), label: code.id}))}
+                                options={codes.map(code => ({value: JSON.stringify(code), label: code.name}))}
                                 {...register("code", {
                                     required: {
                                         value: true,
@@ -248,7 +262,7 @@ const SampleForm: FC<{}> = () => {
                                 isDisabled={!chosenGroup}
                                 chosenGroup={chosenGroup}
                                 className="my-custom-class"
-                                options={JSON.parse(chosenGroup ? chosenGroup : "{}")?.assortments?.map((assortment: Assortment) => ({
+                                options={JSON.parse(chosenGroup ? chosenGroup: "{}")?.assortments?.map((assortment: Assortment) => ({
                                     value: JSON.stringify(assortment),
                                     label: assortment.name
                                 }))}
@@ -301,6 +315,7 @@ const SampleForm: FC<{}> = () => {
                                 <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza odwoławcza</label>
                                 <Checkbox
                                     {...register("analysis", {})}
+                                    checked={analisys}
                                 />
                             </div>
                         </div>
@@ -349,7 +364,7 @@ const SampleForm: FC<{}> = () => {
                     </div>
                     <div className='flex justify-center p-3 gap-5'>
                         <CancelButton type='button' className='mt-3' onClick={() => navigate('/')}>Anuluj</CancelButton>
-                        <StandardButton type="submit" className='mt-3'>Dodaj</StandardButton>
+                        <StandardButton type="submit" className='mt-3'>{sampleId? "Edytuj":"Dodaj"}</StandardButton>
 
                     </div>
                 </div>
@@ -357,7 +372,7 @@ const SampleForm: FC<{}> = () => {
             </form>
         </FormProvider>
 
-    </div>)
+    </div>:<div className='font-bold text-4xl mt-5'>Ładowanie...</div>)
 }
 
 export default SampleForm;

@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request) {
-        userService.changePassword(request);
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, @RequestAttribute String email) {
+        userService.changePassword(request, email);
         return ResponseEntity.ok().build();
     }
 }

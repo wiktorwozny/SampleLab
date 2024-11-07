@@ -20,7 +20,8 @@ export const FormSelect = (
                 name={name}
                 control={control}
                 render={({field}) => {
-                    console.log(field)
+                    console.log(field.value)
+                    console.log(JSON.stringify(options))
                     return(
                     <Select
                         className={`mb-2 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${className}`}
@@ -35,7 +36,7 @@ export const FormSelect = (
                         }}
                         isDisabled={isDisabled}
                         ref={selectRef}
-                        value={{label:options?.filter((option:any)=>option.value===field.value)[0]?.label ,value:field.value}}
+                        value={field.value&&{label:options?.filter((option:any)=>option.label===JSON.parse(field.value).name)[0]?.label ,value:field.value}}
                         {...props}
                     />
                 )}}

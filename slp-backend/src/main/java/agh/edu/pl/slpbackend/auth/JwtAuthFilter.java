@@ -45,6 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            request.setAttribute("email",email);
         } catch (ExpiredJwtException e) {
             response.sendError(401, "Token expired");
             return;
@@ -52,7 +53,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.sendError(403, "Permission denied");
             return;
         }
-
         filterChain.doFilter(request, response);
     }
 }
