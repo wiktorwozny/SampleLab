@@ -12,7 +12,7 @@ import {Client, Code, Inspection, ProductGroup, Assortment, SamplingStandards} f
 import {addSample} from '../helpers/samplingApi';
 import {useNavigate, useParams} from 'react-router-dom';
 import {AlertContext} from '../contexts/AlertsContext';
-import { Checkbox } from '@mui/material';
+// import { Checkbox } from '@mui/material';
 import { checkResponse } from '../utils/checkResponse';
 import { getSampleById } from '../helpers/sampleApi';
 const SampleForm: FC<{}> = () => {
@@ -118,14 +118,6 @@ const SampleForm: FC<{}> = () => {
         setValue("assortment", null)
         setValue("samplingStandard", null)
     }, [chosenGroup])
-
-    // useEffect(()=>{
-    //     console.log(previousGroup)
-    // }, [previousGroup])
-
-    useEffect(()=>{
-        console.log(analisys)
-    },[analisys])
 
     const submit = async (values: any) => {
         values.code = JSON.parse(values.code)
@@ -313,7 +305,7 @@ const SampleForm: FC<{}> = () => {
 
                             <div className='flex items-center justify-between'>
                                 <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza odwoławcza</label>
-                                <Checkbox
+                                <input type="checkbox" className='h-4 w-4 rounded'
                                     {...register("analysis", {})}
                                     checked={analisys}
                                 />
