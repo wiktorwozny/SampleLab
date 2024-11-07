@@ -34,6 +34,9 @@ interface CommonInfo {
     jobNumber: number;
     mechanism: string;
     deliveryMethod: string;
+    collectionDate: Date;
+    protocolNumber: string;
+    sampleCollector: string;
 }
 
 interface FormData {
@@ -149,6 +152,9 @@ const ProtocolReportDataForm: FC<{}> = ({}) => {
                 jobNumber: values.jobNumber,
                 mechanism: values.mechanism,
                 deliveryMethod: values.deliveryMethod,
+                collectionDate: values.collectionDate,
+                protocolNumber: values.protocolNumber,
+                sampleCollector: values.sampleCollector
             };
 
             const reportDataPromises = protocolSamplesIds.map(async (sampleId, index) => {
@@ -398,6 +404,26 @@ const ProtocolReportDataForm: FC<{}> = ({}) => {
                             </div>
 
                             <div className='w-5/12 flex flex-col'>
+                                <FormLabel>Data pobrania próbki</FormLabel>
+                                <Input type='date' {...register("collectionDate", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                                />
+                                {errors.collectionDate && errors.collectionDate.message &&
+                                    <p className="text-red-600">{`${errors.collectionDate.message}`}</p>}
+                                <FormLabel>Numer protokołu</FormLabel>
+                                <Input {...register("protocolNumber", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
+                                />
+                                {errors.protocolNumber && errors.protocolNumber.message &&
+                                    <p className="text-red-600">{`${errors.protocolNumber.message}`}</p>}
                                 <FormLabel>Numer zlecenia</FormLabel>
                                 <Input type='number' {...register("jobNumber", {
                                     required: {
@@ -431,10 +457,15 @@ const ProtocolReportDataForm: FC<{}> = ({}) => {
                                     <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
                                 <h2 className='text-2xl font-bold p-2'>Dane próbkobiorcy</h2>
                                 <FormLabel>Próbkę pobrał</FormLabel>
-                                <Input
+                                <Input {...register("sampleCollector", {
+                                    required: {
+                                        value: true,
+                                        message: "Pole wymagane"
+                                    }
+                                })}
                                 />
-                                {errors.deliveryMethod && errors.deliveryMethod.message &&
-                                    <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
+                                {errors.sampleCollector && errors.sampleCollector.message &&
+                                    <p className="text-red-600">{`${errors.sampleCollector.message}`}</p>}
                                 <FormLabel>Miejsce pobrania próbki</FormLabel>
                                 <Input {...register("sampleCollectionSite", {
                                     required: {

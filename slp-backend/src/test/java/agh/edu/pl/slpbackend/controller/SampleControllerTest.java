@@ -35,7 +35,6 @@ public class SampleControllerTest {
                 .state("test")
                 .analysis(Boolean.TRUE)
                 .inspection(null)
-                .group(null)
                 .samplingStandard(null)
                 .reportData(null)
                 .build();

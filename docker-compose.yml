@@ -1,0 +1,50 @@
+services:
+  backend:
+    build: ./slp-backend
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "postgres"
+      DB_URL: "jdbc:postgresql://db:5432/sample-lab-db"
+      ENCRYPTOR_PASSWORD: "password"
+    networks:
+      - front-tier
+      - back-tier
+
+
+  frontend:
+    build: ./slp-frontend
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      BE_URL: "http://backend:8080/"
+    ports:
+      - "3000:3000"
+    networks:
+      - front-tier
+
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "sample-lab-db"
+    networks:
+      - back-tier
+
+volumes:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:

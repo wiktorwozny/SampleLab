@@ -31,12 +31,14 @@ export type SamplingStandards = {
     name: string,
     groups: ProductGroup[]
 }
+
 export type Indication = {
     id: number,
     name: string,
     method: string,
     unit: string,
     laboratory: string,
+    isOrganoleptic: boolean
 }
 
 export type Examination = {
@@ -60,7 +62,7 @@ export type Examination = {
 export type ProductGroup = {
     id: number,
     name: string,
-    samplingStandards?: SamplingStandards[]
+    samplingStandards?: SamplingStandards[],
     assortments?: Assortment[]
 }
 
@@ -68,7 +70,8 @@ export type Assortment = {
     id: number,
     name: string,
     group: ProductGroup,
-    indications: Indication[]
+    indications: Indication[],
+    organolepticMethod: string
 }
 
 export type ProductGroupSave = {
@@ -81,7 +84,8 @@ export type AssortmentSave = {
     id: number,
     name: string,
     group: number,
-    indications: number[]
+    indications: number[],
+    organolepticMethod: string
 }
 
 export type ReportData = {
@@ -99,11 +103,14 @@ export type ReportData = {
     batchNumber: number,
     batchSizeProd: string,
     batchSizeStorehouse: string,
+    sampleCollector: string,
     samplePacking: string,
     sampleCollectionSite: string,
     jobNumber: number,
     mechanism: string,
     deliveryMethod: string,
+    collectionDate: Date,
+    protocolNumber: string,
     sampleId: number
 }
 
@@ -131,6 +138,7 @@ export type FilterRequest = {
     pageNumber: number,
     pageSize: number,
     filters: FiltersData
+    fuzzySearch: string;
 }
 
 export type ProgressState = {

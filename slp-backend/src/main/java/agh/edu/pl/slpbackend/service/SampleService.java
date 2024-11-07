@@ -12,6 +12,7 @@ import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.mapper.SampleMapper;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
+import agh.edu.pl.slpbackend.repository.Specification.SampleSpecification;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
@@ -78,8 +79,13 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
                 .and(hasFieldIn(List.of("assortment", "group", "name"), request.filters().groups()))
                 .and(hasFieldIn(List.of("progressStatus"), request.filters().progressStatuses()));
 
+        if (request.fuzzySearch() != null && !request.fuzzySearch().isEmpty()) {
+            specification = specification.and(SampleSpecification.fuzzySearch(request.fuzzySearch()));
+        }
+
         Sort.Direction direction = request.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
         PageRequest pageRequest = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(direction, request.fieldName()).and(Sort.by(direction, "id")));
+
 
         Page<Sample> page = sampleRepository.findAll(specification, pageRequest);
         List<SummarySample> samples = page.stream()

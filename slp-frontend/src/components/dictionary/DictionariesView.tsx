@@ -8,9 +8,9 @@ const DictionariesView: React.FC = () => {
     const buttons = [
         {label: 'Klienci', onClick: () => navigate('/dictionary/clientDict')},
         // {label: 'Oznaczenia', onClick: () => navigate('/dictionary/indicationDict')},
-        {label: 'Standardy pobrania próbek', onClick: () => navigate('/dictionary/samplingStandardDict')},
+        {label: 'Normy pobrania próbki', onClick: () => navigate('/dictionary/samplingStandardDict')},
         {label: 'Kontrole', onClick: () => navigate('/dictionary/inspectionDict')},
-        {label: 'Kody próbek', onClick: () => navigate('/dictionary/codeDict')},
+        {label: 'Kody próbki', onClick: () => navigate('/dictionary/codeDict')},
         {label: 'Grupy', onClick: () => navigate('/dictionary/productGroupDict')},
         {label: 'Asortyment', onClick: () => navigate('/dictionary/assortmentDict')},
     ];

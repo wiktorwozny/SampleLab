@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -35,6 +36,8 @@ public class SampleReportGenerator {
     private final ExaminationRepository examinationRepository;
     private Sample sample;
     private List<Examination> examinationList;
+    private List<Examination> basicExaminationList;
+    private String reportTemplatePathName;
 
     public ByteArrayOutputStream generateReport() {
         if (sample == null) {
@@ -43,7 +46,7 @@ public class SampleReportGenerator {
 
         try {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-                    .load(new java.io.File("report_templates/sample_report_template.docx"));
+                    .load(new java.io.File(this.reportTemplatePathName));
 
             boolean uncertaintyExists = checkIfUncertaintyExists();
 
@@ -63,19 +66,30 @@ public class SampleReportGenerator {
 
             documentPart.variableReplace(fieldsMap);
             headerPart.variableReplace(fieldsMap);
-            footerPart.variableReplace(fieldsMap);
 
+            // base examination table
             boolean[] pattern = getRequirementsPattern();
             XLSXtoTblConverter xlsXtoTblConverter = new XLSXtoTblConverter(pattern, uncertaintyExists, examinationList);
             Tbl convertedExaminationsTable = xlsXtoTblConverter.convert();
 
-            adjustExaminationsTableSize(convertedExaminationsTable, pattern);
-            addTableAtParagraph(documentPart, "EXAMINATIONS_TABLE", convertedExaminationsTable);
+            if (convertedExaminationsTable != null) {
+                adjustExaminationsTableSize(convertedExaminationsTable, pattern);
+                addTableAtParagraph(documentPart, "EXAMINATIONS_TABLE", convertedExaminationsTable);
+            }
+
+            // organoleptic examination table
+            XLSXorganolepticToTblConverter xlsXorganolepticToTblConverter = new XLSXorganolepticToTblConverter(examinationList, this.sample.getAssortment().getOrganolepticMethod());
+            Tbl convertedOrganolepticExaminationsTable = xlsXorganolepticToTblConverter.convert();
+
+            if (convertedOrganolepticExaminationsTable != null) {
+                addTableAtParagraph(documentPart, "ORGANOLEPTIC_TABLE", convertedOrganolepticExaminationsTable);
+            }
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Docx4J.save(wordMLPackage, byteArrayOutputStream);
 
             xlsXtoTblConverter.cleanFiles();
+            xlsXorganolepticToTblConverter.cleanFiles();
 
             return byteArrayOutputStream;
         } catch (Exception e) {
@@ -87,47 +101,50 @@ public class SampleReportGenerator {
 
     private Map<String, String> getStringStringHashMap(boolean uncertaintyExists) {
         Map<String, String> fieldsMap = new HashMap<>();
-        fieldsMap.put("labName", "Moje Laboratorium");
-        fieldsMap.put("city", "Moje Miasto");
-        fieldsMap.put("fullAddress", "Pełny adres 96 Warszawa");
-        fieldsMap.put("phoneNumber", "123 123 123");
-        fieldsMap.put("fax", "+12 123 123 123");
-        fieldsMap.put("email", "laboratoryemail@email.com");
-        fieldsMap.put("sampleId", String.valueOf(sample.getId()));
-        fieldsMap.put("newDate", getCurrentTime());
-        fieldsMap.put("counter", Integer.toString(1));
-        fieldsMap.put("country", "Polska");
 
-        String supplierOrSellerName = sample.getReportData().getSupplierName() != null
-                ? sample.getReportData().getSupplierName()
-                : sample.getReportData().getSellerName();
-
-        fieldsMap.put("supplierName", supplierOrSellerName);
-        fieldsMap.put("recipientName", sample.getReportData().getRecipientName());
-        fieldsMap.put("jobNumber", String.valueOf(sample.getReportData().getJobNumber()));
-        fieldsMap.put("samplingStandard", sample.getSamplingStandard().getName());
-        fieldsMap.put("samplingDate", getCurrentTime());
-        fieldsMap.put("mechanism", sample.getReportData().getMechanism());
-        fieldsMap.put("batchSize", sample.getReportData().getBatchSizeProd() != null ? sample.getReportData().getBatchSizeProd() : sample.getReportData().getBatchSizeStorehouse());
-        fieldsMap.put("batchNumber", String.valueOf(sample.getReportData().getBatchNumber()));
-        fieldsMap.put("productionDate", getCurrentTime());
-        fieldsMap.put("expirationDate", formatLocalDate(sample.getExpirationDate()));
-        fieldsMap.put("clientName", sample.getClient().getName());
-        fieldsMap.put("clientAddress", formatAddress(sample.getClient().getAddress()));
-        fieldsMap.put("admissionDate", formatLocalDate(sample.getAdmissionDate()));
-        fieldsMap.put("sampleDesc", "");
-        fieldsMap.put("sampleSize", sample.getSize());
-        fieldsMap.put("sampleState", sample.getState());
-
-        // uncertainty cases
-        if (uncertaintyExists) {
-            fieldsMap.put("uncertaintyInfo", """
-                    Podana niepewność jest niepewnością rozszerzoną, uzyskaną przez pomnożenie niepewności standardowej\s
-                    i współczynnika rozszerzenia k=2, co w przybliżeniu zapewnia poziom ufności 95%.
-                    Podana niepewność pomiaru oszacowana została tylko i wyłącznie dla podanej metodyki badawczej.
-                    """);
+        //  analysis
+        if (sample.isAnalysis()) {
+            fieldsMap.put("analysis1", "Analiza odwoławcza");
+            fieldsMap.put("analysis2", "");
         } else {
-            fieldsMap.put("uncertaintyInfo", "");
+            fieldsMap.put("analysis1", "Sprawozdanie z badań nr …/ …/ rok/ lab");
+            fieldsMap.put("analysis2", "Aneks do / Korekta Sprawozdania z badań nr …/ …/ rok/ lab z dnia ...");
+        }
+
+        // F4 template
+        fieldsMap.put("protocolNumber", sample.getReportData().getProtocolNumber() != null ? sample.getReportData().getProtocolNumber() : "");  // TODO add field
+        fieldsMap.put("controllersIndication", formatRecipient(sample));
+        fieldsMap.put("collectionDate", sample.getReportData().getCollectionDate() != null ? formatLocalDate(sample.getReportData().getCollectionDate()) : "");  // TODO add field
+        fieldsMap.put("manufacturer", formatManufacturer(sample));
+        fieldsMap.put("recipient", formatRecipient(sample));
+        fieldsMap.put("supplier", formatSupplier(sample));
+        fieldsMap.put("manufacturerCountry", sample.getReportData().getManufacturerCountry() != null ? sample.getReportData().getManufacturerCountry() : "");
+        fieldsMap.put("samplingStandard", sample.getSamplingStandard().getName());
+        fieldsMap.put("assortment", sample.getAssortment().getName());
+        fieldsMap.put("batchSize", sample.getReportData().getBatchSizeProd() != null ? sample.getReportData().getBatchSizeProd() : (sample.getReportData().getBatchSizeStorehouse() != null ? sample.getReportData().getBatchSizeStorehouse() : ""));
+        fieldsMap.put("batchNumber", sample.getReportData().getBatchNumber() != 0 ? String.valueOf(sample.getReportData().getBatchNumber()) : "");
+        fieldsMap.put("productionDate", sample.getReportData().getProductionDate() != null ? sample.getReportData().getProductionDate().toString() : "");
+        fieldsMap.put("expirationDate", sample.getExpirationDate().toString());
+        fieldsMap.put("expirationComment", sample.getExpirationComment());
+        fieldsMap.put("clientName", sample.getClient().getName());
+        fieldsMap.put("clientAddress", formatClientsAddress(sample.getClient().getAddress()));
+        fieldsMap.put("admissionDate", formatLocalDate(sample.getAdmissionDate()));
+        fieldsMap.put("sampleSize", sample.getSize());
+        fieldsMap.put("samplePacking", sample.getReportData().getSamplePacking() != null ? sample.getReportData().getSamplePacking() : "");
+        fieldsMap.put("sampleState", sample.getState() != null ? sample.getState() : "bez zastrzeżeń");
+
+        //  F5 template
+        fieldsMap.put("jobNumber", sample.getReportData().getJobNumber() != null ? sample.getReportData().getJobNumber().toString() : "");
+        fieldsMap.put("mechanism", sample.getReportData().getMechanism() != null ? sample.getReportData().getMechanism() : "");
+
+        // uncertainty
+        if (uncertaintyExists) {
+            fieldsMap.put("uncertaintyInfo1", "Podana niepewność jest niepewnością rozszerzoną, uzyskaną przez pomnożenie niepewności standardowej\n" +
+                    " i współczynnika rozszerzenia k=2, co w przybliżeniu zapewnia poziom ufności 95%.");
+            fieldsMap.put("uncertaintyInfo2", "Podana niepewność pomiaru oszacowana została tylko i wyłącznie dla podanej metodyki badawczej.");
+        } else {
+            fieldsMap.put("uncertaintyInfo1", "");
+            fieldsMap.put("uncertaintyInfo2", "");
         }
 
 
@@ -148,17 +165,69 @@ public class SampleReportGenerator {
             throw new IllegalStateException("ExaminationList not set");
         }
 
-        for (Examination examination: examinationList) {
-            LocalDate startDate = examination.getStartDate();
-            LocalDate endDate = examination.getEndDate();
+        examinationList.sort(Comparator.comparing(Examination::getStartDate)
+                .thenComparing(Examination::getEndDate)
+                .thenComparing(exam -> exam.getIndication().getId()));
 
-            if (startDate == null && endDate == null) {
+        int lpCounter = 1;
+        Map<String, List<Integer>> mergedExaminationsMap = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
+        LocalDate organolepticStartDate = null;
+        LocalDate organolepticEndDate = null;
+        boolean hasOrganoleptic = false;
+
+        for (Examination examination : examinationList) {
+
+            if (examination.getIndication().isOrganoleptic()) {
+                hasOrganoleptic = true;
+                LocalDate startDate = examination.getStartDate();
+                LocalDate endDate = examination.getEndDate();
+
+                if (startDate != null) {
+                    organolepticStartDate = (organolepticStartDate == null || startDate.isBefore(organolepticStartDate))
+                            ? startDate
+                            : organolepticStartDate;
+                }
+
+                if (endDate != null) {
+                    organolepticEndDate = (organolepticEndDate == null || endDate.isAfter(organolepticEndDate))
+                            ? endDate
+                            : organolepticEndDate;
+                }
+
                 continue;
             }
 
-            String lp = examination.getIndication().getId().toString();
+            LocalDate startDate = examination.getStartDate();
+            LocalDate endDate = examination.getEndDate();
 
-            addRowToTable(examinationsTimesTable, formatLocalDate(startDate), lp, formatLocalDate(endDate), lp);
+            if (startDate == null || endDate == null) {
+                continue;
+            }
+
+            String key = startDate.format(formatter) + ";" + endDate.format(formatter);
+
+            mergedExaminationsMap.computeIfAbsent(key, k -> new ArrayList<>()).add(lpCounter);
+
+            lpCounter++;
+        }
+
+        for (Map.Entry<String, List<Integer>> entry : mergedExaminationsMap.entrySet()) {
+            String[] dates = entry.getKey().split(";");
+            LocalDate startDate = LocalDate.parse(dates[0]);
+            LocalDate endDate = LocalDate.parse(dates[1]);
+
+            String lpList = entry.getValue().stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
+
+            addRowToTable(examinationsTimesTable, formatLocalDate(startDate), lpList, formatLocalDate(endDate), lpList);
+        }
+
+        if (hasOrganoleptic && organolepticStartDate != null && organolepticEndDate != null) {
+            String lpList = String.valueOf(lpCounter);
+            addRowToTable(examinationsTimesTable, formatLocalDate(organolepticStartDate), lpList, formatLocalDate(organolepticEndDate), lpList);
         }
     }
 
@@ -263,7 +332,7 @@ public class SampleReportGenerator {
         }
 
 
-        for (int i = 0; i < examinationList.size(); i++) {
+        for (int i = 0; i < basicExaminationList.size(); i++) {
             Tr row = (Tr) rowObjects.get(i + 2);
             for (int j = 0; j < widthsToSet.size(); j++) {
                 Tc cell = (Tc) ((JAXBElement) row.getContent().get(j)).getValue();
@@ -276,7 +345,7 @@ public class SampleReportGenerator {
         if (IntStream.range(0, pattern.length)
                 .filter(i -> pattern[i])
                 .count() == 2) {
-            for (int i = 0; i < examinationList.size() + 1; i++) {
+            for (int i = 0; i < basicExaminationList.size() + 1; i++) {
                 Tr row = (Tr) rowObjects.get(i + 1);
                 for (int j = 6; j < 8; j++) {
                     Tc cell = (Tc) ((JAXBElement) row.getContent().get(j)).getValue();
@@ -307,7 +376,7 @@ public class SampleReportGenerator {
 
         boolean[] pattern = new boolean[]{false, false, false};
 
-        examinationList.forEach(examination -> {
+        basicExaminationList.forEach(examination -> {
             if (!examination.getSignage().equals("")) {
                 pattern[0] = true;
             }
@@ -351,13 +420,41 @@ public class SampleReportGenerator {
         return date.format(pattern);
     }
 
-    private String formatAddress(Address address) {
+    private String formatClientsAddress(Address address) {
         return "ul. " + address.getStreet() + "\n" + address.getZipCode() + ", " + address.getCity();
     }
 
-    public void setParameters(Sample sample) {
+    private String formatAddress(Address address) {
+        return "ul. " + address.getStreet() + " " + address.getZipCode() + ", " + address.getCity();
+    }
+
+    private String formatManufacturer(Sample sample) {
+        return sample.getReportData().getManufacturerName() + " " + formatAddress(sample.getReportData().getManufacturerAddress());
+    }
+
+    private String formatRecipient(Sample sample) {
+        return sample.getReportData().getRecipientName() + " " + formatAddress(sample.getReportData().getRecipientAddress());
+    }
+
+    private String formatSupplier(Sample sample) {
+        return sample.getReportData().getSupplierName() + " " + formatAddress(sample.getReportData().getSupplierAddress());
+    }
+
+    private String addLineBreaks(String... lines) {
+        return String.join("<w:br/>", lines);
+    }
+
+    public void setParameters(Sample sample, String reportType) {
         this.sample = sample;
         this.examinationList = examinationRepository.findBySampleId(sample.getId());
+        this.basicExaminationList = examinationList.stream()
+                .filter(exam -> exam.getIndication() != null && Boolean.FALSE.equals(exam.getIndication().isOrganoleptic()))
+                .collect(Collectors.toList());
+        if ("F5".equals(reportType)) {
+            this.reportTemplatePathName = "report_templates/F-5_report_template.docx";
+        } else {
+            this.reportTemplatePathName = "report_templates/F-4_report_template.docx";
+        }
     }
 
 }

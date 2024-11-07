@@ -1,8 +1,20 @@
 package agh.edu.pl.slpbackend.reports;
 
+import com.spire.doc.Table;
+import com.spire.doc.TableCell;
+import com.spire.doc.fields.TextRange;
+import com.spire.xls.Worksheet;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+import java.util.zip.ZipFile;
 
 public class XLSXFilesHelper {
 
@@ -78,4 +90,84 @@ public class XLSXFilesHelper {
         destCell.setCellStyle(newCellStyle);
     }
 
+    public String readXmlContentFromDocx(String docxFilePath) throws IOException {
+        try (ZipFile zipFile = new ZipFile(docxFilePath);
+             InputStream inputStream = zipFile.getInputStream(zipFile.getEntry("word/document.xml"));
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            return bufferedReader.lines().collect(Collectors.joining("\n"));
+        }
+    }
+
+    public String extractTableXml(String xmlContent) {
+        int startIndex = xmlContent.indexOf("<w:tbl");
+
+        if (startIndex != -1) {
+            int endIndex = xmlContent.indexOf("</w:tbl>", startIndex);
+
+            if (endIndex != -1) {
+                endIndex += "</w:tbl>".length();
+                String tableXml = xmlContent.substring(startIndex, endIndex);
+
+                // I have to ensure that the namespace declaration is included, this spire library pretty bad xd
+                if (!tableXml.contains("xmlns:w=")) {
+                    tableXml = tableXml.replaceFirst("<w:tbl", "<w:tbl xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"");
+                }
+
+                return tableXml;
+            }
+        }
+
+        return null;
+    }
+
+    public void mergeCellsInDocxFile(Worksheet sheet, Table table) {
+        if (sheet.hasMergedCells()) {
+
+            com.spire.xls.CellRange[] ranges = sheet.getMergedCells();
+            for (com.spire.xls.CellRange range : ranges) {
+                int startRow = range.getRow();
+                int startColumn = range.getColumn();
+                int rowCount = range.getRowCount();
+                int columnCount = range.getColumnCount();
+
+                if (rowCount > 1 && columnCount > 1) {
+                    for (int j = startRow; j <= startRow + rowCount; j++) {
+                        table.applyHorizontalMerge(j - 1, startColumn - 1, startColumn - 1 + columnCount - 1);
+                    }
+                    table.applyVerticalMerge(startColumn - 1, startRow - 1, startRow - 1 + rowCount - 1);
+                }
+                if (rowCount > 1 && columnCount == 1) {
+                    table.applyVerticalMerge(startColumn - 1, startRow - 1, startRow - 1 + rowCount - 1);
+                }
+                if (columnCount > 1 && rowCount == 1) {
+                    table.applyHorizontalMerge(startRow - 1, startColumn - 1, startColumn - 1 + columnCount - 1);
+                }
+            }
+        }
+    }
+
+    public void copyStyle(TextRange wTextRange, com.spire.xls.CellRange xCell, TableCell wCell) {
+
+        wTextRange.getCharacterFormat().setTextColor(xCell.getStyle().getFont().getColor());
+        wTextRange.getCharacterFormat().setFontSize((float) xCell.getStyle().getFont().getSize());
+        wTextRange.getCharacterFormat().setFontName(xCell.getStyle().getFont().getFontName());
+        wTextRange.getCharacterFormat().setBold(xCell.getStyle().getFont().isBold());
+        wTextRange.getCharacterFormat().setItalic(xCell.getStyle().getFont().isItalic());
+
+        wCell.getCellFormat().setBackColor(xCell.getStyle().getColor());
+
+        switch (xCell.getHorizontalAlignment()) {
+            case Left -> wTextRange.getOwnerParagraph().getFormat().setHorizontalAlignment(com.spire.doc.documents.HorizontalAlignment.Left);
+            case Center ->
+                    wTextRange.getOwnerParagraph().getFormat().setHorizontalAlignment(com.spire.doc.documents.HorizontalAlignment.Center);
+            case Right -> wTextRange.getOwnerParagraph().getFormat().setHorizontalAlignment(com.spire.doc.documents.HorizontalAlignment.Right);
+        }
+
+        switch (xCell.getVerticalAlignment()) {
+            case Bottom -> wCell.getCellFormat().setVerticalAlignment(com.spire.doc.documents.VerticalAlignment.Bottom);
+            case Center -> wCell.getCellFormat().setVerticalAlignment(com.spire.doc.documents.VerticalAlignment.Middle);
+            case Top -> wCell.getCellFormat().setVerticalAlignment(com.spire.doc.documents.VerticalAlignment.Top);
+        }
+    }
 }

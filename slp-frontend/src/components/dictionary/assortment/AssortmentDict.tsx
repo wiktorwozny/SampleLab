@@ -11,6 +11,7 @@ import AssortmentDictItem from "./AssortmentDictItem";
 const columns: Column<Assortment>[] = [
     {header: 'ID', accessor: 'id'},
     {header: 'Nazwa', accessor: 'name'},
+    {header: 'Metoda organoleptyczna', accessor: 'organolepticMethod'},
     {
         header: 'Grupa', accessor: 'group', render: (value) => {
             if (typeof value === 'object' && value !== null && 'name' in value) {
@@ -20,7 +21,7 @@ const columns: Column<Assortment>[] = [
         }
     },
     {
-        header: 'Wskazania', accessor: 'indications', render: (value) => {
+        header: 'Oznaczenia', accessor: 'indications', render: (value) => {
             if (Array.isArray(value)) {
                 return value.map((indication: Indication) => indication.name).join(' ,  ');
             }
@@ -113,7 +114,7 @@ const AssortmentDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Asortyments</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Asortymenty</h1>
 
             <div className="w-full justify-content-between flex mb-2">
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>

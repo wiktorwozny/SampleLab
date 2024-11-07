@@ -4,10 +4,12 @@ import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.enums.RoleEnum;
 import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.repository.*;
+import agh.edu.pl.slpbackend.service.MethodService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,8 +25,15 @@ public class Config {
             final ProductGroupRepository groupRepository,
             final ExaminationRepository examinationRepository,
             final UserRepository userRepository,
-            final AssortmentRepository assortmentRepository) {
+            final AssortmentRepository assortmentRepository,
+            final MethodService methodService) {
         return args -> {
+            if (groupRepository.count() == 0) {
+                try (InputStream methodStream = getClass().getResourceAsStream("/metody_v2.xlsm")){
+                    methodService.importMethods(methodStream);
+                }
+            }
+
             if (sampleRepository.count() == 0) {
                 //code
                 Code code1 = Code.builder()

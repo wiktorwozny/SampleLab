@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
         <div className="sticky p-15 bg-gray-900 min-h-screen min-w-64 max-w-64">
 
             <div className="">
-                <h2 className="pt-12 pb-4 text-white">Menu</h2>
+                <h2 className="pt-12 pb-4 text-white text-3xl">WIJHARS</h2>
                 <ul className="list-none p-0">
                     <li className="my-1.5">
                         <a
@@ -46,6 +46,13 @@ const Sidebar: React.FC = () => {
                         className="text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
                         onClick={() => navigate('/changePassword')}
                     >Zmień hasło
+                    </a>
+                    </li>
+                    
+                    <li className="my-1.5"><a
+                        className="text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
+                        onClick={() => navigate('/importMethods')}
+                    >Wczytaj metody
                     </a>
                     </li>
 

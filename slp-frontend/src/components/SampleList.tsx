@@ -12,7 +12,8 @@ import {
 import {useForm} from 'react-hook-form';
 import {ProgressStateEnum, ProgressStateMap} from "../utils/enums";
 import {checkResponse} from "../utils/checkResponse";
-import {DisableButton} from "./ui/StandardButton";
+import {DisableButton, StandardButton} from "./ui/StandardButton";
+import {Input} from "./ui/Input";
 
 
 const SampleList: React.FC<any> = ({selectedFilters}) => {
@@ -27,11 +28,13 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
         ascending: true,
         pageNumber: 0,
         pageSize: 10,
-        filters: selectedFilters
+        filters: selectedFilters,
+        fuzzySearch: ''
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
     const [selectedSamplesIds, setSelectedSamplesIds] = useState<number[]>([]);
+    const [fuzzySearchValue, setFuzzySearchValue] = useState<string>('');
 
     useEffect(() => {
         setRequest(prev => ({
@@ -85,10 +88,37 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
 
     const isSampleSelected = (sampleId: number) => selectedSamplesIds.includes(sampleId);
 
+    const handleButtonClick = () => {
+        setRequest(prevRequest => ({
+            ...prevRequest,
+            fuzzySearch: fuzzySearchValue
+        }));
+    };
+
     return (
         <div className="w-full">
-            {!isLoading && numberOfPages > 0 && <div>
-                <table className="table table-hover table-bordered cursor-pointer">
+            <div>
+                <div className="flex justify-end items-center mb-4 pr-4 space-x-4">
+                    <Input
+                        placeholder="Szukaj..."
+                        type="text"
+                        className="border border-gray-300 rounded w-25 shadow-none !mb-0"
+                        maxLength={50}
+                        value={fuzzySearchValue}
+                        onChange={(e) => setFuzzySearchValue(e.target.value)}
+                    />
+                    <StandardButton
+                        type="submit"
+                        onClick={handleButtonClick}
+                        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600"
+                    >
+                        Szukaj
+                    </StandardButton>
+                </div>
+                {isLoading && <div className="text-2xl my-32">Ładowanie...</div>}
+                {!isLoading && numberOfPages === 0 &&
+                    <div className="text-2xl my-32">Brak próbek spełniających filtry</div>}
+                {!isLoading && numberOfPages > 0 && <table className="table table-hover table-bordered cursor-pointer">
                     <thead>
                     <tr>
                         <th></th>
@@ -140,7 +170,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             <td className={(sample.progressStatus === ProgressStateEnum.DONE ? '!bg-green-100' : '!bg-red-100')}>{progressEnumDesc.get(sample.progressStatus)}</td>
                         </tr>))}
                     </tbody>
-                </table>
+                </table>}
                 <div className="flex flex-row justify-between items-center w-full">
 
                     <DisableButton type="button" disabled={selectedSamplesIds.length === 0} onClick={(e) => {
@@ -176,9 +206,8 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                     </button>
                 </div>
                 <br/>
-            </div>}
-            {isLoading && <div className="text-2xl">Ładowanie...</div>}
-            {!isLoading && numberOfPages === 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
+            </div>
+
         </div>
     )
 }

@@ -1,6 +1,5 @@
 package agh.edu.pl.slpbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,4 +26,6 @@ public class Assortment {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Indication> indications;
+
+    private String organolepticMethod;
 }

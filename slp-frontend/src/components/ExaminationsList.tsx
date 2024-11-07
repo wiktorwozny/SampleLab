@@ -16,6 +16,7 @@ const ExaminationsList: FC<{}> = () => {
     const [examinations, setExaminations] = useState<Examination[]>([]);
     const [checkedStates, setCheckedStates] = useState<Record<number, Examination>>({});
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [hasOrganoleptic, setHasOrganoleptic] = useState<boolean>(false);
 
     useEffect(() => {
         const getIndicationsAndExaminations = async () => {
@@ -29,6 +30,8 @@ const ExaminationsList: FC<{}> = () => {
 
                 if (indicationsResponse?.status === 200) {
                     setIndications(indicationsResponse.data ?? []);
+                    const hasOrganoleptic = indicationsResponse.data.some((indication: Indication) => indication.isOrganoleptic);
+                    setHasOrganoleptic(hasOrganoleptic);
                 }
 
                 if (examinationsResponse?.status === 200) {
@@ -119,7 +122,7 @@ const ExaminationsList: FC<{}> = () => {
                 <h1 className="text-center font-bold text-2xl w-full my-2">dla próbki nr: {sampleId}</h1>
             </div>
             {!isLoading && indications.map(indication => (
-                <Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
+                (!indication.isOrganoleptic && (<Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
                     <div className="flex items-center">
                         <input
                             id="link-checkbox"
@@ -134,9 +137,29 @@ const ExaminationsList: FC<{}> = () => {
                         <StandardButton type="button" onClick={() => {
                             const examination = checkedStates[indication.id];
                             handleNavigation(sampleId, examination.id, indication.id);
-                        }}>Wprowadź wyniki badań</StandardButton>
+                        }}>Edytuj</StandardButton>
                     )}
-                </Div>
+                </Div>))
+            ))}
+            {hasOrganoleptic && <h1 className="font-bold text-xl w-full my-2">Cechy organoleptyczne</h1>}
+            {!isLoading && indications.map(indication => (
+                (indication.isOrganoleptic && (<Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
+                    <div className="flex items-center">
+                        <input
+                            id="link-checkbox"
+                            type="checkbox"
+                            checked={checkedStates[indication.id] !== undefined}
+                            onChange={() => handleCheckboxChange(indication.id, checkedStates[indication.id]?.id)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
+                        <span className="font-bold ml-2">{indication.name}</span>
+                    </div>
+                    {checkedStates[indication.id] && (
+                        <StandardButton type="button" onClick={() => {
+                            const examination = checkedStates[indication.id];
+                            handleNavigation(sampleId, examination.id, indication.id);
+                        }}>Edytuj</StandardButton>
+                    )}
+                </Div>))
             ))}
             <StandardButton type='button' className='mt-3' onClick={
                 (e) => {
