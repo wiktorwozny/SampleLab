@@ -15,6 +15,7 @@ import {checkResponse} from "../utils/checkResponse";
 import {DisableButton} from "./ui/StandardButton";
 import {Input} from "./ui/Input";
 import {LoadingSpinner} from "./ui/LoadingSpinner";
+import useDebounce from "../hooks/useDebounce";
 
 
 const SampleList: React.FC<any> = ({selectedFilters}) => {
@@ -36,6 +37,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
     const [selectedSamplesIds, setSelectedSamplesIds] = useState<number[]>([]);
     const [fuzzySearchValue, setFuzzySearchValue] = useState<string>('');
+    const debouncedFuzzySearchedValue = useDebounce(fuzzySearchValue, 150);
 
     useEffect(() => {
         setRequest(prev => ({
@@ -43,25 +45,22 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             filters: selectedFilters,
             pageNumber: 0
         }))
-    }, [selectedFilters, fuzzySearchValue])
+    }, [selectedFilters])
 
 
     useEffect(() => {
         setRequest(prev => ({
             ...prev,
-            fuzzySearch: fuzzySearchValue
+            fuzzySearch: debouncedFuzzySearchedValue
         }))
-    }, [fuzzySearchValue])
+    }, [debouncedFuzzySearchedValue])
 
     useEffect(() => {
         const getSamples = async () => {
             try {
-                let fuzzy = `${request.fuzzySearch}`;
                 let response = await getFilteredSamples(request);
-                if (response.status === 200 && fuzzySearchValue === fuzzy) {
-                    console.log(fuzzy);
-                    console.log(fuzzySearchValue);
-                    console.log("^")
+                if (response.status === 200) {
+                    console.log("XX", response.data.samples)
                     setSamples(response.data.samples)
                     setNumberOfPages(response.data.totalPages)
                     setIsLoading(false)
@@ -110,14 +109,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         type="text"
                         className="border border-gray-300 rounded w-25 shadow-none !mb-0"
                         maxLength={50}
-                        onChange={(e) => {
-                            console.log(e.target.value)
-                            console.log(fuzzySearchValue)
-                            if (fuzzySearchValue !== e.target.value) {
-                                setFuzzySearchValue(e.target.value);
-                                console.log("siema");
-                            }
-                        }}
+                        onChange={(e) => setFuzzySearchValue(e.target.value)}
                     />
                 </div>
                 {isLoading &&
