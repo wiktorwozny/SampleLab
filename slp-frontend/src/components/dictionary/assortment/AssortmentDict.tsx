@@ -120,7 +120,6 @@ const AssortmentDict = () => {
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
                 </StandardButton>
-
             </div>
 
             <DictionaryTable<Assortment>

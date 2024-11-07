@@ -2,10 +2,9 @@ import React, {useContext, useEffect, useState} from "react";
 import {Column, Indication} from "../../../utils/types";
 import {AlertContext} from "../../../contexts/AlertsContext";
 import {deleteIndication, getAllIndications} from "../../../helpers/indicationApi";
-import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
 import IndicationDictItem from "./IndicationDictItem";
-import {CancelButton} from "../../ui/StandardButton";
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
 import ConfirmPopup from "../../ui/ConfirmPopup";
 
@@ -107,10 +106,9 @@ const IndicationDict = () => {
             <h1 className="text-center font-bold text-3xl w-full my-3">Test dict</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
-
+                </StandardButton>
             </div>
 
             <DictionaryTable<Indication>

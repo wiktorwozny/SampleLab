@@ -60,7 +60,6 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             try {
                 let response = await getFilteredSamples(request);
                 if (response.status === 200) {
-                    console.log("XX", response.data.samples)
                     setSamples(response.data.samples)
                     setNumberOfPages(response.data.totalPages)
                     setIsLoading(false)

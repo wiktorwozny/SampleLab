@@ -2,10 +2,9 @@ import {Code, Column} from "../../../utils/types";
 import React, {useContext, useEffect, useState} from "react";
 import {AlertContext} from "../../../contexts/AlertsContext";
 import {deleteCode, getAllCodes} from "../../../helpers/codeApi";
-import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
 import CodeDictItem from "./CodeDictItem";
-import {CancelButton} from "../../ui/StandardButton";
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
 import ConfirmPopup from "../../ui/ConfirmPopup";
 
@@ -101,10 +100,9 @@ const CodeDict = () => {
             <h1 className="text-center font-bold text-3xl w-full my-3">Kody</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
-
+                </StandardButton>
             </div>
 
             <DictionaryTable<Code>

@@ -3,9 +3,8 @@ import {deleteClient, getAllClients} from "../../../helpers/clientApi";
 import {Address, Client, Column} from "../../../utils/types";
 import DictionaryTable from "../../ui/DictionaryTable";
 import ClientDictItem from "./ClientDictItem";
-import {Button} from "react-bootstrap";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {CancelButton} from "../../ui/StandardButton";
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import {useNavigate} from 'react-router-dom';
 import ConfirmPopup from "../../ui/ConfirmPopup"; // Import useNavigate
 
@@ -114,9 +113,9 @@ const ClientDict = () => {
             <h1 className="text-center font-bold text-3xl w-full my-3">Klienci</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
+                </StandardButton>
             </div>
 
             <DictionaryTable<Client>

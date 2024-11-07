@@ -1,9 +1,8 @@
 import {Column, ProductGroup} from "../../../utils/types";
 import React, {useContext, useEffect, useState} from "react";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
-import {CancelButton} from "../../ui/StandardButton";
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
 import {deleteGroup, getAllGroup} from "../../../helpers/groupApi";
 import ProductGroupDictItem from "./ProductGroupDictItem";
@@ -102,10 +101,9 @@ const ProductGroupDict = () => {
             <h1 className="text-center font-bold text-3xl w-full my-3">Grupy produktów</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
-
+                </StandardButton>
             </div>
 
             <DictionaryTable<ProductGroup>
