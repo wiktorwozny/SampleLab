@@ -56,8 +56,8 @@ public class UserService extends AbstractService implements UserMapper {
         return new LoginResponse(userDto, token);
     }
 
-    public void changePassword(ChangePasswordRequest request) {
-        User user = userRepository.findByEmail(request.email())
+    public void changePassword(ChangePasswordRequest request, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.getPassword().equals(request.oldPassword())) {

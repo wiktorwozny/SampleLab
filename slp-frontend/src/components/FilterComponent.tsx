@@ -14,7 +14,7 @@ const FilterComponet = ({setIsFilters, isFilters, filtersData, selectedFilters, 
                     setTimeout(()=>{setIsFilters(false)},75)
             }
         }/>
-        <div className={`${isOpen? "left-0":"left-1/3"} w-1/3 z-10 bg-white relative flex flex-col duration-75 font-bold p-3`}>
+        <div className={`${isOpen? "left-0":"left-1/3"} w-1/3 z-10 bg-white relative flex flex-col duration-75 font-bold p-3 overflow-y-scroll`}>
             <div className="w-full justify-between flex">
                 <div className="text-2xl">Filtruj</div>
                 <div className="text-3xl" 
