@@ -155,7 +155,7 @@ const SampleForm: FC<{}> = () => {
                     <div className='flex justify-between p-5 bg-white rounded text-left w-100%'>
                         <div className='w-1/4'>
                             <h2 className='text-2xl font-bold'>Dane próbki</h2>
-                            <FormLabel>Symbol próbki</FormLabel>
+                            <FormLabel>Kod próbki</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
                                 options={codes.map(code => ({value: JSON.stringify(code), label: code.name}))}

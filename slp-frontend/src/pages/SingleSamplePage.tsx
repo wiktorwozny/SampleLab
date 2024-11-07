@@ -147,7 +147,7 @@ const SingleSamplePage = () => {
             }}>Zarządzaj badaniami</StandardButton>
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/edit/${sampleId}`)
-            }}>Edytuj próbke</StandardButton>
+            }}>Edytuj próbkę</StandardButton>
             <Dropdown>
                 <Dropdown.Toggle
                     disabled={sample?.progressStatus !== ProgressStateEnum.DONE}

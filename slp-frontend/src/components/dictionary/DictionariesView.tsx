@@ -18,7 +18,7 @@ const DictionariesView: React.FC = () => {
     return (
         <div className="indications-list flex flex-col items-center w-full">
             <div>
-                <h1 className="text-center font-bold text-3xl w-full my-6">Słowniki</h1>
+                <h1 className="text-center font-bold text-3xl w-full my-6">Dane</h1>
             </div>
             <DictionaryButtonList buttons={buttons}/>
         </div>
