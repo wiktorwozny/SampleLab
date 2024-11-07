@@ -15,6 +15,7 @@ public interface SampleMapper {
                 .admissionDate(model.getAdmissionDate())
                 .expirationComment(model.getExpirationComment())
                 .examinationExpectedEndDate(model.getExaminationExpectedEndDate())
+                .expirationDate(model.getExpirationDate())
                 .size(model.getSize())
                 .state(model.getState())
                 .analysis(model.isAnalysis())

@@ -1,20 +1,21 @@
 import {FC, useContext, useEffect, useState} from 'react'
 import {Input} from './ui/Input';
 import {FormSelect} from './ui/Select';
-import {FormProvider, set, useForm} from 'react-hook-form';
+import {FormProvider, useForm} from 'react-hook-form';
 import {FormLabel} from './ui/Labels';
 import {CancelButton, StandardButton} from './ui/StandardButton';
 import {getAllCodes} from '../helpers/codeApi';
 import {getAllClients} from '../helpers/clientApi';
 import {getAllInspection} from '../helpers/inspectionApi';
 import {getAllGroup} from '../helpers/groupApi';
-import {Client, Code, Inspection, ProductGroup, Assortment, SamplingStandards} from '../utils/types';
+import {Assortment, Client, Code, Inspection, ProductGroup, SamplingStandards} from '../utils/types';
 import {addSample} from '../helpers/samplingApi';
 import {useNavigate, useParams} from 'react-router-dom';
 import {AlertContext} from '../contexts/AlertsContext';
 // import { Checkbox } from '@mui/material';
-import { checkResponse } from '../utils/checkResponse';
-import { getSampleById } from '../helpers/sampleApi';
+import {checkResponse} from '../utils/checkResponse';
+import {getSampleById} from '../helpers/sampleApi';
+
 const SampleForm: FC<{}> = () => {
 
     const method = useForm();
@@ -26,7 +27,7 @@ const SampleForm: FC<{}> = () => {
     const navigate = useNavigate();
     const {setAlertDetails} = useContext(AlertContext);
     const chosenGroup: string = watch("group");
-    const analisys: boolean = watch("analysis");
+    const analysis: boolean = watch("analysis");
     const assortment: string = watch("assortment");
     const samplingStandard: string = watch("samplingStandard")
     const {sampleId} = useParams()
@@ -34,26 +35,26 @@ const SampleForm: FC<{}> = () => {
     useEffect(() => {
         const getSample = async () => {
             try {
-                let reponse = await getSampleById(sampleId)
-                let sample = reponse?.data
+                let response = await getSampleById(sampleId)
+                let sample = response?.data
                 sample.code = JSON.stringify(sample.code)
                 sample.client = JSON.stringify(sample.client)
                 sample.inspection = JSON.stringify(sample.inspection)
-                sample.group = JSON.stringify(groups.filter(el=>sample.assortment.group.name===el.name)[0])
+                sample.group = JSON.stringify(groups.filter(el => sample.assortment.group.name === el.name)[0])
                 sample.samplingStandard = JSON.stringify(sample.samplingStandard)
                 sample.assortment = JSON.stringify(sample.assortment);
                 console.log(sample)
                 reset(sample)
-            } catch(err){
+            } catch (err) {
                 console.log(err);
                 checkResponse(err);
             }
         }
 
-        if(sampleId&&codes.length&&clients.length&&inspections.length&&groups.length) {
+        if (sampleId && codes.length && clients.length && inspections.length && groups.length) {
             getSample();
         }
-    },[codes,clients,inspections,groups])
+    }, [codes, clients, inspections, groups])
 
     useEffect(() => {
         const getCodes = async () => {
@@ -142,11 +143,11 @@ const SampleForm: FC<{}> = () => {
             checkResponse(err);
         }
     }
-    const isReady = () =>{
-        console.log(assortment,samplingStandard)
-        return codes.length&&clients.length&&inspections.length&&groups.length;
+    const isReady = () => {
+        console.log(assortment, samplingStandard)
+        return codes.length && clients.length && inspections.length && groups.length;
     }
-    return (isReady()?<div className='flex flex-col justify-center items-center w-full'>
+    return (isReady() ? <div className='flex flex-col justify-center items-center w-full'>
         <h2 className="text-center font-bold my-3 text-2xl">Dodawanie próbki</h2>
         <FormProvider {...method}>
             <form className="w-4/5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
@@ -171,7 +172,10 @@ const SampleForm: FC<{}> = () => {
                             <FormLabel>Kontrola</FormLabel>
                             <FormSelect
                                 className="my-custom-class"
-                                options={inspections.map(inspection => ({value: JSON.stringify(inspection), label: inspection.name}))}
+                                options={inspections.map(inspection => ({
+                                    value: JSON.stringify(inspection),
+                                    label: inspection.name
+                                }))}
                                 {...register("inspection", {
                                     required: {
                                         value: true,
@@ -205,8 +209,7 @@ const SampleForm: FC<{}> = () => {
                                 <p className="text-red-600">{`${errors.expirationDate.message}`}</p>}
 
                             <FormLabel>Dodatkowy komentarz</FormLabel>
-                            <Input {...register("expirationComment", {
-                            })}
+                            <Input {...register("expirationComment", {})}
                             />
                             {errors.expirationComment && errors.expirationComment.message &&
                                 <p className="text-red-600">{`${errors.expirationComment.message}`}</p>}
@@ -223,7 +226,7 @@ const SampleForm: FC<{}> = () => {
                                 <p className="text-red-600">{`${errors.examinationExpectedEndDate.message}`}</p>}
                         </div>
                         <div className='w-1/4'>
-                        <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
+                            <h2 className='text-2xl font-bold opacity-0 cursor-normal'>D</h2>
                             {/* <FormSelect
                                 className="my-custom-class"
                                 options={[{value: "true", label: "Tak"}, {value: "false", label: "Nie"}]}
@@ -254,7 +257,7 @@ const SampleForm: FC<{}> = () => {
                                 isDisabled={!chosenGroup}
                                 chosenGroup={chosenGroup}
                                 className="my-custom-class"
-                                options={JSON.parse(chosenGroup ? chosenGroup: "{}")?.assortments?.map((assortment: Assortment) => ({
+                                options={JSON.parse(chosenGroup ? chosenGroup : "{}")?.assortments?.map((assortment: Assortment) => ({
                                     value: JSON.stringify(assortment),
                                     label: assortment.name
                                 }))}
@@ -304,10 +307,11 @@ const SampleForm: FC<{}> = () => {
                                 <p className="text-red-600">{`${errors.size.message}`}</p>}
 
                             <div className='flex items-center justify-between'>
-                                <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza odwoławcza</label>
+                                <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Analiza
+                                    odwoławcza</label>
                                 <input type="checkbox" className='h-4 w-4 rounded'
-                                    {...register("analysis", {})}
-                                    checked={analisys}
+                                       {...register("analysis", {})}
+                                       checked={analysis}
                                 />
                             </div>
                         </div>
@@ -356,14 +360,14 @@ const SampleForm: FC<{}> = () => {
                     </div>
                     <div className='flex justify-center p-3 gap-2'>
                         <CancelButton type='button' className='mt-3' onClick={() => navigate('/')}>Anuluj</CancelButton>
-                        <StandardButton type="submit" className='mt-3'>{sampleId? "Edytuj":"Dodaj"}</StandardButton>
+                        <StandardButton type="submit" className='mt-3'>{sampleId ? "Edytuj" : "Dodaj"}</StandardButton>
                     </div>
                 </div>
 
             </form>
         </FormProvider>
 
-    </div>:<div className='font-bold text-4xl mt-5'>Ładowanie...</div>)
+    </div> : <div className='font-bold text-4xl mt-5'>Ładowanie...</div>)
 }
 
 export default SampleForm;

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 import {FilterRequest, SummarySample} from "../utils/types"
 import {getFilteredSamples} from "../helpers/samplingApi"
 import {useNavigate} from "react-router-dom"
@@ -12,8 +12,9 @@ import {
 import {useForm} from 'react-hook-form';
 import {ProgressStateEnum, ProgressStateMap} from "../utils/enums";
 import {checkResponse} from "../utils/checkResponse";
-import {DisableButton, StandardButton} from "./ui/StandardButton";
+import {DisableButton} from "./ui/StandardButton";
 import {Input} from "./ui/Input";
+import {LoadingSpinner} from "./ui/LoadingSpinner";
 
 
 const SampleList: React.FC<any> = ({selectedFilters}) => {
@@ -42,13 +43,25 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             filters: selectedFilters,
             pageNumber: 0
         }))
-    }, [selectedFilters])
+    }, [selectedFilters, fuzzySearchValue])
+
+
+    useEffect(() => {
+        setRequest(prev => ({
+            ...prev,
+            fuzzySearch: fuzzySearchValue
+        }))
+    }, [fuzzySearchValue])
 
     useEffect(() => {
         const getSamples = async () => {
             try {
+                let fuzzy = `${request.fuzzySearch}`;
                 let response = await getFilteredSamples(request);
-                if (response.status === 200) {
+                if (response.status === 200 && fuzzySearchValue === fuzzy) {
+                    console.log(fuzzy);
+                    console.log(fuzzySearchValue);
+                    console.log("^")
                     setSamples(response.data.samples)
                     setNumberOfPages(response.data.totalPages)
                     setIsLoading(false)
@@ -83,17 +96,10 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
         setSelectedSamplesIds((prevSelected) =>
             prevSelected.includes(sampleId) ? prevSelected.filter((id) => id !== sampleId) : [...prevSelected, sampleId]
         );
-        console.log(selectedSamplesIds);
     };
 
     const isSampleSelected = (sampleId: number) => selectedSamplesIds.includes(sampleId);
 
-    const handleButtonClick = () => {
-        setRequest(prevRequest => ({
-            ...prevRequest,
-            fuzzySearch: fuzzySearchValue
-        }));
-    };
 
     return (
         <div className="w-full">
@@ -104,18 +110,19 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         type="text"
                         className="border border-gray-300 rounded w-25 shadow-none !mb-0"
                         maxLength={50}
-                        value={fuzzySearchValue}
-                        onChange={(e) => setFuzzySearchValue(e.target.value)}
+                        onChange={(e) => {
+                            console.log(e.target.value)
+                            console.log(fuzzySearchValue)
+                            if (fuzzySearchValue !== e.target.value) {
+                                setFuzzySearchValue(e.target.value);
+                                console.log("siema");
+                            }
+                        }}
                     />
-                    <StandardButton
-                        type="submit"
-                        onClick={handleButtonClick}
-                        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600"
-                    >
-                        Szukaj
-                    </StandardButton>
                 </div>
-                {isLoading && <div className="text-2xl my-32">Ładowanie...</div>}
+                {isLoading &&
+                    <LoadingSpinner/>
+                }
                 {!isLoading && numberOfPages === 0 &&
                     <div className="text-2xl my-32">Brak próbek spełniających filtry</div>}
                 {!isLoading && numberOfPages > 0 && <table className="table table-hover table-bordered cursor-pointer">
