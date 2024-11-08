@@ -45,7 +45,7 @@ export const FormSelect = (
     }
 );
 
-export const ExaminationFromSelect = () =>(
+export const ExaminationFromSelect = (
     ({className = '', options, name, onChange, onBlur, isDisabled = false, ...props}: any) => {
         const {control} = useFormContext();
         return (
