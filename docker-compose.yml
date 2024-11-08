@@ -12,7 +12,7 @@ services:
       DB_URL: "jdbc:postgresql://db:5432/sample-lab-db"
       ENCRYPTOR_PASSWORD: "password"
     volumes:
-      - ./report-templates:/app/report-templates
+      - ./report_templates:/app/report_templates
     networks:
       - front-tier
       - back-tier

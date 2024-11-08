@@ -455,9 +455,9 @@ public class SampleReportGenerator {
                 .filter(exam -> exam.getIndication() != null && Boolean.FALSE.equals(exam.getIndication().isOrganoleptic()))
                 .collect(Collectors.toList());
         if ("F5".equals(reportType)) {
-            this.reportTemplatePathName = "report_templates/F-5_report_template.docx";
+            this.reportTemplatePathName = "F-5_report_template.docx";
         } else {
-            this.reportTemplatePathName = "report_templates/F-4_report_template.docx";
+            this.reportTemplatePathName = "F-4_report_template.docx";
         }
     }
 

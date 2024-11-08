@@ -26,9 +26,9 @@ import java.util.stream.IntStream;
 
 public class XLSXtoTblConverter extends XLSXFilesHelper {
 
-    private final String tableXlsxFilePath = "report_templates/table.xlsx";
-    private final String modifiedTableXlsxFilePath = "report_templates/modified.xlsx";
-    private final String docxFilePath = "report_templates/converted_docx.docx";
+    private final String tableXlsxFilePath = "table.xlsx";
+    private final String modifiedTableXlsxFilePath = "modified.xlsx";
+    private final String docxFilePath = "converted_docx.docx";
     private final boolean[] pattern;
     private final boolean uncertaintyExists;
     private final List<Examination> examinationList;

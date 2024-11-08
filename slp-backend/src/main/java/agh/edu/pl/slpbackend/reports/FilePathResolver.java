@@ -14,7 +14,7 @@ import java.util.Comparator;
 
 @Component
 public class FilePathResolver {
-    @Value("${app.templates.path:/app/report-templates}")
+    @Value("${app.templates.path:/app/report_templates}")
     private String templatesPath;
 
     public Path resolvePath(String fileName) {

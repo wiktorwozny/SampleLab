@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
 
-    private final String tableXlsxFilePath = "report_templates/organoleptic_table.xlsx";
-    private final String modifiedTableXlsxFilePath = "report_templates/organoleptic_modified.xlsx";
-    private final String docxFilePath = "report_templates/organoleptic_converted_docx.docx";
+    private final String tableXlsxFilePath = "organoleptic_table.xlsx";
+    private final String modifiedTableXlsxFilePath = "organoleptic_modified.xlsx";
+    private final String docxFilePath = "organoleptic_converted_docx.docx";
     private final List<Examination> examinationList;
     private final String organolepticMethod;
     private final List<Examination> organolepticExaminationList;

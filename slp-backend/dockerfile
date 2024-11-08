@@ -13,8 +13,8 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
-RUN mkdir -p /app/report-templates
+RUN mkdir -p /app/report_templates
 
-COPY report-templates/ /app/report-templates/
+COPY report_templates/ /app/report_templates/
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

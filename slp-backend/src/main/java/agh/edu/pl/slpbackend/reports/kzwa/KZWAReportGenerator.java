@@ -38,7 +38,7 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
     private FilePathResolver pathResolver = new FilePathResolver();
 
     public ByteArrayOutputStream generateReport() {
-        String templateFilePath = "report_templates/kzwa_template.xlsx";
+        String templateFilePath = "kzwa_template.xlsx";
 
         try (FileInputStream fileInputStream = new FileInputStream(pathResolver.getFullPath(templateFilePath));
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {
