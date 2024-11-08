@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.reports.kzwa;
 
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.model.Sample;
+import agh.edu.pl.slpbackend.reports.FilePathResolver;
 import agh.edu.pl.slpbackend.reports.XLSXFilesHelper;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +35,12 @@ public class KZWAReportGenerator extends XLSXFilesHelper {
     private final ExaminationRepository examinationRepository;
     private Sample sample;
     private List<Examination> examinationList;
+    private FilePathResolver pathResolver = new FilePathResolver();
 
     public ByteArrayOutputStream generateReport() {
         String templateFilePath = "report_templates/kzwa_template.xlsx";
 
-        try (FileInputStream fileInputStream = new FileInputStream(templateFilePath);
+        try (FileInputStream fileInputStream = new FileInputStream(pathResolver.getFullPath(templateFilePath));
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {
 
             Sheet templateSheet = workbook.getSheetAt(0);

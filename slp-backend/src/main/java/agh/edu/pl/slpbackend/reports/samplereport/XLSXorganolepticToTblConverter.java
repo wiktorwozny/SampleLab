@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.reports.samplereport;
 
 import agh.edu.pl.slpbackend.model.Examination;
+import agh.edu.pl.slpbackend.reports.FilePathResolver;
 import agh.edu.pl.slpbackend.reports.XLSXFilesHelper;
 import com.spire.doc.*;
 import com.spire.doc.documents.PageOrientation;
@@ -30,6 +31,7 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
     private final List<Examination> examinationList;
     private final String organolepticMethod;
     private final List<Examination> organolepticExaminationList;
+    private final FilePathResolver pathResolver = new FilePathResolver();
 
     public XLSXorganolepticToTblConverter(List<Examination> examinationList, String organolepticMethod) {
         this.examinationList = examinationList;
@@ -49,7 +51,7 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
 
         String xmlContent = null;
         try {
-            xmlContent = readXmlContentFromDocx(docxFilePath);
+            xmlContent = readXmlContentFromDocx(docxFilePath, pathResolver);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,14 +67,14 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
     }
 
     private void modifyTableFile() {
-        try (FileInputStream fileInputStream = new FileInputStream(tableXlsxFilePath);
+        try (FileInputStream fileInputStream = new FileInputStream(pathResolver.getFullPath(tableXlsxFilePath));
              org.apache.poi.ss.usermodel.Workbook workbook = new XSSFWorkbook(fileInputStream)) {
 
             Sheet sheet = workbook.getSheetAt(0);
 
             modifySheet(sheet, workbook);
 
-            try (FileOutputStream fileOutputStream = new FileOutputStream(modifiedTableXlsxFilePath)) {
+            try (FileOutputStream fileOutputStream = new FileOutputStream(pathResolver.getFullPath(modifiedTableXlsxFilePath))) {
                 workbook.write(fileOutputStream);
             }
         } catch (IOException e) {
@@ -105,7 +107,7 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
 
     private void createDocxFileWithGeneratedTable() {
         Workbook workbook = new Workbook();
-        workbook.loadFromFile(modifiedTableXlsxFilePath);
+        workbook.loadFromFile(pathResolver.getFullPath(modifiedTableXlsxFilePath));
 
         Worksheet sheet = workbook.getWorksheets().get(0);
 
@@ -132,12 +134,12 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
             }
         }
 
-        doc.saveToFile(docxFilePath, FileFormat.Docx);
+        doc.saveToFile(pathResolver.getFullPath(docxFilePath), FileFormat.Docx);
     }
 
     public void cleanFiles() throws Exception {
-        Files.delete(Paths.get(modifiedTableXlsxFilePath));
-        Files.delete(Paths.get(docxFilePath));
+        Files.delete(Paths.get(pathResolver.getFullPath(modifiedTableXlsxFilePath)));
+        Files.delete(Paths.get(pathResolver.getFullPath(docxFilePath)));
     }
 
 }

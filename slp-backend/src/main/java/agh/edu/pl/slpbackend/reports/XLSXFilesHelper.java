@@ -90,8 +90,8 @@ public class XLSXFilesHelper {
         destCell.setCellStyle(newCellStyle);
     }
 
-    public String readXmlContentFromDocx(String docxFilePath) throws IOException {
-        try (ZipFile zipFile = new ZipFile(docxFilePath);
+    public String readXmlContentFromDocx(String docxFilePath, FilePathResolver pathResolver) throws IOException {
+        try (ZipFile zipFile = new ZipFile(pathResolver.getFullPath(docxFilePath));
              InputStream inputStream = zipFile.getInputStream(zipFile.getEntry("word/document.xml"));
              BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 

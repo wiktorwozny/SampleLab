@@ -4,6 +4,7 @@ package agh.edu.pl.slpbackend.reports.samplereport;
 import agh.edu.pl.slpbackend.model.Address;
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.model.Sample;
+import agh.edu.pl.slpbackend.reports.FilePathResolver;
 import agh.edu.pl.slpbackend.repository.ExaminationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +15,13 @@ import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBElement;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -38,6 +41,7 @@ public class SampleReportGenerator {
     private List<Examination> examinationList;
     private List<Examination> basicExaminationList;
     private String reportTemplatePathName;
+    private final FilePathResolver pathResolver = new FilePathResolver();
 
     public ByteArrayOutputStream generateReport() {
         if (sample == null) {
@@ -46,7 +50,7 @@ public class SampleReportGenerator {
 
         try {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-                    .load(new java.io.File(this.reportTemplatePathName));
+                    .load(new java.io.File(pathResolver.getFullPath(this.reportTemplatePathName)));
 
             boolean uncertaintyExists = checkIfUncertaintyExists();
 
