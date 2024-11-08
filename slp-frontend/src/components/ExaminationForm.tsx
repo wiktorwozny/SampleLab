@@ -4,7 +4,7 @@ import {addExamination, getExaminationById, updateExamination} from "../helpers/
 import {FormProvider, useForm} from "react-hook-form";
 import {FormLabel} from "./ui/Labels";
 import {BigTextInput, Input} from "./ui/Input";
-import {FormSelect} from "./ui/Select";
+import {ExaminationFromSelect} from "./ui/Select";
 import {CancelButton, StandardButton} from "./ui/StandardButton";
 import {getIndicationById} from "../helpers/indicationApi";
 import {Examination, Indication, Sample} from "../utils/types";
@@ -224,7 +224,7 @@ const ExaminationForm: FC<{}> = () => {
                             />
 
                             <FormLabel>Status metody</FormLabel>
-                            <FormSelect
+                            <ExaminationFromSelect
                                 className="my-custom-class"
                                 options={Object.values(MethodStatuses).map(methodStatus => ({
                                     value: methodStatus,
@@ -291,7 +291,7 @@ const ExaminationForm: FC<{}> = () => {
                             />
 
                             <FormLabel>Status metody</FormLabel>
-                            <FormSelect
+                            <ExaminationFromSelect
                                 className="my-custom-class"
                                 options={Object.values(MethodStatuses).map(methodStatus => ({
                                     value: methodStatus,
