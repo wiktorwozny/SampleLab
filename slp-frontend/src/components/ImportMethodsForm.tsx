@@ -1,7 +1,8 @@
-import { useContext, useState } from 'react';
+import {useContext, useState} from 'react';
 import {Accept, useDropzone} from "react-dropzone";
-import { AlertContext } from '../contexts/AlertsContext';
-import { importMethods } from '../helpers/methodsApi';
+import {AlertContext} from '../contexts/AlertsContext';
+import {importMethods} from '../helpers/methodsApi';
+import {DisableButton} from "./ui/StandardButton";
 
 const ImportMethodsForm = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -25,7 +26,7 @@ const ImportMethodsForm = () => {
             }
         } catch (err: any) {
             console.log(err)
-            setAlertDetails({type: "error", isAlert: true, message: "Nie udało się wczytać pliku"})            
+            setAlertDetails({type: "error", isAlert: true, message: "Nie udało się wczytać pliku"})
         }
     };
 
@@ -39,7 +40,7 @@ const ImportMethodsForm = () => {
         maxFiles: 1
     });
     return (
-        <div className="flex flex-col items-center justify-center h-full space-y-6">
+        <div className="mt-20 flex flex-col items-center justify-center h-full space-y-6">
             <h1 className="text-3xl font-semibold text-center mb-4">Wczytaj metody</h1>
             <div
                 {...getRootProps()}
@@ -56,13 +57,13 @@ const ImportMethodsForm = () => {
                 <p className="text-gray-700">Wybrano plik: {selectedFile.name}</p>
             )}
 
-            <button
-                className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 disabled:opacity-50"
+            <DisableButton
+                type="button"
                 onClick={handleSubmit}
                 disabled={!selectedFile}
             >
                 Wyślij plik
-            </button>
+            </DisableButton>
         </div>
     );
 };
