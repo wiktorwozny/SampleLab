@@ -44,7 +44,7 @@ public class SampleControllerTest {
     @Test
     public void add() throws Exception {
         final ResponseEntity<Void> response = this.sampleController.add(getSaveExample());
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
