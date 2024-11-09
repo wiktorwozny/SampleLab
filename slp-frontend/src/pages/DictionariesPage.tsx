@@ -1,8 +1,9 @@
 import React from "react";
-import DictionaryButtonList from "../ui/DictionaryButton";
+import DictionaryButtonList from "../components/ui/DictionaryButton";
 import {NavigateFunction, useNavigate} from "react-router-dom";
+import Title from "../components/ui/Title";
 
-const DictionariesView: React.FC = () => {
+const DictionariesPage: React.FC = () => {
     const navigate: NavigateFunction = useNavigate();
 
     const buttons = [
@@ -16,13 +17,17 @@ const DictionariesView: React.FC = () => {
     ];
 
     return (
-        <div className="indications-list flex flex-col items-center w-full">
-            <div>
-                <h1 className="text-center font-bold text-3xl w-full my-6">Dane</h1>
+        <div>
+
+            <Title message={'Edycja danych'}/>
+
+            <div className="indications-list flex flex-col items-center w-full">
+
+               
+                <DictionaryButtonList buttons={buttons}/>
             </div>
-            <DictionaryButtonList buttons={buttons}/>
         </div>
     );
 }
 
-export default DictionariesView;
+export default DictionariesPage;

@@ -1,14 +1,16 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {NavigateFunction, useNavigate,} from "react-router-dom";
 import {logout} from '../utils/logout';
 import {AlertContext} from '../contexts/AlertsContext';
 import {backup} from "../helpers/backupApi";
 import {checkResponse} from "../utils/checkResponse";
+import LoadingOverlay from "./ui/LoadingOverlay";
 
 const Sidebar: React.FC = () => {
 
     const navigate: NavigateFunction = useNavigate();
     const {setAlertDetails} = useContext(AlertContext)
+    const [isLoading, setIsLoading] = useState(false);
 
     const formatDate = (date: Date) => {
         return date.toLocaleDateString('pl-PL', {
@@ -19,9 +21,10 @@ const Sidebar: React.FC = () => {
     };
 
     const handleBackup = async (mode: string) => {
+        if (isLoading) return;
+        setIsLoading(true);
         try {
             let response = await backup(mode)
-            console.log(response)
             setAlertDetails({isAlert: true, message: "Archiwizacja danych zakończona poprawnie", type: "success"})
             if (response != null) {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -41,14 +44,16 @@ const Sidebar: React.FC = () => {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
             checkResponse(err);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
-        <div className="sticky p-15 bg-gray-900 min-h-screen min-w-64 max-w-64">
-
+        <div className="fixed top-0 left-0 p-15 bg-gray-800 min-h-screen min-w-64 max-w-64">
+            {isLoading && <LoadingOverlay message="Proszę czekać, trwa archiwizacja danych..."/>}
             <div className="">
-                <h2 className="pt-12 pb-4 text-white text-3xl">WIJHARS</h2>
+                <h2 className="pt-12 pb-4 text-white text-xl">Menu</h2>
                 <ul className="list-none p-0 text-left">
                     <li className="my-1.5">
                         <a
