@@ -1,7 +1,7 @@
 import SampleList from "../components/SampleList"
 import {HiAdjustmentsHorizontal} from "react-icons/hi2";
 import {useEffect, useState} from "react";
-import FilterComponet from "../components/FilterComponent";
+import FilterComponent from "../components/FilterComponent";
 import {FiltersData} from "../utils/types";
 import {getFiltersData} from "../helpers/dataApi";
 import {checkResponse} from "../utils/checkResponse";
@@ -45,7 +45,7 @@ const SampleListPage = () => {
                 </div>
             </div>
             <SampleList selectedFilters={selectedFilters}/>
-            {isFilters && <FilterComponet
+            {isFilters && <FilterComponent
                 setIsFilters={setIsFilters}
                 isFilters={isFilters}
                 filtersData={filtersData}
