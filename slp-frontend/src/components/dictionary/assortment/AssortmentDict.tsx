@@ -7,6 +7,7 @@ import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import ConfirmPopup from "../../ui/ConfirmPopup";
 import {deleteAssortment, getAllAssortments} from "../../../helpers/assortmentApi";
 import AssortmentDictItem from "./AssortmentDictItem";
+import Title from "../../ui/Title";
 
 const columns: Column<Assortment>[] = [
     {header: 'ID', accessor: 'id'},
@@ -114,7 +115,7 @@ const AssortmentDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Asortymenty</h1>
+            <Title message={'Asortymenty'}/>
 
             <div className="w-full justify-content-between flex mb-2">
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
