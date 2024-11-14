@@ -128,6 +128,7 @@ const AssortmentDict = () => {
                 onView={handleView}
                 onEdit={handleEdit}
                 onDelete={confirmDelete}
+                maxRows={5}
             />
             <CancelButton
                 type='button'
