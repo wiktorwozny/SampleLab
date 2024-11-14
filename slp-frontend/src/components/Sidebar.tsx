@@ -52,7 +52,7 @@ const Sidebar: React.FC<{}> = () => {
 
     return (
         <div
-            className={`z-10 fixed top-0 left-0 h-full bg-gray-800 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-16' : 'w-64'}`}
+            className={`z-30 fixed top-0 left-0 h-full bg-gray-800 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-16' : 'w-64'}`}
         >
             <button
                 className="absolute top-4 right-[-16px] bg-gray-800 text-white p-2 rounded-full shadow-md focus:outline-none hover:bg-gray-700"

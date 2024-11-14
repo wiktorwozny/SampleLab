@@ -7,7 +7,7 @@ const Main = ({children}: any): any => {
 
     return (
         <main
-            className={`flex-grow transition-all duration-300 ${
+            className={`relative overflow-scroll pt-24 pb-16 flex-grow transition-all duration-300 ${
                 isSidebarCollapsed ? 'ml-16' : 'ml-64'
             }`}
         >{children}</main>
