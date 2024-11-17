@@ -29,6 +29,7 @@ import ChangePasswordForm from './components/ChangePasswordForm';
 import DictionariesPage from "./pages/DictionariesPage";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import AdminPage from './pages/AdminPage';
 
 function App() {
     const [isToken, setIsToken] = useState<boolean>(false);
@@ -49,7 +50,7 @@ function App() {
                 <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
                     <BrowserRouter>
                         <Header/>
-                        <Sidebar isCollapsed={isSidebarCollapsed}
+                        <Sidebar isCollapsed={isSidebarCollapsed} 
                                  toggleSidebar={toggleSidebar}/>{/* Sidebar jako element `fixed` */}
                         <main
                             className={`flex-grow transition-all duration-300 ${
@@ -105,10 +106,18 @@ function App() {
                                     <Route path="/changePassword" element={<ChangePasswordForm/>}/>
                                     <Route path="/sample/edit/:sampleId" element={<SampleForm/>}/>
                                     <Route path="/importMethods" element={<ImportMethodsForm/>}/>
+                                    <Route
+                                        path="/admin-panel"
+                                        element={
+                                            <PrivateRoute>
+                                                <AdminPage/>
+                                            </PrivateRoute>
+                                        }
+                                    />
                                 </Routes>
                             </div>
                         </main>
-                        <Footer/>
+                        {/* <Footer/> */}
                     </BrowserRouter>
                 </CheckIsLogin>
             </AlertsContext>

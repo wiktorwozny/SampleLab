@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from './ui/Input';
 import { FormLabel } from './ui/Labels';
 import { StandardButton } from './ui/StandardButton';
-import { FormSelect } from './ui/Select';
+import { ExaminationFromSelect } from './ui/Select';
 import { RoleEnumDesc } from '../utils/enums';
 import { registerRequest } from '../helpers/userApi';
 import { useContext } from 'react';
@@ -73,7 +73,7 @@ const RegisterForm = ({setPassword}: Props) => {
                     <p className="text-red-600 text-start">{`${errors.email.message}`}</p>}
 
                 <FormLabel className='text-start mt-3'>Rola</FormLabel>
-                <FormSelect
+                <ExaminationFromSelect
                     options={RoleEnumDesc}
                     {...register("role",{
                         required:{
