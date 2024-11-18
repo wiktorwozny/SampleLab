@@ -7,10 +7,11 @@ import { Modal } from "react-bootstrap";
 import ConfirmPopup from "./ui/ConfirmPopup";
 import { deleteUserByEmail } from "../helpers/userApi";
 import { AlertContext } from "../contexts/AlertsContext";
+import ChangePasswordFormAdminForm from "./ChangePasswordForAdminForm";
 
 const UserList = () => {
     const [userList, setUserList] = useState<User[]>([])
-    const [isChangePasswordModal, setIsChangePasswordModal] = useState<boolean>(false);
+    const [userToChangePassword, setUserToChangePassword] = useState<String|null>(null);
     const [userToDelete, setUserToDelete] = useState<String|null>(null);
     const {setAlertDetails} = useContext(AlertContext)
     const deleteUserFunction = async()=>{
@@ -71,7 +72,7 @@ const UserList = () => {
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>
-                                            <Dropdown.Item onClick={()=>setIsChangePasswordModal(true)}>Zmień hasło</Dropdown.Item>
+                                            <Dropdown.Item onClick={()=>setUserToChangePassword(user.email)}>Zmień hasło</Dropdown.Item>
                                             <Dropdown.Item onClick={()=>setUserToDelete(user.email)}>Usuń użytkowanika</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -81,33 +82,10 @@ const UserList = () => {
                                 <td>{user.role === "WORKER"? "Pracownik":"Admin"}</td>
                             </tr>
                         ))}
-                    {/* {samples.map(sample => (
-                        <tr
-                            key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)}
-                        >
-                            <td
-                                style={{padding: 5, textAlign: 'center', width: 35, height: 35}}
-                                onClick={(e) => e.stopPropagation()}>
-                                <input
-                                    type="checkbox"
-                                    checked={isSampleSelected(sample.id)}
-                                    onChange={() => handleCheckboxChange(sample.id)}
-                                    onClick={(e) => e.stopPropagation()}
-                                    style={{width: '80%', height: '80%'}}
-                                />
-                            </td>
-                            <td>{sample.id}</td>
-                            <td>{sample.code}</td>
-                            <td>{sample.group}</td>
-                            <td>{sample.assortment}</td>
-                            <td>{sample.clientName}</td>
-                            <td>{sample.admissionDate.toString()}</td>
-                            <td className={(sample.progressStatus === ProgressStateEnum.DONE ? '!bg-green-100' : '!bg-red-100')}>{progressEnumDesc.get(sample.progressStatus)}</td>
-                        </tr>))} */}
                     </tbody>
                 </table>
-                <Modal show={isChangePasswordModal} onHide={()=>{setIsChangePasswordModal(false)}}>
-
+                <Modal show={userToChangePassword!==null} onHide={()=>{setUserToChangePassword(null)}}>
+                        <ChangePasswordFormAdminForm email={userToChangePassword} closeHandler={setUserToChangePassword}/>
                 </Modal>
                 <ConfirmPopup
                     onConfirm={deleteUserFunction}

@@ -40,7 +40,7 @@ function App() {
     };
 
     return (
-        <div className="App flex flex-col min-h-screen relative">
+        <div className="App flex flex-col min-h-screen relative w-full">
             <AlertsContext>
                 {!isToken && (
                     <div className="fixed w-full top-2 z-2 justify-center">
@@ -117,7 +117,7 @@ function App() {
                                 </Routes>
                             </div>
                         </main>
-                        {/* <Footer/> */}
+                        <Footer/>
                     </BrowserRouter>
                 </CheckIsLogin>
             </AlertsContext>

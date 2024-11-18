@@ -23,3 +23,7 @@ export const getUsersData = () => {
 export const deleteUserByEmail = (email:String) => {
     return axios.delete(backendUrl + url + `${email}`, Header());
 }
+
+export const changePasswordForAdmin = (email:String, data:ChangePasswordPayload) => {
+    return axios.post(backendUrl + url + `change-password/${email}`, data, Header());
+}
