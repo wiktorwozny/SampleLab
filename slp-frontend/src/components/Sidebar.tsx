@@ -87,7 +87,7 @@ const Sidebar: React.FC<{}> = () => {
 
                             onClick={() => navigate('/dictionary')}
                         >
-                            Edycja danych
+                            Edytuj dane
                         </p>
                     </li>
                     <li className="my-2">
