@@ -4,6 +4,7 @@ import {AlertContext} from '../contexts/AlertsContext';
 import {importMethods} from '../helpers/methodsApi';
 import {DisableButton} from "./ui/StandardButton";
 import {FaFileAlt} from 'react-icons/fa';
+import Title from "./ui/Title";
 
 const ImportMethodsForm = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -46,8 +47,8 @@ const ImportMethodsForm = () => {
     };
 
     return (
-        <div className="mt-20 flex flex-col items-center justify-center h-full space-y-6">
-            <h1 className="text-3xl font-semibold text-center mb-4">Wczytaj metody</h1>
+        <div className="mt-10 flex flex-col items-center justify-center h-full space-y-6">
+            <Title message={'Wczytaj metody'}/>
             <div
                 {...getRootProps()}
                 className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-gray-500"

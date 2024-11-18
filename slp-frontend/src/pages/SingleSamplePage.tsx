@@ -11,13 +11,13 @@ import {AlertContext} from "../contexts/AlertsContext";
 import {checkResponse} from "../utils/checkResponse";
 import {Dropdown} from "react-bootstrap";
 import Title from "../components/ui/Title";
+import {useAppContext} from "../contexts/AppContext";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
     const [sample, setSample] = useState<Sample>();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const {setAlertDetails} = useContext(AlertContext);
-    const [openReportDropdown, setOpenReportDropdown] = useState(false);
 
     const navigate = useNavigate()
 
@@ -37,7 +37,14 @@ const SingleSamplePage = () => {
         getSample()
     }, [sampleId])
 
+    const {isLoadingOverlayVisible, toggleVisibility} = useAppContext();
+
     const generateReport = async (sampleId: number, reportType: string) => {
+        if (isLoadingOverlayVisible) {
+            return
+        }
+        toggleVisibility();
+
         try {
             let response = await generateReportForSample(sampleId, reportType);
             console.log(response);
@@ -53,6 +60,8 @@ const SingleSamplePage = () => {
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            toggleVisibility();
         }
     }
 
