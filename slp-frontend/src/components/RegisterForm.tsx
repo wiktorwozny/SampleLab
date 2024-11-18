@@ -1,11 +1,11 @@
-import {FormProvider, useForm} from 'react-hook-form';
-import {Input} from './ui/Input';
-import {FormLabel} from './ui/Labels';
-import {StandardButton} from './ui/StandardButton';
-import {FormSelect} from './ui/Select';
-import {RoleEnumDesc} from '../utils/enums';
-import {registerRequest} from '../helpers/userApi';
-import {useContext} from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Input } from './ui/Input';
+import { FormLabel } from './ui/Labels';
+import { StandardButton } from './ui/StandardButton';
+import { ExaminationFromSelect } from './ui/Select';
+import { RoleEnumDesc } from '../utils/enums';
+import { registerRequest } from '../helpers/userApi';
+import { useContext } from 'react';
 import {AlertContext} from '../contexts/AlertsContext';
 import {checkResponse} from '../utils/checkResponse';
 
@@ -76,15 +76,14 @@ const RegisterForm = ({setPassword}: Props) => {
                     {errors.email && errors.email.message &&
                         <p className="text-red-600 text-start">{`${errors.email.message}`}</p>}
 
-                    <FormLabel className='text-start mt-1'>Rola</FormLabel>
-                    <FormSelect
+                    <FormLabel className='text-start mt-3'>Rola</FormLabel>
+                    <ExaminationFromSelect
                         options={RoleEnumDesc}
-                        {...register("role", {
-                            required: {
-                                value: true,
-                                message: "Pole wymagane"
-                            }
-                        })}
+                        {...register("role",{
+                            required:{
+                            value:true,
+                            message:"Pole wymagane"
+                        }})}
                     />
                     {errors.role && errors.role.message &&
                         <p className="text-red-600 text-start">{`${errors.role.message}`}</p>}

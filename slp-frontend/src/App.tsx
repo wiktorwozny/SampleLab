@@ -29,9 +29,10 @@ import ChangePasswordForm from './components/ChangePasswordForm';
 import DictionariesPage from "./pages/DictionariesPage";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import AdminPage from './pages/AdminPage';
 import {AppProvider} from "./contexts/AppContext";
 import LoadingOverlay from "./components/ui/LoadingOverlay";
-import Main from "./components/ui/Main";
+import Main from './components/ui/Main';
 
 function App() {
     const [isToken, setIsToken] = useState<boolean>(false);
@@ -100,6 +101,14 @@ function App() {
                                         <Route path="/changePassword" element={<ChangePasswordForm/>}/>
                                         <Route path="/sample/edit/:sampleId" element={<SampleForm/>}/>
                                         <Route path="/importMethods" element={<ImportMethodsForm/>}/>
+                                        <Route
+                                            path="/admin-panel"
+                                            element={
+                                                <PrivateRoute>
+                                                    <AdminPage/>
+                                                </PrivateRoute>
+                                            }
+                                        />
                                     </Routes>
                                 </div>
                             </Main>

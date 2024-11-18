@@ -128,6 +128,15 @@ const Sidebar: React.FC<{}> = () => {
                             Zmień hasło
                         </p>
                     </li>
+                    {localStorage.getItem('role') === 'ADMIN' && (<li className="my-2">
+                        <a
+                            className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
+
+                            onClick={() => navigate('/admin-panel')}
+                        >
+                            Lista Użytkowników
+                        </a>
+                    </li>)}
                     <li className="my-2">
                         <p
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
