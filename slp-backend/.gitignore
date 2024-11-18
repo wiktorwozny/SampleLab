@@ -33,3 +33,5 @@ build/
 .vscode/
 
 .env
+
+report_templates/
