@@ -33,7 +33,7 @@ const SampleListPage = () => {
 
     return (
         <div className="w-full">
-            <Title message={'Lista póbek'}/>
+            <Title message={'Lista próbek'}/>
             <div className="w-full justify-end flex">
                 <div
                     className=" rounded-3 bg-sky-500 hover:bg-sky-500 relative mr-4 mb-2 p-2 flex items-center cursor-pointer"

@@ -14,7 +14,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({message}) => {
 
     return (
         isLoadingOverlayVisible ?
-            <div className="rounded-3 fixed top-4 right-4 bg-white p-4 rounded shadow-lg flex items-center gap-4 !z-99">
+            <div className="rounded-3 fixed top-4 right-4 bg-white p-4 rounded shadow-lg flex items-center gap-4 z-50">
                 <Spinner animation="border" role="status" variant="primary">
                 </Spinner>
                 <span>{message}</span>

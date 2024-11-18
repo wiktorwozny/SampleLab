@@ -42,19 +42,19 @@ function App() {
                 <LoadingOverlay message={'Trwa pobieranie...'}/>
                 <AlertsContext>
                     {!isToken && (
-                        <div className="fixed w-full top-2 z-2 justify-center">
+                        <div className="fixed w-full top-2 right-2 z-30">
                             <AlertComponent isToken={isToken}/>
                         </div>
                     )}
+                    <div className="fixed w-full top-2 right-2 z-30">
+                        <AlertComponent/>
+                    </div>
                     <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
                         <BrowserRouter>
                             <Header/>
                             <Sidebar/>
                             <Main>
                                 <div>
-                                    <div className="fixed w-full top-2 z-2 justify-center">
-                                        <AlertComponent/>
-                                    </div>
                                     <Routes>
                                         <Route path="/" element={<SampleListPage/>}/>
                                         <Route path="/addSample" element={<SampleForm/>}/>
