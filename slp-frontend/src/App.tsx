@@ -15,7 +15,6 @@ import BackupView from "./components/BackupView";
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
-import DictionariesView from "./components/dictionary/DictionariesView";
 import LoginForm from "./components/LoginForm";
 import RegisterPage from "./pages/RegisterPage";
 import ClientDict from "./components/dictionary/client/ClientDict";
@@ -27,61 +26,100 @@ import ProductGroupDict from "./components/dictionary/product-group/ProductGroup
 import AssortmentDict from "./components/dictionary/assortment/AssortmentDict";
 import ImportMethodsForm from './components/ImportMethodsForm';
 import ChangePasswordForm from './components/ChangePasswordForm';
+import DictionariesPage from "./pages/DictionariesPage";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import AdminPage from './pages/AdminPage';
+import {AppProvider} from "./contexts/AppContext";
+import LoadingOverlay from "./components/ui/LoadingOverlay";
+import Main from './components/ui/Main';
 
 function App() {
     const [isToken, setIsToken] = useState<boolean>(false);
 
     return (
-        <div className="App flex relative h-fit">
-            <AlertsContext>
-                {!isToken && <div className='fixed w-full top-2 z-2 justify-center'>
-                    <AlertComponent isToken={isToken}/>
-                </div>}
-                <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
-                    <BrowserRouter>
-                        <Sidebar/>
-                        <div className='relative w-full min-h-screen'>
-                            <div className='fixed w-full top-2 z-2 justify-center'>
-                                <AlertComponent/>
-                            </div>
-                            <Routes>
-                                <Route path='/' element={<SampleListPage/>}/>
-                                <Route path='/addSample' element={<SampleForm/>}/>
-                                <Route path='/sample/:sampleId' element={<SingleSamplePage/>}/>
-                                <Route path='/sample/addReportData/:sampleId' element={<ReportDataForm/>}/>
-                                <Route path='/sample/manageExaminations/:sampleId' element={<ExaminationsList/>}/>
-                                <Route path='/sample/manageExaminations/:sampleId/newExamination'
-                                       element={<ExaminationForm/>}/>
-                                <Route path='/sample/manageExaminations/:sampleId/newExamination/:examinationId'
-                                       element={<ExaminationForm/>}/>
-                                <Route path='/backup' element={<BackupView/>}/>
-                                <Route path='/dictionary' element={<DictionariesView/>}/>
-                                <Route path='/dictionary/clientDict' element={<ClientDict/>}/>
-                                <Route path='/dictionary/indicationDict' element={<IndicationDict/>}/>
-                                <Route path='/dictionary/codeDict' element={<CodeDict/>}/>
-                                <Route path='/dictionary/inspectionDict' element={<InspectionDict/>}/>
-                                <Route path='/dictionary/samplingStandardDict' element={<SamplingStandardDict/>}/>
-                                <Route path='/dictionary/productGroupDict' element={<ProductGroupDict/>}/>
-                                <Route path='/dictionary/assortmentDict' element={<AssortmentDict/>}/>
-                                <Route path='/login' element={<LoginForm/>}/>
-                                <Route path='/register' element={
-                                    <PrivateRoute>
-                                        <RegisterPage/>
-                                    </PrivateRoute>
-                                }/>
-                                <Route path='/protocolReportData/:data' element={<ProtocolReportDataForm/>}/>
-                                <Route path='/changePassword' element={<ChangePasswordForm/>}/>
-                                <Route path='/sample/edit/:sampleId' element={<SampleForm/>}/>
-                                <Route path='/importMethods' element={<ImportMethodsForm/>}/>
-                            </Routes>
+        <AppProvider>
+            <div className="App flex flex-col min-h-screen relative">
+                <LoadingOverlay message={'Trwa pobieranie...'}/>
+                <AlertsContext>
+                    {!isToken && (
+                        <div className="fixed w-full top-2 right-2 z-30">
+                            <AlertComponent isToken={isToken}/>
                         </div>
-                    </BrowserRouter>
-                </CheckIsLogin>
-                {/* <NoPermitionPage/> */}
-                {/* <ReportDataForm/> */}
-            </AlertsContext>
-        </div>
+                    )}
+                    <div className="fixed w-full top-2 right-2 z-30">
+                        <AlertComponent/>
+                    </div>
+                    <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>
+                        <BrowserRouter>
+                            <Header/>
+                            <Sidebar/>
+                            <Main>
+                                <div>
+                                    <Routes>
+                                        <Route path="/" element={<SampleListPage/>}/>
+                                        <Route path="/addSample" element={<SampleForm/>}/>
+                                        <Route path="/sample/:sampleId" element={<SingleSamplePage/>}/>
+                                        <Route path="/sample/addReportData/:sampleId" element={<ReportDataForm/>}/>
+                                        <Route
+                                            path="/sample/manageExaminations/:sampleId"
+                                            element={<ExaminationsList/>}
+                                        />
+                                        <Route
+                                            path="/sample/manageExaminations/:sampleId/newExamination"
+                                            element={<ExaminationForm/>}
+                                        />
+                                        <Route
+                                            path="/sample/manageExaminations/:sampleId/newExamination/:examinationId"
+                                            element={<ExaminationForm/>}
+                                        />
+                                        <Route path="/backup" element={<BackupView/>}/>
+                                        <Route path="/dictionary" element={<DictionariesPage/>}/>
+                                        <Route path="/dictionary/clientDict" element={<ClientDict/>}/>
+                                        <Route path="/dictionary/indicationDict" element={<IndicationDict/>}/>
+                                        <Route path="/dictionary/codeDict" element={<CodeDict/>}/>
+                                        <Route path="/dictionary/inspectionDict" element={<InspectionDict/>}/>
+                                        <Route
+                                            path="/dictionary/samplingStandardDict"
+                                            element={<SamplingStandardDict/>}
+                                        />
+                                        <Route path="/dictionary/productGroupDict" element={<ProductGroupDict/>}/>
+                                        <Route path="/dictionary/assortmentDict" element={<AssortmentDict/>}/>
+                                        <Route path="/login" element={<LoginForm/>}/>
+                                        <Route
+                                            path="/register"
+                                            element={
+                                                <PrivateRoute>
+                                                    <RegisterPage/>
+                                                </PrivateRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/protocolReportData/:data"
+                                            element={<ProtocolReportDataForm/>}
+                                        />
+                                        <Route path="/changePassword" element={<ChangePasswordForm/>}/>
+                                        <Route path="/sample/edit/:sampleId" element={<SampleForm/>}/>
+                                        <Route path="/importMethods" element={<ImportMethodsForm/>}/>
+                                        <Route
+                                            path="/admin-panel"
+                                            element={
+                                                <PrivateRoute>
+                                                    <AdminPage/>
+                                                </PrivateRoute>
+                                            }
+                                        />
+                                    </Routes>
+                                </div>
+                            </Main>
+                            <Footer/>
+                        </BrowserRouter>
+                    </CheckIsLogin>
+                </AlertsContext>
+            </div>
+        </AppProvider>
     );
 }
 
 export default App;
+

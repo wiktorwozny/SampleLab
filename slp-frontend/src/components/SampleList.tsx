@@ -126,10 +126,10 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         <th scope="col" className={activeColumn === 'code.id' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("code.id")}>Kod próbki
                         </th>
-                        <th scope="col" className={activeColumn === 'group.name' ? '!bg-gray-400' : '!bg-gray-300'}
+                        <th scope="col" className={activeColumn === 'assortment.group.name' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("assortment.group.name")}>Grupa
                         </th>
-                        <th scope="col" className={activeColumn === 'assortment' ? '!bg-gray-400' : '!bg-gray-300'}
+                        <th scope="col" className={activeColumn === 'assortment.name' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("assortment.name")}>Asortyment
                         </th>
                         <th scope="col" className={activeColumn === 'client.name' ? '!bg-gray-400' : '!bg-gray-300'}

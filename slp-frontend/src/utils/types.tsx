@@ -200,3 +200,9 @@ export type ChangePasswordPayload = {
     oldPassword: String, 
     newPassword: String
 }
+
+export type User = {
+    email: String,
+    name: String,
+    role: RoleEnum
+}

@@ -15,3 +15,15 @@ export const registerRequest = (data: RegisterData) => {
 export const changePassword = (data: ChangePasswordPayload) => {
     return axios.post(backendUrl + url + "change-password", data, Header())
 }
+
+export const getUsersData = () => {
+   return axios.get(backendUrl + url, Header()) 
+}
+
+export const deleteUserByEmail = (email:String) => {
+    return axios.delete(backendUrl + url + `${email}`, Header());
+}
+
+export const changePasswordForAdmin = (email:String, data:ChangePasswordPayload) => {
+    return axios.post(backendUrl + url + `change-password/${email}`, data, Header());
+}

@@ -3,20 +3,21 @@ import {useNavigate, useParams} from "react-router-dom";
 import {deleteSample, getSampleById} from "../helpers/sampleApi";
 import {Sample} from "../utils/types";
 import {Div} from "../components/ui/Div";
-import {DisableButton, StandardButton} from "../components/ui/StandardButton";
+import {StandardButton} from "../components/ui/StandardButton";
 import {generateReportForSample} from "../helpers/generateReportApi";
 import {ProgressStateEnum} from "../utils/enums";
 import ConfirmPopup from "../components/ui/ConfirmPopup";
-import { AlertContext } from "../contexts/AlertsContext";
-import { checkResponse } from "../utils/checkResponse";
+import {AlertContext} from "../contexts/AlertsContext";
+import {checkResponse} from "../utils/checkResponse";
 import {Dropdown} from "react-bootstrap";
+import Title from "../components/ui/Title";
+import {useAppContext} from "../contexts/AppContext";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
     const [sample, setSample] = useState<Sample>();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const {setAlertDetails} = useContext(AlertContext);
-    const [openReportDropdown, setOpenReportDropdown] = useState(false);
 
     const navigate = useNavigate()
 
@@ -36,7 +37,14 @@ const SingleSamplePage = () => {
         getSample()
     }, [sampleId])
 
+    const {isLoadingOverlayVisible, toggleVisibility} = useAppContext();
+
     const generateReport = async (sampleId: number, reportType: string) => {
+        if (isLoadingOverlayVisible) {
+            return
+        }
+        toggleVisibility();
+
         try {
             let response = await generateReportForSample(sampleId, reportType);
             console.log(response);
@@ -52,6 +60,8 @@ const SingleSamplePage = () => {
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            toggleVisibility();
         }
     }
 
@@ -71,13 +81,13 @@ const SingleSamplePage = () => {
             }
         } catch (err: any) {
             console.log(err)
-            setAlertDetails({type: "error", isAlert: true, message: "Nie udało ci się usunąć próbki"})            
+            setAlertDetails({type: "error", isAlert: true, message: "Nie udało ci się usunąć próbki"})
         }
         setIsPopupOpen(false)
     }
 
     return (<div className="flex flex-col justify-center items-center w-full">
-        <h2 className="text-2xl text-center font-bold my-3">Widok szczegółowy próbki</h2>
+        <Title message={'Widok szczegółowy próbki'}/>
         <Div className="text-start">
             <span className="font-bold">Data przyjęcia: </span>
             {`${sample?.admissionDate}`}
@@ -175,11 +185,11 @@ const SingleSamplePage = () => {
         </div>
 
         <ConfirmPopup
-                onConfirm={deleteSampleFunction}
-                show={isPopupOpen}
-                handleClose={() => setIsPopupOpen(false)}
-                message="Czy na pewno chcesz usunąć próbkę wraz z wykonanymi badaniami?"
-            />
+            onConfirm={deleteSampleFunction}
+            show={isPopupOpen}
+            handleClose={() => setIsPopupOpen(false)}
+            message="Czy na pewno chcesz usunąć próbkę wraz z wykonanymi badaniami?"
+        />
     </div>)
 }
 

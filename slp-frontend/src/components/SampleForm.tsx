@@ -15,6 +15,7 @@ import {AlertContext} from '../contexts/AlertsContext';
 // import { Checkbox } from '@mui/material';
 import {checkResponse} from '../utils/checkResponse';
 import {getSampleById} from '../helpers/sampleApi';
+import {LoadingSpinner} from "./ui/LoadingSpinner";
 
 const SampleForm: FC<{}> = () => {
 
@@ -367,7 +368,7 @@ const SampleForm: FC<{}> = () => {
             </form>
         </FormProvider>
 
-    </div> : <div className='font-bold text-4xl mt-5'>Ładowanie...</div>)
+    </div> : <LoadingSpinner/>)
 }
 
 export default SampleForm;

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Column} from "../../utils/types";
 import {Dropdown} from "react-bootstrap";
 import {LoadingSpinner} from "./LoadingSpinner";
+import RowsLimitSelector from "./RowsLimitSelector";
 
 interface TableProps<T> {
     columns: Column<T>[];
@@ -9,6 +10,7 @@ interface TableProps<T> {
     onView: (item: T) => void;
     onEdit: (item: T) => void;
     onDelete: (item: T) => void;
+    maxRows?: number;
 }
 
 type SortDirection = 'asc' | 'desc' | 'none';
@@ -18,8 +20,9 @@ interface SortRule<T> {
     direction: SortDirection;
 }
 
-const DictionaryTable = <T extends {}>({columns, data, onView, onEdit, onDelete}: TableProps<T>) => {
+const DictionaryTable = <T extends {}>({columns, data, onView, onEdit, onDelete, maxRows = 10}: TableProps<T>) => {
     const [sortRules, setSortRules] = useState<SortRule<T>[]>([]);
+    const [rowsLimit, setRowsLimit] = useState<number>(maxRows);
 
     const handleSort = (accessor: keyof T | string) => {
         setSortRules((prevSortRules) => {
@@ -68,12 +71,14 @@ const DictionaryTable = <T extends {}>({columns, data, onView, onEdit, onDelete}
         return 0;
     });
 
+    const displayedData = sortedData.slice(0, rowsLimit);
+
     return (
-        <div className="justify-content-center flex mb-2 min-w-1/2">
+        <div className="justify-content-center flex-column mb-2 w-full">
             {data.length === 0 ? (
                 <LoadingSpinner/>
             ) : (
-                <table className="table table-hover table-bordered max-w-fit">
+                <table className="table table-hover table-bordered">
                     <thead>
                     <tr>
                         <th className="w-20">Akcja</th>
@@ -96,7 +101,7 @@ const DictionaryTable = <T extends {}>({columns, data, onView, onEdit, onDelete}
                     </tr>
                     </thead>
                     <tbody>
-                    {sortedData.map((item, rowIndex) => (
+                    {displayedData.map((item, rowIndex) => (
                         <tr key={rowIndex}>
                             <td>
                                 <Dropdown>
@@ -123,8 +128,10 @@ const DictionaryTable = <T extends {}>({columns, data, onView, onEdit, onDelete}
                         </tr>
                     ))}
                     </tbody>
+
                 </table>
             )}
+            <RowsLimitSelector rowsLimit={rowsLimit} setRowsLimit={setRowsLimit}/>
         </div>
     );
 };

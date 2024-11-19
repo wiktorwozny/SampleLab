@@ -1,10 +1,11 @@
 import SampleList from "../components/SampleList"
 import {HiAdjustmentsHorizontal} from "react-icons/hi2";
 import {useEffect, useState} from "react";
-import FilterComponet from "../components/FilterComponent";
+import FilterComponent from "../components/FilterComponent";
 import {FiltersData} from "../utils/types";
 import {getFiltersData} from "../helpers/dataApi";
 import {checkResponse} from "../utils/checkResponse";
+import Title from "../components/ui/Title";
 
 const SampleListPage = () => {
     const [isFilters, setIsFilters] = useState<boolean>(false)
@@ -30,27 +31,28 @@ const SampleListPage = () => {
         getFiltersDataFunction();
     }, [])
 
-    return (<div className="w-full">
-        <h1 className="text-center font-bold text-3xl w-full my-3">Lista próbek</h1>
-        <div className="w-full justify-end flex">
-            <div
-                className="flex border relative mr-2 mb-2 p-2 border-black flex items-center hover:bg-gray-300 cursor-pointer"
-                onClick={() => {
-                    setIsFilters(true)
-                }}>
-                <div>Filtruj &nbsp;</div>
-                <HiAdjustmentsHorizontal className="text-3xl"></HiAdjustmentsHorizontal>
+    return (
+        <div className="w-full">
+            <Title message={'Lista próbek'}/>
+            <div className="w-full justify-end flex">
+                <div
+                    className=" rounded-3 bg-sky-500 hover:bg-sky-500 relative mr-4 mb-2 p-2 flex items-center cursor-pointer"
+                    onClick={() => {
+                        setIsFilters(true)
+                    }}>
+                    <div className="text-white">Filtruj &nbsp;</div>
+                    <HiAdjustmentsHorizontal className="text-white text-3xl"></HiAdjustmentsHorizontal>
+                </div>
             </div>
-        </div>
-        <SampleList selectedFilters={selectedFilters}/>
-        {isFilters && <FilterComponet
-            setIsFilters={setIsFilters}
-            isFilters={isFilters}
-            filtersData={filtersData}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-        />}
-    </div>)
+            <SampleList selectedFilters={selectedFilters}/>
+            {isFilters && <FilterComponent
+                setIsFilters={setIsFilters}
+                isFilters={isFilters}
+                filtersData={filtersData}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+            />}
+        </div>)
 }
 
 export default SampleListPage;
