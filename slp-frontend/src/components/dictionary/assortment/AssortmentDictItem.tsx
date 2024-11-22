@@ -70,7 +70,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                 }
             });
         } catch (err) {
-            setAlertDetails({isAlert: true, message: "Wystąpił błąd spróbuj ponownie później", type: "error"});
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
         }
     };
 
@@ -87,7 +87,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                 }
             });
         } catch (err) {
-            setAlertDetails({isAlert: true, message: "Wystąpił błąd spróbuj ponownie później", type: "error"});
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
         }
     };
 
