@@ -72,9 +72,13 @@ const ClientDict = () => {
                 getClients();
                 handleClose();
             }
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            if (err?.response?.status === 409) {
+                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+            } else {
+                setAlertDetails({isAlert: true, message: "Wystąpił bład, spróbuj ponownie później", type: "error"})
+            }
         }
     };
 

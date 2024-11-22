@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.ClientDto;
+import agh.edu.pl.slpbackend.exception.DataDependencyException;
 import agh.edu.pl.slpbackend.mapper.ClientMapper;
 import agh.edu.pl.slpbackend.model.Client;
 import agh.edu.pl.slpbackend.repository.ClientRepository;
@@ -8,6 +9,7 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,10 @@ public class ClientService extends AbstractService implements ClientMapper {
     @Override
     public void delete(IModel model) {
         final ClientDto dto = (ClientDto) model;
-        clientRepository.deleteById(dto.getId());
+        try {
+            clientRepository.deleteById(dto.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DataDependencyException();
+        }
     }
 }
