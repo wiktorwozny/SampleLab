@@ -54,7 +54,7 @@ const UserList = () => {
                     <tr>
                         <th className="!bg-gray-300"/>
                         <th scope={"col"} className="!bg-gray-300">Email</th>
-                        <th scope={"col"} className="!bg-gray-300">Imie i nazwisko</th>
+                        <th scope={"col"} className="!bg-gray-300">Imię i nazwisko</th>
                         <th scope={"col"} className="!bg-gray-300">Rola</th>
                     </tr>
                     </thead>
