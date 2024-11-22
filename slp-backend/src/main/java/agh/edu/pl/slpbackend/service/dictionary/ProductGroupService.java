@@ -5,7 +5,6 @@ import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupSaveDto;
 import agh.edu.pl.slpbackend.mapper.ProductGroupMapper;
 import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.SamplingStandard;
-import agh.edu.pl.slpbackend.repository.IndicationRepository;
 import agh.edu.pl.slpbackend.repository.ProductGroupRepository;
 import agh.edu.pl.slpbackend.repository.SamplingStandardRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 public class ProductGroupService extends AbstractService implements ProductGroupMapper {
 
     private final ProductGroupRepository productGroupRepository;
-    private final IndicationRepository indicationRepository;
     private final SamplingStandardRepository samplingStandardRepository;
 
     public List<ProductGroupDto> selectAll() {
