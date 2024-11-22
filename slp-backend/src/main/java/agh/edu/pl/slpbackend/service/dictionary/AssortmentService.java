@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.assortment.AssortmentDto;
 import agh.edu.pl.slpbackend.dto.assortment.AssortmentSaveDto;
+import agh.edu.pl.slpbackend.exception.DataDependencyException;
 import agh.edu.pl.slpbackend.mapper.AssortmentMapper;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
 import agh.edu.pl.slpbackend.model.Assortment;
@@ -13,6 +14,7 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +50,11 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
     @Override
     public void delete(IModel model) {
         final AssortmentDto dto = (AssortmentDto) model;
-        assortmentRepository.deleteById(dto.getId());
+        try {
+            assortmentRepository.deleteById(dto.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DataDependencyException();
+        }
     }
 
     private AssortmentDto createObjectToSave(AssortmentSaveDto dto, final boolean isEdit) {
