@@ -30,6 +30,6 @@ public class ProductGroup implements Serializable {
     @JsonIgnore
     private List<SamplingStandard> samplingStandards;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "group")
     private List<Assortment> assortments;
 }

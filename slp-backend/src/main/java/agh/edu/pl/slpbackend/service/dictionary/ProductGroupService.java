@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupDto;
 import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupSaveDto;
+import agh.edu.pl.slpbackend.exception.DataDependencyException;
 import agh.edu.pl.slpbackend.mapper.ProductGroupMapper;
 import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.SamplingStandard;
@@ -11,6 +12,7 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,7 +47,11 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     @Override
     public void delete(IModel model) {
         final ProductGroupDto dto = (ProductGroupDto) model;
-        productGroupRepository.deleteById(dto.getId());
+        try {
+            productGroupRepository.deleteById(dto.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DataDependencyException();
+        }
     }
 
     private ProductGroupDto createObjectToSave(ProductGroupSaveDto dto) {
