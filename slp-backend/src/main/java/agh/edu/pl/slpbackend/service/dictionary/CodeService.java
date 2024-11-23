@@ -1,6 +1,7 @@
 package agh.edu.pl.slpbackend.service.dictionary;
 
 import agh.edu.pl.slpbackend.dto.CodeDto;
+import agh.edu.pl.slpbackend.exception.DataDependencyException;
 import agh.edu.pl.slpbackend.mapper.CodeMapper;
 import agh.edu.pl.slpbackend.model.Code;
 import agh.edu.pl.slpbackend.repository.CodeRepository;
@@ -8,6 +9,7 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,10 @@ public class CodeService extends AbstractService implements CodeMapper {
     @Override
     public void delete(IModel model) {
         final CodeDto dto = (CodeDto) model;
-        codeRepository.deleteById(dto.getId());
+        try {
+            codeRepository.deleteById(dto.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DataDependencyException();
+        }
     }
 }
