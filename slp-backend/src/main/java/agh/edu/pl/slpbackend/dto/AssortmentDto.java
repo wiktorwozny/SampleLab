@@ -1,7 +1,8 @@
-package agh.edu.pl.slpbackend.dto.assortment;
+package agh.edu.pl.slpbackend.dto;
 
 import agh.edu.pl.slpbackend.model.Assortment;
 import agh.edu.pl.slpbackend.model.Indication;
+import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
@@ -21,7 +22,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ModelClass(Assortment.class)
-public class AssortmentSaveDto implements IModel, Serializable {
+public class AssortmentDto implements IModel, Serializable {
 
     @Id
     @ModelFieldName("id")
@@ -31,7 +32,7 @@ public class AssortmentSaveDto implements IModel, Serializable {
     private String name;
 
     @ModelFieldName("group")
-    private Long group;
+    private ProductGroup group;
 
     @ModelFieldName("indications")
     private List<Indication> indications;

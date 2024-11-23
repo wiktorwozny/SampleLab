@@ -51,17 +51,8 @@ const IndicationForAssortmentDictItem: React.FC<IndicationDictItemProps> = ({
     };
 
     const submit = (formData: any) => {
-        const newIndication: Indication = {
-            id: Date.now(),
-            name: formData.name,
-            method: formData.method,
-            unit: formData.unit,
-            laboratory: formData.laboratory,
-            isOrganoleptic: formData.isOrganoleptic,
-        };
-
-        console.log(newIndication);
-        addNewIndication(newIndication);
+        console.log(formData);
+        addNewIndication(formData);
         handleClose();
         resetForm();
     };
