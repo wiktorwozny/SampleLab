@@ -64,7 +64,7 @@ const SamplingStandardDict = () => {
             if (err?.response?.status === 409) {
                 setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
             } else {
-                setAlertDetails({isAlert: true, message: "Wystąpił bład, spróbuj ponownie później", type: "error"})
+                setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
             }
         }
     };
