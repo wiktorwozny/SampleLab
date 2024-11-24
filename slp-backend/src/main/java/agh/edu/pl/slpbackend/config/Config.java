@@ -153,10 +153,18 @@ public class Config {
                         .laboratory("FCh")
                         .build();
 
+                var indication13 = Indication.builder()
+                        .name("Barwa")
+                        .isOrganoleptic(true)
+                        .unit(null)
+                        .laboratory("PCR")
+                        .build();
+
                 Assortment assortment1 = Assortment.builder()
                         .name("Kasza")
                         .group(group1)
-                        .indications(List.of(indication11, indication12))
+                        .indications(List.of(indication11, indication12, indication13))
+                        .organolepticMethod("ASD-ZXC")
                         .build();
 
                 var indication21 = Indication.builder()
@@ -229,7 +237,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(reportData1)
-                        .progressStatus(ProgressStatusEnum.DONE)
+                        .progressStatus(ProgressStatusEnum.TODO)
                         .build();
 
                 Address address2 = Address.builder()

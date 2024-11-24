@@ -87,13 +87,13 @@ public class SampleReportGenerator {
 
             if (convertedOrganolepticExaminationsTable != null) {
                 addTableAtParagraph(documentPart, "ORGANOLEPTIC_TABLE", convertedOrganolepticExaminationsTable);
+                xlsXorganolepticToTblConverter.cleanFiles();
             }
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Docx4J.save(wordMLPackage, byteArrayOutputStream);
 
             xlsXtoTblConverter.cleanFiles();
-            xlsXorganolepticToTblConverter.cleanFiles();
 
             return byteArrayOutputStream;
         } catch (Exception e) {

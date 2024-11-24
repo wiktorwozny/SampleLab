@@ -85,7 +85,8 @@ public class ExaminationService extends AbstractService implements ExaminationMa
         final List<Examination> examinationList = sample.getExaminations();
         boolean completed = false;
         for (Examination examination : examinationList) {
-            completed = (examination.getResult() != null && !examination.getResult().isEmpty());
+            completed = (examination.getResult() != null && !examination.getResult().isEmpty())
+                    && (examination.getStartDate() != null && examination.getEndDate() != null);
         }
 
         sample.setProgressStatus(completed ? ProgressStatusEnum.DONE : ProgressStatusEnum.IN_PROGRESS);

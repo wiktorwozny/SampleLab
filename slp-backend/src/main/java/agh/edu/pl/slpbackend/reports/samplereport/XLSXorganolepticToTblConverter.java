@@ -102,7 +102,10 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
         String titleCellValue = sheet.getRow(0).getCell(0).getStringCellValue();
         int lp = examinationList.size() - organolepticExaminationList.size() + 1;
         sheet.getRow(0).getCell(0).setCellValue(lp + ". " + titleCellValue);
-        mergeCells(sheet, 2, organolepticExaminationList.size() + 1, 1, 1);
+
+        if (organolepticExaminationList.size() > 1) {
+            mergeCells(sheet, 2, organolepticExaminationList.size() + 1, 1, 1);
+        }
     }
 
     private void createDocxFileWithGeneratedTable() {
