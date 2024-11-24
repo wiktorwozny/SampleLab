@@ -58,9 +58,13 @@ const CodeDict = () => {
                 getCodes();
                 handleClose();
             }
-        } catch (err) {
-            console.error(err);
-            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
+        } catch (err: any) {
+            console.log(err)
+            if (err?.response?.status === 409) {
+                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+            } else {
+                setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
+            }
         }
     };
 
@@ -97,7 +101,7 @@ const CodeDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Kody</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Kody próbki</h1>
 
             <div className="w-full justify-content-between flex mb-2">
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>

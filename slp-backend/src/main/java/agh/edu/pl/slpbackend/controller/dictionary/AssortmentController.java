@@ -1,8 +1,7 @@
 package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
-import agh.edu.pl.slpbackend.dto.assortment.AssortmentDto;
-import agh.edu.pl.slpbackend.dto.assortment.AssortmentSaveDto;
+import agh.edu.pl.slpbackend.dto.AssortmentDto;
 import agh.edu.pl.slpbackend.service.dictionary.AssortmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,13 +33,13 @@ public class AssortmentController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody AssortmentSaveDto assortmentSaveDto) throws Exception {
-        return add(assortmentSaveDto, assortmentService);
+    public ResponseEntity<Void> add(@RequestBody AssortmentDto assortmentDto) throws Exception {
+        return add(assortmentDto, assortmentService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody AssortmentSaveDto assortmentSaveDto) throws Exception {
-        return edit(assortmentSaveDto, assortmentService);
+    public ResponseEntity<Void> edit(@RequestBody AssortmentDto assortmentDto) throws Exception {
+        return edit(assortmentDto, assortmentService);
     }
 
     @DeleteMapping("/delete/{id}")

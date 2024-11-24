@@ -59,9 +59,13 @@ const SamplingStandardDict = () => {
                 getSamplingStandards();
                 handleClose();
             }
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            if (err?.response?.status === 409) {
+                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+            } else {
+                setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
+            }
         }
     };
 
@@ -97,7 +101,7 @@ const SamplingStandardDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Standardy pobrania póbek</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Normy pobrania próbki</h1>
 
             <div className="w-full justify-content-between flex mb-2">
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>

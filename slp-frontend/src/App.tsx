@@ -47,7 +47,7 @@ function App() {
                             <AlertComponent isToken={isToken}/>
                         </div>
                     )}
-                    <div className="fixed w-full top-2 right-2 z-30">
+                    <div className="fixed w-full top-2 z-30">
                         <AlertComponent/>
                     </div>
                     <CheckIsLogin isToken={isToken} setIsToken={setIsToken}>

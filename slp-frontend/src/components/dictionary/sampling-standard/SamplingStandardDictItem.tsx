@@ -59,7 +59,7 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -74,7 +74,7 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -116,7 +116,7 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
                         </div>
                         <FormLabel>Standard próbki</FormLabel>
                         <Input type="text" disabled={isView}
-                               placeholder="Standard próbki" {...register("name", {
+                               placeholder="Norma pobrania próbki" {...register("name", {
                             required: {
                                 value: true,
                                 message: "Pole wymagane"

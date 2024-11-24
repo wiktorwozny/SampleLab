@@ -1,6 +1,6 @@
 package agh.edu.pl.slpbackend.mapper;
 
-import agh.edu.pl.slpbackend.dto.assortment.AssortmentDto;
+import agh.edu.pl.slpbackend.dto.AssortmentDto;
 import agh.edu.pl.slpbackend.model.Assortment;
 
 public interface AssortmentMapper {

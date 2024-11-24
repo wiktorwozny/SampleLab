@@ -38,14 +38,14 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     const [selectedIndicationList, setSelectedIndicationList] = useState<Indication[]>(item?.indications || []);
     const [showIndicationModal, setShowIndicationModal] = useState(false);
     const [productGroupList, setProductGroupList] = useState<ProductGroup[]>([]);
-    const [selectedProductGroup, setSelectedProductGroup] = useState<number | null>(item?.group?.id || null);
+    const [selectedProductGroup, setSelectedProductGroup] = useState<ProductGroup | null>(item?.group || null);
 
 
     useEffect(() => {
         if (item !== null) {
             reset(item);
-            setSelectedIndicationList(item?.indications || []);
-            setSelectedProductGroup(item?.group?.id || null);
+            setSelectedIndicationList(item.indications);
+            setSelectedProductGroup(item.group);
         } else {
             resetForm();
         }
@@ -70,7 +70,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                 }
             });
         } catch (err) {
-            setAlertDetails({isAlert: true, message: "Wystąpił błąd spróbuj ponownie później", type: "error"});
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
         }
     };
 
@@ -87,7 +87,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                 }
             });
         } catch (err) {
-            setAlertDetails({isAlert: true, message: "Wystąpił błąd spróbuj ponownie później", type: "error"});
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
         }
     };
 
@@ -154,8 +154,8 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                         {/* Używamy SearchableDropdown z przekazanymi danymi */}
                         <SearchableDropdown
                             options={productGroupList}
-                            selectedOption={selectedProductGroup}
-                            onSelect={(id) => setSelectedProductGroup(id)}
+                            selectedOption={selectedProductGroup?.id || null}
+                            onSelect={(id) => setSelectedProductGroup(productGroupList.find(group => group.id === id) || null)}
                             disabled={isView}
                         />
                         {errors.group && <p className="text-red-600">{`${errors.group.message}`}</p>}
