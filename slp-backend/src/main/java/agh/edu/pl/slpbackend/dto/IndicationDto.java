@@ -6,6 +6,7 @@ import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class IndicationDto implements IModel {
     private String name;
 
     @ModelFieldName("norm")
-    private String norm;
+    private String method;
 
     @ModelFieldName("unit")
     private String unit;
@@ -39,8 +40,7 @@ public class IndicationDto implements IModel {
     @ModelFieldName("laboratory")
     private String laboratory;
 
-    @ModelFieldName("groups")
-    private List<ProductGroup> groups;
-
-
+    @ModelFieldName("isOrganoleptic")
+    @JsonProperty("isOrganoleptic")
+    private boolean isOrganoleptic;
 }

@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.auth.JwtUtil;
 import agh.edu.pl.slpbackend.dto.UserDto;
+import agh.edu.pl.slpbackend.dto.users.ChangePasswordForAdminRequest;
 import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginResponse;
@@ -15,6 +16,8 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -40,7 +43,12 @@ public class UserService extends AbstractService implements UserMapper {
 
     @Override
     public void delete(IModel model) {
-
+        final UserDto userDto = (UserDto) model;
+        User user = userRepository.findByEmail(userDto.getEmail()).orElse(null);
+        if(user == null) {
+            throw new UserNotFoundException();
+        }
+        userRepository.deleteById(user.getId());
     }
 
     public LoginResponse login(LoginRequest request) {
@@ -56,8 +64,8 @@ public class UserService extends AbstractService implements UserMapper {
         return new LoginResponse(userDto, token);
     }
 
-    public void changePassword(ChangePasswordRequest request) {
-        User user = userRepository.findByEmail(request.email())
+    public void changePassword(ChangePasswordRequest request, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.getPassword().equals(request.oldPassword())) {
@@ -66,5 +74,17 @@ public class UserService extends AbstractService implements UserMapper {
 
         user.setPassword(request.newPassword());
         userRepository.save(user);
+    }
+
+    public void changePasswordForAdmin(ChangePasswordRequest request, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        user.setPassword(request.newPassword());
+        userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

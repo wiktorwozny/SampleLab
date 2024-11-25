@@ -27,7 +27,7 @@ public class SampleControllerTest {
         return SampleDto.builder()
                 .code(null)
                 .client(null)
-                .assortment("test")
+                .assortment(null)
                 .admissionDate(LocalDate.now())
                 .expirationComment("test")
                 .examinationExpectedEndDate(LocalDate.now())
@@ -35,7 +35,6 @@ public class SampleControllerTest {
                 .state("test")
                 .analysis(Boolean.TRUE)
                 .inspection(null)
-                .group(null)
                 .samplingStandard(null)
                 .reportData(null)
                 .build();
@@ -45,7 +44,7 @@ public class SampleControllerTest {
     @Test
     public void add() throws Exception {
         final ResponseEntity<Void> response = this.sampleController.add(getSaveExample());
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test

@@ -1,12 +1,12 @@
 import {Column, Inspection} from "../../../utils/types";
 import React, {useContext, useEffect, useState} from "react";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
 import {deleteInspection, getAllInspection} from "../../../helpers/inspectionApi";
 import InspectionDictItem from "./InspectionDictItem";
-import {CancelButton} from "../../ui/StandardButton";
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
+import ConfirmPopup from "../../ui/ConfirmPopup";
 
 
 const columns: Column<Inspection>[] = [
@@ -23,6 +23,10 @@ const InspectionDict = () => {
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
+
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<Inspection | null>(null);
+
     const handleView = (item: Inspection) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -40,27 +44,41 @@ const InspectionDict = () => {
     };
 
     const handleAdd = () => {
-        setSelectedItem(null);  // No item selected since we're adding a new client
+        setSelectedItem(null);
         setOpenModal(true);
         setIsViewMode(false);
         setIsAddMode(true);
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: Inspection) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteInspection(item?.id)
+            let response = await deleteInspection(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
                 getInspections();
                 handleClose();
             }
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            if (err?.response?.status === 409) {
+                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+            } else {
+                setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
+            }
         }
     };
+
+    const confirmDelete = (item: Inspection) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+        setItemToDelete(null);
+    }
 
     const handleClose = () => {
         setOpenModal(false);
@@ -87,10 +105,9 @@ const InspectionDict = () => {
             <h1 className="text-center font-bold text-3xl w-full my-3">Rodzaje kontroli</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
-
+                </StandardButton>
             </div>
 
             <DictionaryTable<Inspection>
@@ -98,7 +115,7 @@ const InspectionDict = () => {
                 data={inspectionList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
@@ -113,6 +130,12 @@ const InspectionDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     )

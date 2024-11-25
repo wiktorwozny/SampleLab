@@ -3,9 +3,10 @@ import {FormProvider, useForm} from "react-hook-form";
 import {AlertContext} from "../../../contexts/AlertsContext";
 import {Indication} from "../../../utils/types";
 import {addIndication, updateIndication} from "../../../helpers/indicationApi";
-import {Button, Modal} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
+import {StandardButton} from "../../ui/StandardButton";
 
 interface IndicationDictItemProps {
     refresh: () => void;
@@ -63,7 +64,7 @@ const IndicationDictItem: React.FC<IndicationDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -78,7 +79,7 @@ const IndicationDictItem: React.FC<IndicationDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -129,17 +130,17 @@ const IndicationDictItem: React.FC<IndicationDictItemProps> = ({
                         />
                         {errors.name && errors.name.message &&
                             <p className="text-red-600">{`${errors.name.message}`}</p>}
-                        <FormLabel>Norma</FormLabel>
+                        <FormLabel>Metoda</FormLabel>
                         <Input type="text" disabled={isView}
-                               placeholder="Norma" {...register("norm", {
+                               placeholder="Norma" {...register("method", {
                             required: {
                                 value: true,
                                 message: "Pole wymagane"
                             }
                         })}
                         />
-                        {errors.norm && errors.norm.message &&
-                            <p className="text-red-600">{`${errors.norm.message}`}</p>}
+                        {errors.method && errors.method.message &&
+                            <p className="text-red-600">{`${errors.method.message}`}</p>}
 
                         <FormLabel>Jednostka</FormLabel>
                         <Input
@@ -178,13 +179,16 @@ const IndicationDictItem: React.FC<IndicationDictItemProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
-                            <Button type={"submit"} variant="primary">
+                            <StandardButton type={"submit"}
+                                            className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                                 Zapisz
-                            </Button>
+                            </StandardButton>
                         )}
-                        <Button variant="secondary" onClick={handleCancel}>
+                        <StandardButton type={"reset"}
+                                        className="bg-gray-600 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                                        onClick={handleCancel}>
                             Anuluj
-                        </Button>
+                        </StandardButton>
                     </Modal.Footer>
                 </form>
             </FormProvider>

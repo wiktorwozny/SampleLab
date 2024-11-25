@@ -3,10 +3,10 @@ import {deleteClient, getAllClients} from "../../../helpers/clientApi";
 import {Address, Client, Column} from "../../../utils/types";
 import DictionaryTable from "../../ui/DictionaryTable";
 import ClientDictItem from "./ClientDictItem";
-import {Button} from "react-bootstrap";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {CancelButton} from "../../ui/StandardButton";
-import {useNavigate} from 'react-router-dom'; // Import useNavigate
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
+import {useNavigate} from 'react-router-dom';
+import ConfirmPopup from "../../ui/ConfirmPopup"; // Import useNavigate
 
 const formatAddress = (address: number | string | Address): string => {
     if (typeof address === 'object' && address !== null && 'street' in address && 'zipCode' in address && 'city' in address) {
@@ -34,6 +34,8 @@ const ClientDict = () => {
     const [isViewMode, setIsViewMode] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<Client | null>(null);
 
     const navigate = useNavigate(); // Use the useNavigate hook
 
@@ -54,27 +56,41 @@ const ClientDict = () => {
     };
 
     const handleAdd = () => {
-        setSelectedItem(null);  // No item selected since we're adding a new client
+        setSelectedItem(null);
         setOpenModal(true);
         setIsViewMode(false);
         setIsAddMode(true);
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: Client) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteClient(item?.id)
+            let response = await deleteClient(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
                 getClients();
                 handleClose();
             }
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            if (err?.response?.status === 409) {
+                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+            } else {
+                setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
+            }
         }
     };
+
+    const confirmDelete = (item: Client) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+        setItemToDelete(null);
+    }
 
     const handleClose = () => {
         setOpenModal(false);
@@ -101,9 +117,9 @@ const ClientDict = () => {
             <h1 className="text-center font-bold text-3xl w-full my-3">Klienci</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
+                </StandardButton>
             </div>
 
             <DictionaryTable<Client>
@@ -111,13 +127,14 @@ const ClientDict = () => {
                 data={clientsList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
                 className='mt-3'
                 onClick={() => navigate(-1)} // Go back to the previous screen
             >Powrót</CancelButton>
+
             <ClientDictItem
                 refresh={getClients}
                 show={openModal}
@@ -126,6 +143,12 @@ const ClientDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     );

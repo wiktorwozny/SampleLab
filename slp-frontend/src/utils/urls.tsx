@@ -1,4 +1,4 @@
-export const backendUrl:string="http://localhost:8080/";
+export const backendUrl:string=process.env.BE_URL || "http://localhost:8080/";
 
 export const Header = () => {
     const token = localStorage.getItem("token")? localStorage.getItem("token"):"";

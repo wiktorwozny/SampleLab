@@ -2,10 +2,11 @@ import React, {useContext, useEffect} from "react";
 import {SamplingStandards} from "../../../utils/types";
 import {FormProvider, useForm} from "react-hook-form";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {Button, Modal} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
 import {addSamplingStandard, updateSamplingStandard} from "../../../helpers/samplingStandardApi";
+import {StandardButton} from "../../ui/StandardButton";
 
 interface SamplingStandardDictItemProps {
     refresh: () => void;
@@ -58,7 +59,7 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -73,7 +74,7 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -115,7 +116,7 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
                         </div>
                         <FormLabel>Standard próbki</FormLabel>
                         <Input type="text" disabled={isView}
-                               placeholder="Standard próbki" {...register("name", {
+                               placeholder="Norma pobrania próbki" {...register("name", {
                             required: {
                                 value: true,
                                 message: "Pole wymagane"
@@ -127,13 +128,16 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
-                            <Button type={"submit"} variant="primary">
+                            <StandardButton type={"submit"}
+                                            className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                                 Zapisz
-                            </Button>
+                            </StandardButton>
                         )}
-                        <Button variant="secondary" onClick={handleCancel}>
+                        <StandardButton type={"reset"}
+                                        className="bg-gray-600 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                                        onClick={handleCancel}>
                             Anuluj
-                        </Button>
+                        </StandardButton>
                     </Modal.Footer>
                 </form>
             </FormProvider>

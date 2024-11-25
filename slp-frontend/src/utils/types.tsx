@@ -31,13 +31,14 @@ export type SamplingStandards = {
     name: string,
     groups: ProductGroup[]
 }
+
 export type Indication = {
     id: number,
     name: string,
-    norm: string,
+    method: string,
     unit: string,
     laboratory: string,
-    // groups: ProductGroup []
+    isOrganoleptic: boolean
 }
 
 export type Examination = {
@@ -61,15 +62,30 @@ export type Examination = {
 export type ProductGroup = {
     id: number,
     name: string,
-    indications?: Indication[],
-    samplingStandards?: SamplingStandards[]
+    samplingStandards?: SamplingStandards[],
+    assortments?: Assortment[]
+}
+
+export type Assortment = {
+    id: number,
+    name: string,
+    group: ProductGroup,
+    indications: Indication[],
+    organolepticMethod: string
 }
 
 export type ProductGroupSave = {
     id: number,
     name: string,
-    indications?: number[],
     samplingStandards?: number[]
+}
+
+export type AssortmentSave = {
+    id: number,
+    name: string,
+    group: number,
+    indications: number[],
+    organolepticMethod: string
 }
 
 export type ReportData = {
@@ -87,11 +103,14 @@ export type ReportData = {
     batchNumber: number,
     batchSizeProd: string,
     batchSizeStorehouse: string,
+    sampleCollector: string,
     samplePacking: string,
     sampleCollectionSite: string,
     jobNumber: number,
     mechanism: string,
     deliveryMethod: string,
+    collectionDate: Date,
+    protocolNumber: string,
     sampleId: number
 }
 
@@ -99,7 +118,7 @@ export type Sample = {
     id: number,
     code: Code,
     client: Client,
-    assortment: string,
+    assortment: Assortment,
     admissionDate: Date,
     expirationDate: Date,
     expirationComment: string,
@@ -108,7 +127,6 @@ export type Sample = {
     state: string,
     analysis: boolean,
     inspection: Inspection,
-    group: ProductGroup,
     samplingStandard: SamplingStandards,
     reportData: ReportData
     progressStatus: ProgressStateEnum
@@ -120,6 +138,7 @@ export type FilterRequest = {
     pageNumber: number,
     pageSize: number,
     filters: FiltersData
+    fuzzySearch: string;
 }
 
 export type ProgressState = {
@@ -175,4 +194,15 @@ export interface Column<T> {
     header: string;
     accessor: keyof T | string;
     render?: (value: T[keyof T]) => ReactNode;
+}
+
+export type ChangePasswordPayload = {
+    oldPassword: String, 
+    newPassword: String
+}
+
+export type User = {
+    email: String,
+    name: String,
+    role: RoleEnum
 }

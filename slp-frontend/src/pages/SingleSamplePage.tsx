@@ -1,16 +1,23 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {getSampleById} from "../helpers/sampleApi";
+import {deleteSample, getSampleById} from "../helpers/sampleApi";
 import {Sample} from "../utils/types";
 import {Div} from "../components/ui/Div";
-import {DisableButton, StandardButton} from "../components/ui/StandardButton";
+import {StandardButton} from "../components/ui/StandardButton";
 import {generateReportForSample} from "../helpers/generateReportApi";
 import {ProgressStateEnum} from "../utils/enums";
-import { checkResponse } from "../utils/checkResponse";
+import ConfirmPopup from "../components/ui/ConfirmPopup";
+import {AlertContext} from "../contexts/AlertsContext";
+import {checkResponse} from "../utils/checkResponse";
+import {Dropdown} from "react-bootstrap";
+import Title from "../components/ui/Title";
+import {useAppContext} from "../contexts/AppContext";
 
 const SingleSamplePage = () => {
     let {sampleId} = useParams();
     const [sample, setSample] = useState<Sample>();
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const {setAlertDetails} = useContext(AlertContext);
 
     const navigate = useNavigate()
 
@@ -30,9 +37,16 @@ const SingleSamplePage = () => {
         getSample()
     }, [sampleId])
 
-    const generateReport = async (sampleId: number) => {
+    const {isLoadingOverlayVisible, toggleVisibility} = useAppContext();
+
+    const generateReport = async (sampleId: number, reportType: string) => {
+        if (isLoadingOverlayVisible) {
+            return
+        }
+        toggleVisibility();
+
         try {
-            let response = await generateReportForSample(sampleId);
+            let response = await generateReportForSample(sampleId, reportType);
             console.log(response);
 
             if (response != null) {
@@ -46,19 +60,37 @@ const SingleSamplePage = () => {
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            toggleVisibility();
         }
     }
 
+    const deleteSampleFunction = async () => {
+        if (sampleId === undefined) {
+            setAlertDetails({type: "error", isAlert: true, message: "Wystąpił błąd"})
+            navigate('/')
+            setIsPopupOpen(false)
+            return
+        }
+        try {
+            let response = await deleteSample(sampleId)
+            console.log(response)
+            if (response.status === 200) {
+                setAlertDetails({type: "success", isAlert: true, message: "Udało ci się usunąć próbkę"})
+                navigate('/')
+            }
+        } catch (err: any) {
+            console.log(err)
+            setAlertDetails({type: "error", isAlert: true, message: "Nie udało ci się usunąć próbki"})
+        }
+        setIsPopupOpen(false)
+    }
+
     return (<div className="flex flex-col justify-center items-center w-full">
-        <h2 className="text-2xl text-center font-bold my-3">Widok szczegółowy próbki</h2>
+        <Title message={'Widok szczegółowy próbki'}/>
         <Div className="text-start">
             <span className="font-bold">Data przyjęcia: </span>
             {`${sample?.admissionDate}`}
-        </Div>
-
-        <Div className="text-start">
-            <span className="font-bold">Analiza odwoławcza: </span>
-            {sample?.analysis === true ? "Tak" : "Nie"}
         </Div>
 
         <Div className="flex justify-between">
@@ -72,8 +104,18 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
+            <span className="font-bold">Grupa: </span>
+            {`${sample?.assortment.group.name}`}
+        </Div>
+
+        <Div className="text-start">
             <span className="font-bold">Asortyment: </span>
-            {`${sample?.assortment}`}
+            {`${sample?.assortment.name}`}
+        </Div>
+
+        <Div className="text-start">
+            <span className="font-bold">Norma pobrania próbki: </span>
+            {`${sample?.samplingStandard?.name}`}
         </Div>
 
         <Div className="text-start">
@@ -87,18 +129,8 @@ const SingleSamplePage = () => {
         </Div>
 
         <Div className="text-start">
-            <span className="font-bold">Grupa: </span>
-            {`${sample?.group.name}`}
-        </Div>
-
-        <Div className="text-start">
             <span className="font-bold">Kontrola: </span>
             {`${sample?.inspection?.name}`}
-        </Div>
-
-        <Div className="text-start">
-            <span className="font-bold">Norma pobrania próbki: </span>
-            {`${sample?.samplingStandard?.name}`}
         </Div>
 
         <Div className="text-start">
@@ -111,18 +143,53 @@ const SingleSamplePage = () => {
             {`${sample?.state}`}
         </Div>
 
-        <div className="flex justify-between w-3/4 p-3">
+        <Div className="text-start">
+            <span className="font-bold">Analiza odwoławcza: </span>
+            {sample?.analysis === true ? "Tak" : "Nie"}
+        </Div>
+
+        <div className="flex justify-center w-3/4 p-3 gap-2">
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/addReportData/${sampleId}`)
             }}>Dodaj dodatkowe informacje</StandardButton>
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
-            <StandardButton type="button" onClick={(e) => {
-                e.stopPropagation();
-                generateReport(Number(sampleId));
-            }}>Generuj raport</StandardButton>
+            <StandardButton type="button" onClick={() => {
+                navigate(`/sample/edit/${sampleId}`)
+            }}>Edytuj próbkę</StandardButton>
+            <Dropdown>
+                <Dropdown.Toggle
+                    disabled={sample?.progressStatus !== ProgressStateEnum.DONE}
+                    variant="primary"
+                    id="dropdown-basic"
+                    className="p-2 rounded self-center text-white border-0"
+                    style={{
+                        backgroundColor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(229, 231, 235)' : 'rgb(14, 165, 233)',  // Grey when disabled, blue otherwise
+                        color: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(107, 114, 128)' : 'white',
+                        cursor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'not-allowed' : 'pointer',
+                        pointerEvents: sample?.progressStatus !== ProgressStateEnum.DONE ? 'none' : 'auto'
+                    }}
+                >
+                    Generuj raport
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F4")}>Raport F-4</Dropdown.Item>
+                    <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F5")}>Raport F-5</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+            <StandardButton type="button" className="!bg-red-500 hover:!bg-red-600" onClick={() => {
+                setIsPopupOpen(true);
+            }}>Usuń próbkę</StandardButton>
         </div>
+
+        <ConfirmPopup
+            onConfirm={deleteSampleFunction}
+            show={isPopupOpen}
+            handleClose={() => setIsPopupOpen(false)}
+            message="Czy na pewno chcesz usunąć próbkę wraz z wykonanymi badaniami?"
+        />
     </div>)
 }
 

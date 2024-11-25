@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder(toBuilder = true)
-@Table(name = "product_group")
 public class ProductGroup implements Serializable {
     @Serial
     private static final long serialVersionUID = -6720720397053849550L;
@@ -28,12 +27,9 @@ public class ProductGroup implements Serializable {
     private String name;
 
     @ManyToMany
-    @JoinTable(name = "group_indication")
-    @JsonIgnore
-    private List<Indication> indications;
-
-    @ManyToMany
-    @JoinTable(name = "group_sampling_standard")
     @JsonIgnore
     private List<SamplingStandard> samplingStandards;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "group")
+    private List<Assortment> assortments;
 }

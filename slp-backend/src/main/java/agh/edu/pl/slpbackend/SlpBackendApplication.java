@@ -10,12 +10,17 @@ public class SlpBackendApplication {
         loadEnvVariables();
         SpringApplication.run(SlpBackendApplication.class, args);
     }
+
     private static void loadEnvVariables() {
-        Dotenv dotenv = Dotenv.configure().load();
-        System.getenv().forEach((k, v) -> {
-            if (dotenv.get(k) != null) {
-                System.setProperty(k, dotenv.get(k));
-            }
-        });
+        try{
+            Dotenv dotenv = Dotenv.configure().load();
+            System.getenv().forEach((k, v) -> {
+                if (dotenv.get(k) != null) {
+                    System.setProperty(k, dotenv.get(k));
+                }
+            });
+        } catch (Exception e) {
+            System.out.println(".env file not found, continuing without it.");
+        }
     }
 }

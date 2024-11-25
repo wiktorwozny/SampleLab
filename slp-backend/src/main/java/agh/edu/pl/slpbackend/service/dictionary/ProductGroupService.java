@@ -1,18 +1,18 @@
 package agh.edu.pl.slpbackend.service.dictionary;
 
-import agh.edu.pl.slpbackend.dto.ProductGroupDto;
-import agh.edu.pl.slpbackend.dto.ProductGroupSaveDto;
+import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupDto;
+import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupSaveDto;
+import agh.edu.pl.slpbackend.exception.DataDependencyException;
 import agh.edu.pl.slpbackend.mapper.ProductGroupMapper;
-import agh.edu.pl.slpbackend.model.Indication;
 import agh.edu.pl.slpbackend.model.ProductGroup;
 import agh.edu.pl.slpbackend.model.SamplingStandard;
-import agh.edu.pl.slpbackend.repository.IndicationRepository;
 import agh.edu.pl.slpbackend.repository.ProductGroupRepository;
 import agh.edu.pl.slpbackend.repository.SamplingStandardRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class ProductGroupService extends AbstractService implements ProductGroupMapper {
 
     private final ProductGroupRepository productGroupRepository;
-    private final IndicationRepository indicationRepository;
     private final SamplingStandardRepository samplingStandardRepository;
 
     public List<ProductGroupDto> selectAll() {
@@ -48,7 +47,11 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     @Override
     public void delete(IModel model) {
         final ProductGroupDto dto = (ProductGroupDto) model;
-        productGroupRepository.deleteById(dto.getId());
+        try {
+            productGroupRepository.deleteById(dto.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DataDependencyException();
+        }
     }
 
     private ProductGroupDto createObjectToSave(ProductGroupSaveDto dto) {
@@ -56,21 +59,12 @@ public class ProductGroupService extends AbstractService implements ProductGroup
         dtoToSave.setId(dto.getId());
         dtoToSave.setName(dto.getName());
 
-        final List<Indication> indicationList = new ArrayList<>();
-        dto.getIndications().forEach(indicationId -> createIndicationListToSave(indicationId, indicationList));
-
         final List<SamplingStandard> samplingStandardList = new ArrayList<>();
         dto.getSamplingStandards().forEach(samplingStandardId -> createSampleStandardListToSave(samplingStandardId, samplingStandardList));
 
-        dtoToSave.setIndications(indicationList);
         dtoToSave.setSamplingStandards(samplingStandardList);
 
         return dtoToSave;
-    }
-
-    private void createIndicationListToSave(final Long id, final List<Indication> indicationList) {
-        final Indication indication = indicationRepository.findById(id).orElseThrow();
-        indicationList.add(indication);
     }
 
     private void createSampleStandardListToSave(final Long id, final List<SamplingStandard> samplingStandardList) {

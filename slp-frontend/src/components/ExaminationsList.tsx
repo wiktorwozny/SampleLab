@@ -6,7 +6,9 @@ import {getIndicationsForSample} from "../helpers/indicationApi";
 import {deleteExamination, getExaminationsForSample} from "../helpers/examinationApi";
 import {CancelButton, StandardButton} from "./ui/StandardButton";
 import {generateKzwaForSample} from "../helpers/generateReportApi";
-import { checkResponse } from "../utils/checkResponse";
+import {checkResponse} from "../utils/checkResponse";
+import {useAppContext} from "../contexts/AppContext";
+
 const ExaminationsList: FC<{}> = () => {
 
     const {sampleId} = useParams();
@@ -16,6 +18,7 @@ const ExaminationsList: FC<{}> = () => {
     const [examinations, setExaminations] = useState<Examination[]>([]);
     const [checkedStates, setCheckedStates] = useState<Record<number, Examination>>({});
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [hasOrganoleptic, setHasOrganoleptic] = useState<boolean>(false);
 
     useEffect(() => {
         const getIndicationsAndExaminations = async () => {
@@ -29,6 +32,8 @@ const ExaminationsList: FC<{}> = () => {
 
                 if (indicationsResponse?.status === 200) {
                     setIndications(indicationsResponse.data ?? []);
+                    const hasOrganoleptic = indicationsResponse.data.some((indication: Indication) => indication.isOrganoleptic);
+                    setHasOrganoleptic(hasOrganoleptic);
                 }
 
                 if (examinationsResponse?.status === 200) {
@@ -69,7 +74,13 @@ const ExaminationsList: FC<{}> = () => {
         }
     }
 
+    const {isLoadingOverlayVisible, toggleVisibility} = useAppContext();
+
     const generateKzwa = async (sampleId: number) => {
+        if (isLoadingOverlayVisible) {
+            return;
+        }
+        toggleVisibility();
         try {
             let response = await generateKzwaForSample(sampleId);
             console.log(response);
@@ -85,6 +96,8 @@ const ExaminationsList: FC<{}> = () => {
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            toggleVisibility();
         }
     }
 
@@ -119,23 +132,46 @@ const ExaminationsList: FC<{}> = () => {
                 <h1 className="text-center font-bold text-2xl w-full my-2">dla próbki nr: {sampleId}</h1>
             </div>
             {!isLoading && indications.map(indication => (
-                <Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
-                    <div>
-                        <input
-                            id="link-checkbox"
-                            type="checkbox"
-                            checked={checkedStates[indication.id] !== undefined}
-                            onChange={() => handleCheckboxChange(indication.id, checkedStates[indication.id]?.id)}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
-                        <span className="font-bold ml-2">{indication.name}</span>
-                    </div>
-                    {checkedStates[indication.id] && (
-                        <StandardButton type="button" onClick={() => {
-                            const examination = checkedStates[indication.id];
-                            handleNavigation(sampleId, examination.id, indication.id);
-                        }}>Wprowadź wyniki badań</StandardButton>
-                    )}
-                </Div>
+                (!indication.isOrganoleptic && (
+                    <Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
+                        <div className="flex items-center">
+                            <input
+                                id="link-checkbox"
+                                type="checkbox"
+                                checked={checkedStates[indication.id] !== undefined}
+                                onChange={() => handleCheckboxChange(indication.id, checkedStates[indication.id]?.id)}
+                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
+                            <span className="font-bold ml-2">{indication.name}</span>
+                            <span className="ml-2">{indication.method}</span>
+                        </div>
+                        {checkedStates[indication.id] && (
+                            <StandardButton type="button" onClick={() => {
+                                const examination = checkedStates[indication.id];
+                                handleNavigation(sampleId, examination.id, indication.id);
+                            }}>Edytuj</StandardButton>
+                        )}
+                    </Div>))
+            ))}
+            {hasOrganoleptic && <h1 className="font-bold text-xl w-full my-2">Cechy organoleptyczne</h1>}
+            {!isLoading && indications.map(indication => (
+                (indication.isOrganoleptic && (
+                    <Div key={indication.id} className="flex justify-between hover:bg-slate-100 cursor-default">
+                        <div className="flex items-center">
+                            <input
+                                id="link-checkbox"
+                                type="checkbox"
+                                checked={checkedStates[indication.id] !== undefined}
+                                onChange={() => handleCheckboxChange(indication.id, checkedStates[indication.id]?.id)}
+                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
+                            <span className="font-bold ml-2">{indication.name}</span>
+                        </div>
+                        {checkedStates[indication.id] && (
+                            <StandardButton type="button" onClick={() => {
+                                const examination = checkedStates[indication.id];
+                                handleNavigation(sampleId, examination.id, indication.id);
+                            }}>Edytuj</StandardButton>
+                        )}
+                    </Div>))
             ))}
             <StandardButton type='button' className='mt-3' onClick={
                 (e) => {
@@ -144,7 +180,7 @@ const ExaminationsList: FC<{}> = () => {
                 }
             }>Generuj KZWA</StandardButton>
             <CancelButton type='button' className='mt-3'
-                            onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</CancelButton>
+                          onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</CancelButton>
         </div>
     );
 }

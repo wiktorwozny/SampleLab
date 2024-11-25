@@ -9,9 +9,10 @@ public interface IndicationMapper {
         return IndicationDto.builder()
                 .id(model.getId())
                 .name(model.getName())
-                .norm(model.getNorm())
+                .method(model.getMethod())
                 .unit(model.getUnit())
                 .laboratory(model.getLaboratory())
+                .isOrganoleptic(model.isOrganoleptic())
                 .build();
     }
 
@@ -19,9 +20,10 @@ public interface IndicationMapper {
         return Indication.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .norm(dto.getNorm())
+                .method(dto.getMethod())
                 .unit(dto.getUnit())
                 .laboratory(dto.getLaboratory())
+                .isOrganoleptic(dto.isOrganoleptic())
                 .build();
     }
 }

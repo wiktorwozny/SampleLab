@@ -3,9 +3,10 @@ import {Code} from "../../../utils/types";
 import {FormProvider, useForm} from "react-hook-form";
 import {AlertContext} from "../../../contexts/AlertsContext";
 import {addCode, updateCode} from "../../../helpers/codeApi";
-import {Button, Modal} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
+import {StandardButton} from "../../ui/StandardButton";
 
 interface CodeDictItemProps {
     refresh: () => void;
@@ -58,7 +59,7 @@ const CodeDictItem: React.FC<CodeDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -73,7 +74,7 @@ const CodeDictItem: React.FC<CodeDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
@@ -128,13 +129,16 @@ const CodeDictItem: React.FC<CodeDictItemProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
-                            <Button type={"submit"} variant="primary">
+                            <StandardButton type={"submit"}
+                                            className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                                 Zapisz
-                            </Button>
+                            </StandardButton>
                         )}
-                        <Button variant="secondary" onClick={handleCancel}>
+                        <StandardButton type={"button"}
+                                        className="bg-gray-600 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                                        onClick={handleCancel}>
                             Anuluj
-                        </Button>
+                        </StandardButton>
                     </Modal.Footer>
                 </form>
             </FormProvider>

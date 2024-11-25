@@ -1,14 +1,13 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Indication, ProductGroup, SamplingStandards} from "../../../utils/types";
+import {ProductGroup, SamplingStandards} from "../../../utils/types";
 import {FormProvider, useForm} from "react-hook-form";
 import {AlertContext} from "../../../contexts/AlertsContext";
 import {Button, Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
-import {getAllIndications} from "../../../helpers/indicationApi";
-import {addGroup, updateGroup} from "../../../helpers/groupApi";
 import {getAllSamplingStandard} from "../../../helpers/samplingStandardApi";
-import {ModalSelection} from "../../ui/ModalSelection"; // Import modal component
+import {ModalSelection} from "../../ui/ModalSelection";
+import {addGroup, updateGroup} from "../../../helpers/groupApi"; // Import modal component
 
 interface ProductGroupDictItemProps {
     refresh: () => void;
@@ -29,31 +28,24 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                                                                        isAdd,
                                                                        isEdit,
                                                                    }) => {
-    const [indicationsList, setIndicationsList] = useState<Indication[]>([]);
-    const [samplingStandardsList, setSamplingStandardsList] = useState<SamplingStandards[]>([]);
 
     const method = useForm();
     const {reset, handleSubmit, register, formState: {errors}} = method
     const {setAlertDetails} = useContext(AlertContext);
 
+    const [samplingStandardsList, setSamplingStandardsList] = useState<SamplingStandards[]>([]);
 
-    const [selectedIndications, setSelectedIndications] = useState<number[]>(item?.indications?.map(i => i.id) || []);
     const [selectedSamplingStandards, setSelectedSamplingStandards] = useState<number[]>(item?.samplingStandards?.map(s => s.id) || []);
 
-    // Local lists to display selected items
-    const [selectedIndicationsList, setSelectedIndicationsList] = useState<Indication[]>(item?.indications || []);
     const [selectedSamplingStandardsList, setSelectedSamplingStandardsList] = useState<SamplingStandards[]>(item?.samplingStandards || []);
 
-    const [showIndicationsModal, setShowIndicationsModal] = useState(false);
     const [showSamplingStandardsModal, setShowSamplingStandardsModal] = useState(false);
 
 
     useEffect(() => {
         if (item !== null) {
             reset(item);
-            setSelectedIndications(item?.indications?.map(i => i.id) || []);
             setSelectedSamplingStandards(item?.samplingStandards?.map(s => s.id) || []);
-            setSelectedIndicationsList(item?.indications || []);
             setSelectedSamplingStandardsList(item?.samplingStandards || []);
         } else {
             resetForm();
@@ -62,14 +54,11 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
 
     const resetForm = () => {
         reset({id: '', name: ''});
-        setSelectedIndications([]);
         setSelectedSamplingStandards([]);
-        setSelectedIndicationsList([]);
         setSelectedSamplingStandardsList([]);
     };
 
     const handleEdit = (formData: any) => {
-        formData.indications = selectedIndications;
         formData.samplingStandards = selectedSamplingStandards;
         console.log()
         try {
@@ -82,14 +71,13 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
 
     const handleAdd = (formData: any) => {
-        formData.indications = selectedIndications;
         formData.samplingStandards = selectedSamplingStandards;
-
+        console.log(formData)
 
         try {
             addGroup(formData).then((response) => {
@@ -101,16 +89,8 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
             })
         } catch (err) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
-    };
-
-    const getIndications = () => {
-        getAllIndications().then((res) => {
-            if (res.status === 200) {
-                setIndicationsList(res.data);
-            }
-        })
     };
 
     const getSamplingStandards = () => {
@@ -122,7 +102,6 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
     };
 
     useEffect(() => {
-        getIndications();
         getSamplingStandards();
     }, []);
 
@@ -140,11 +119,6 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
         resetForm();
     };
 
-    const handleSaveIndications = (selected: number[]) => {
-        setSelectedIndications(selected);
-        const selectedIndicationsData = indicationsList.filter(indication => selected.includes(indication.id));
-        setSelectedIndicationsList(selectedIndicationsData);  // Update local list for display
-    };
 
     const handleSaveSamplingStandards = (selected: number[]) => {
         setSelectedSamplingStandards(selected);
@@ -190,9 +164,6 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                         {/* Buttons to open modal selection */}
                         {!isView && (
                             <div className="flex space-x-4 mt-4">
-                                <Button variant="primary" onClick={() => setShowIndicationsModal(true)}>
-                                    Wybierz oznaczenia
-                                </Button>
                                 <Button variant="primary" onClick={() => setShowSamplingStandardsModal(true)}>
                                     Wybierz normy pobrania
                                 </Button>
@@ -200,27 +171,6 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                         )}
 
                         <>
-                            <h5 className="mt-6 mb-2 text-lg font-semibold">Oznaczenia</h5>
-                            <div className="max-h-96 overflow-y-auto">
-                                <table className="min-w-full table-auto border-collapse border border-gray-300">
-                                    <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="p-2 border border-gray-300 text-left">Nazwa</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {selectedIndicationsList?.map((option, index) => (
-                                        <tr
-                                            key={option.id}
-                                            className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-                                        >
-                                            <td className="p-2 border border-gray-300">{option.name}</td>
-                                        </tr>
-                                    ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
                             <h5 className="mt-6 mb-2 text-lg font-semibold">Normy pobrania</h5>
                             <div className="max-h-96 overflow-y-auto">
                                 <table className="min-w-full table-auto border-collapse border border-gray-300">
@@ -256,15 +206,6 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                     </Modal.Footer>
                 </form>
             </FormProvider>
-
-            <ModalSelection
-                title="Wybierz Indikacje"
-                options={indicationsList}
-                selectedOptions={selectedIndications}
-                show={showIndicationsModal}
-                handleClose={() => setShowIndicationsModal(false)}
-                handleSave={handleSaveIndications}
-            />
 
             {/* Modal for selecting Sampling Standards */}
             <ModalSelection

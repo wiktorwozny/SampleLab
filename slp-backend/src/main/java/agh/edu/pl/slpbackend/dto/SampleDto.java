@@ -5,6 +5,7 @@ import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class SampleDto implements IModel, Serializable {
     private Client client;
 
     @ModelFieldName("assortment")
-    private String assortment;
+    private Assortment assortment;
 
     @ModelFieldName("admissionDate")
     private LocalDate admissionDate;
@@ -64,10 +65,8 @@ public class SampleDto implements IModel, Serializable {
     @ModelFieldName("inspection")
     private Inspection inspection;
 
-    @ModelFieldName("group")
-    private ProductGroup group;
-
     @ModelFieldName("samplingStandard")
+    @JsonIgnoreProperties("groups")
     private SamplingStandard samplingStandard;
 
     @ModelFieldName("reportData")

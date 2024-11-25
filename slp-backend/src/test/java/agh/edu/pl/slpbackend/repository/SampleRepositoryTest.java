@@ -19,13 +19,12 @@ public class SampleRepositoryTest {
     @Autowired
     private SampleRepository sampleRepository;
 
-
     private Sample getSaveExample() {
         //@formatter:off
         return Sample.builder()
                 .code(null)
                 .client(null)
-                .assortment("test")
+                .assortment(null)
                 .admissionDate(LocalDate.now())
                 .expirationComment("test")
                 .examinationExpectedEndDate(LocalDate.now())
@@ -33,18 +32,12 @@ public class SampleRepositoryTest {
                 .state("test")
                 .analysis(Boolean.TRUE)
                 .inspection(null)
-                .group(null)
                 .samplingStandard(null)
                 .reportData(null)
                 .build();
         //@formatter:on
     }
 
-    @Test
-    public void insert() {
-
-
-    }
 
     @Test
     public void findAll() {
@@ -63,4 +56,5 @@ public class SampleRepositoryTest {
         assertEquals(count1 + 1, count2);
 
     }
+
 }

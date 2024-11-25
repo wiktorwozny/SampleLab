@@ -1,6 +1,6 @@
 package agh.edu.pl.slpbackend.mapper;
 
-import agh.edu.pl.slpbackend.dto.ProductGroupDto;
+import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupDto;
 import agh.edu.pl.slpbackend.model.ProductGroup;
 
 public interface ProductGroupMapper {
@@ -9,8 +9,8 @@ public interface ProductGroupMapper {
         return ProductGroupDto.builder()
                 .id(model.getId())
                 .name(model.getName())
-                .indications(model.getIndications())
                 .samplingStandards(model.getSamplingStandards())
+                .assortments(model.getAssortments())
                 .build();
     }
 
@@ -18,8 +18,8 @@ public interface ProductGroupMapper {
         return ProductGroup.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .indications(dto.getIndications())
                 .samplingStandards(dto.getSamplingStandards())
+                .assortments(dto.getAssortments())
                 .build();
     }
 }

@@ -1,12 +1,12 @@
 import {Column, SamplingStandards} from "../../../utils/types";
 import React, {useContext, useEffect, useState} from "react";
 import {AlertContext} from "../../../contexts/AlertsContext";
-import {Button} from "react-bootstrap";
 import DictionaryTable from "../../ui/DictionaryTable";
 import {deleteSamplingStandard, getAllSamplingStandard} from "../../../helpers/samplingStandardApi";
 import SamplingStandardDictItem from "./SamplingStandardDictItem";
-import {CancelButton} from "../../ui/StandardButton";
+import {CancelButton, StandardButton} from "../../ui/StandardButton";
 import {useNavigate} from "react-router-dom";
+import ConfirmPopup from "../../ui/ConfirmPopup";
 
 
 const columns: Column<SamplingStandards>[] = [
@@ -23,6 +23,9 @@ const SamplingStandardDict = () => {
     const [isAddMode, setIsAddMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const navigate = useNavigate();
+    const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<SamplingStandards | null>(null);
+
     const handleView = (item: SamplingStandards) => {
         setSelectedItem(copyObject(item));
         setOpenModal(true);
@@ -47,20 +50,34 @@ const SamplingStandardDict = () => {
         setIsEditMode(false);
     };
 
-    const handleDelete = async (item: SamplingStandards) => {
+    const handleDelete = async () => {
         try {
-            let response = await deleteSamplingStandard(item?.id)
+            let response = await deleteSamplingStandard(itemToDelete!.id)
             console.log(response)
             if (response.status === 201 || response.status === 200) {
                 setAlertDetails({isAlert: true, message: "Usunięto definicję", type: "success"})
                 getSamplingStandards();
                 handleClose();
             }
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
-            setAlertDetails({isAlert: true, message: "Wystąpił bład spróbuj ponownie później", type: "error"})
+            if (err?.response?.status === 409) {
+                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+            } else {
+                setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
+            }
         }
     };
+
+    const confirmDelete = (item: SamplingStandards) => {
+        setItemToDelete(item);
+        setOpenConfirmPopup(true);
+    };
+
+    const handleCloseConfirmPopup = () => {
+        setOpenConfirmPopup(false);
+        setItemToDelete(null);
+    }
 
     const handleClose = () => {
         setOpenModal(false);
@@ -84,13 +101,12 @@ const SamplingStandardDict = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center font-bold text-3xl w-full my-3">Standardy póbek</h1>
+            <h1 className="text-center font-bold text-3xl w-full my-3">Normy pobrania próbki</h1>
 
             <div className="w-full justify-content-between flex mb-2">
-                <Button className="self-center h-10 ml-2" variant="primary" onClick={handleAdd}>
+                <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
-                </Button>
-
+                </StandardButton>
             </div>
 
             <DictionaryTable<SamplingStandards>
@@ -98,7 +114,7 @@ const SamplingStandardDict = () => {
                 data={samplingStandardsList}
                 onView={handleView}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={confirmDelete}
             />
             <CancelButton
                 type='button'
@@ -113,6 +129,12 @@ const SamplingStandardDict = () => {
                 isView={isViewMode}
                 isAdd={isAddMode}
                 isEdit={isEditMode}
+            />
+
+            <ConfirmPopup
+                onConfirm={handleDelete}
+                show={openConfirmPopup}
+                handleClose={handleCloseConfirmPopup}
             />
         </div>
     )

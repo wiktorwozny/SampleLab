@@ -28,12 +28,15 @@ type ReportDataFormFields = {
     productionDate: Date,
     batchNumber: number,
     batchSizeProd: string,
+    sampleCollector: string,
     batchSizeStorehouse: string,
     samplePacking: string,
     sampleCollectionSite: string,
     jobNumber: number,
     mechanism: string,
-    deliveryMethod: string
+    deliveryMethod: string,
+    collectionDate: Date,
+    protocolNumber: string
 }
 
 const ReportDataForm: FC<{}> = ({}) => {
@@ -114,10 +117,13 @@ const ReportDataForm: FC<{}> = ({}) => {
         'batchSizeProd',
         'batchSizeStorehouse',
         'samplePacking',
+        'sampleCollector',
         'sampleCollectionSite',
         'jobNumber',
         'mechanism',
-        'deliveryMethod'
+        'deliveryMethod',
+        'collectionDate',
+        'protocolNumber'
     ]
 
     interface Country {
@@ -177,7 +183,7 @@ const ReportDataForm: FC<{}> = ({}) => {
 
     return (<div className='flex flex-col justify-center items-center w-full'>
         <h2 className="text-center font-bold mt-10 text-2xl">Dodawanie dodatkowych informacji</h2>
-        <h3 className="text-center font-bold my-3 text-2xl">dla próbki numer {sampleId}: {sample?.assortment}</h3>
+        <h3 className="text-center font-bold my-3 text-2xl">dla próbki numer {sampleId}: {sample?.assortment.name}</h3>
         <FormProvider {...method}>
             <form className="w-100 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
 
@@ -390,6 +396,26 @@ const ReportDataForm: FC<{}> = ({}) => {
                         </div>
 
                         <div className='w-5/12 flex flex-col'>
+                            <FormLabel>Data pobrania próbki</FormLabel>
+                            <Input type='date' {...register("collectionDate", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.colllectionDate && errors.colllectionDate.message &&
+                                <p className="text-red-600">{`${errors.colllectionDate.message}`}</p>}
+                            <FormLabel>Numer protokołu</FormLabel>
+                            <Input {...register("protocolNumber", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
+                            />
+                            {errors.protocolNumber && errors.protocolNumber.message &&
+                                <p className="text-red-600">{`${errors.protocolNumber.message}`}</p>}
                             <FormLabel>Numer zlecenia</FormLabel>
                             <Input type='number' {...register("jobNumber", {
                                 required: {
@@ -423,10 +449,15 @@ const ReportDataForm: FC<{}> = ({}) => {
                                 <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
                             <h2 className='text-2xl font-bold p-2'>Dane próbkobiorcy</h2>
                             <FormLabel>Próbkę pobrał</FormLabel>
-                            <Input
+                            <Input {...register("sampleCollector", {
+                                required: {
+                                    value: true,
+                                    message: "Pole wymagane"
+                                }
+                            })}
                             />
-                            {errors.deliveryMethod && errors.deliveryMethod.message &&
-                                <p className="text-red-600">{`${errors.deliveryMethod.message}`}</p>}
+                            {errors.sampleCollector && errors.sampleCollector.message &&
+                                <p className="text-red-600">{`${errors.sampleCollector.message}`}</p>}
                             <FormLabel>Miejsce pobrania próbki</FormLabel>
                             <Input {...register("sampleCollectionSite", {
                                 required: {

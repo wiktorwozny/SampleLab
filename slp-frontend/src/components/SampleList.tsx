@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 import {FilterRequest, SummarySample} from "../utils/types"
 import {getFilteredSamples} from "../helpers/samplingApi"
 import {useNavigate} from "react-router-dom"
@@ -9,15 +9,17 @@ import {
     MdKeyboardDoubleArrowRight
 } from "react-icons/md";
 
-import {FormProvider, useForm} from 'react-hook-form';
-import {ProgressStateEnumDesc} from "../utils/enums";
-import {ProgressFormSelect} from "./ui/ProgressFormSelect";
-import { checkResponse } from "../utils/checkResponse";
+import {useForm} from 'react-hook-form';
+import {ProgressStateEnum, ProgressStateMap} from "../utils/enums";
+import {checkResponse} from "../utils/checkResponse";
 import {DisableButton} from "./ui/StandardButton";
+import {Input} from "./ui/Input";
+import {LoadingSpinner} from "./ui/LoadingSpinner";
+import useDebounce from "../hooks/useDebounce";
 
 
 const SampleList: React.FC<any> = ({selectedFilters}) => {
-    const progressEnumDesc = ProgressStateEnumDesc;
+    const progressEnumDesc = ProgressStateMap;
     const method = useForm();
     const {handleSubmit, register, formState: {errors}} = method
     const navigate = useNavigate()
@@ -28,11 +30,14 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
         ascending: true,
         pageNumber: 0,
         pageSize: 10,
-        filters: selectedFilters
+        filters: selectedFilters,
+        fuzzySearch: ''
     })
     const [activeColumn, setActiveColumn] = useState<string>('id');
     const [numberOfPages, setNumberOfPages] = useState<number>(0);
     const [selectedSamplesIds, setSelectedSamplesIds] = useState<number[]>([]);
+    const [fuzzySearchValue, setFuzzySearchValue] = useState<string>('');
+    const debouncedFuzzySearchedValue = useDebounce(fuzzySearchValue, 150);
 
     useEffect(() => {
         setRequest(prev => ({
@@ -41,6 +46,14 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
             pageNumber: 0
         }))
     }, [selectedFilters])
+
+
+    useEffect(() => {
+        setRequest(prev => ({
+            ...prev,
+            fuzzySearch: debouncedFuzzySearchedValue
+        }))
+    }, [debouncedFuzzySearchedValue])
 
     useEffect(() => {
         const getSamples = async () => {
@@ -81,15 +94,29 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
         setSelectedSamplesIds((prevSelected) =>
             prevSelected.includes(sampleId) ? prevSelected.filter((id) => id !== sampleId) : [...prevSelected, sampleId]
         );
-        console.log(selectedSamplesIds);
     };
 
     const isSampleSelected = (sampleId: number) => selectedSamplesIds.includes(sampleId);
 
+
     return (
         <div className="w-full">
-            {!isLoading && numberOfPages > 0 && <div>
-                <table className="table table-hover table-bordered cursor-pointer">
+            <div>
+                <div className="flex justify-end items-center mb-4 pr-4 space-x-4">
+                    <Input
+                        placeholder="Szukaj..."
+                        type="text"
+                        className="border border-gray-300 rounded w-25 shadow-none !mb-0"
+                        maxLength={50}
+                        onChange={(e) => setFuzzySearchValue(e.target.value)}
+                    />
+                </div>
+                {isLoading &&
+                    <LoadingSpinner/>
+                }
+                {!isLoading && numberOfPages === 0 &&
+                    <div className="text-2xl my-32">Brak próbek spełniających filtry</div>}
+                {!isLoading && numberOfPages > 0 && <table className="table table-hover table-bordered cursor-pointer">
                     <thead>
                     <tr>
                         <th></th>
@@ -99,11 +126,11 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         <th scope="col" className={activeColumn === 'code.id' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("code.id")}>Kod próbki
                         </th>
-                        <th scope="col" className={activeColumn === 'group.name' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("group.name")}>Grupa
+                        <th scope="col" className={activeColumn === 'assortment.group.name' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("assortment.group.name")}>Grupa
                         </th>
-                        <th scope="col" className={activeColumn === 'assortment' ? '!bg-gray-400' : '!bg-gray-300'}
-                            onClick={() => updateSortParams("assortment")}>Asortyment
+                        <th scope="col" className={activeColumn === 'assortment.name' ? '!bg-gray-400' : '!bg-gray-300'}
+                            onClick={() => updateSortParams("assortment.name")}>Asortyment
                         </th>
                         <th scope="col" className={activeColumn === 'client.name' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("client.name")}>Nazwa klienta
@@ -119,16 +146,17 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                     <tbody>
                     {samples.map(sample => (
                         <tr
-                            key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)
-                        }
+                            key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)}
                         >
-                            <td style={{ padding: 5, textAlign: 'center', width: 35, height: 35 }} onClick={(e) => e.stopPropagation()}>
+                            <td
+                                style={{padding: 5, textAlign: 'center', width: 35, height: 35}}
+                                onClick={(e) => e.stopPropagation()}>
                                 <input
                                     type="checkbox"
                                     checked={isSampleSelected(sample.id)}
                                     onChange={() => handleCheckboxChange(sample.id)}
                                     onClick={(e) => e.stopPropagation()}
-                                    style={{ width: '80%', height: '80%' }}
+                                    style={{width: '80%', height: '80%'}}
                                 />
                             </td>
                             <td>{sample.id}</td>
@@ -137,30 +165,10 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                             <td>{sample.assortment}</td>
                             <td>{sample.clientName}</td>
                             <td>{sample.admissionDate.toString()}</td>
-                            <td className="w-64 h-max"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                }}
-                            >
-                                <FormProvider {...method}>
-                                    <ProgressFormSelect
-                                        className="shadow-none h-max"
-                                        options={progressEnumDesc.map(desc => ({value: desc.value, label: desc.label}))}
-                                        sample={sample}
-                                        defaultValue={
-                                            progressEnumDesc.filter((obj) => obj.value === sample.progressStatus)
-                                        }
-                                        setSamples={setSamples}
-                                        {...register("analysis", {})}
-                                    />
-                                    {errors.analysis && errors.analysis.message &&
-                                        <p className="text-red-600">{`${errors.analysis.message}`}</p>}
-
-                                </FormProvider>
-                            </td>
+                            <td className={(sample.progressStatus === ProgressStateEnum.DONE ? '!bg-green-100' : '!bg-red-100')}>{progressEnumDesc.get(sample.progressStatus)}</td>
                         </tr>))}
                     </tbody>
-                </table>
+                </table>}
                 <div className="flex flex-row justify-between items-center w-full">
 
                     <DisableButton type="button" disabled={selectedSamplesIds.length === 0} onClick={(e) => {
@@ -191,14 +199,13 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                                                     onClick={() => updatePageNumber(numberOfPages - 1)}/>
                     </div>
 
-                    <button className="opacity-0 px-3 py-1 rounded" style={{ cursor: 'default' }}>
+                    <button className="opacity-0 px-3 py-1 rounded" style={{cursor: 'default'}}>
                         Wprowadź dodatkowe dane
                     </button>
                 </div>
                 <br/>
-            </div>}
-            {isLoading && <div className="text-2xl">Ładowanie...</div>}
-            {!isLoading && numberOfPages === 0 && <div className="text-2xl">Brak próbek spełniających filtry</div>}
+            </div>
+
         </div>
     )
 }
