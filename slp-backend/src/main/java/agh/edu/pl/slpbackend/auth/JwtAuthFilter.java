@@ -45,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            request.setAttribute("email",email);
+            request.setAttribute("email", email);
         } catch (ExpiredJwtException e) {
             response.sendError(401, "Token expired");
             return;
