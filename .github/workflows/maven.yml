@@ -19,5 +19,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        
     - name: Build with Maven
-      run: mvn -B clean verify --file slp-backend/pom.xml
+      run: |
+        cd slp-backend
+        mvn clean verify -Dspring.config.location=src/test/resources/application.properties
