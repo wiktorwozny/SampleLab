@@ -21,6 +21,8 @@ jobs:
         cache: maven
         
     - name: Build with Maven
+      env:
+        ENCRYPTOR_PASSWORD: ${{ secrets.ENCRYPTOR_PASSWORD }}
       run: |
         cd slp-backend
         mvn clean verify -Dspring.config.location=src/test/resources/application.properties
