@@ -7,8 +7,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "postgres"
+      DB_USERNAME: "admin"
+      DB_PASSWORD: "admin"
       DB_URL: "jdbc:postgresql://db:5432/sample-lab-db"
       ENCRYPTOR_PASSWORD: "password"
     networks:
@@ -36,8 +36,8 @@ services:
     volumes:
       - "db-data:/var/lib/postgresql/data"
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
       POSTGRES_DB: "sample-lab-db"
     networks:
       - back-tier
