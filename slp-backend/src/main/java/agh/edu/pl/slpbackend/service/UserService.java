@@ -44,10 +44,9 @@ public class UserService extends AbstractService implements UserMapper {
     @Override
     public void delete(IModel model) {
         final UserDto userDto = (UserDto) model;
-        User user = userRepository.findByEmail(userDto.getEmail()).orElse(null);
-        if(user == null) {
-            throw new UserNotFoundException();
-        }
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(UserNotFoundException::new);
+
         userRepository.deleteById(user.getId());
     }
 
