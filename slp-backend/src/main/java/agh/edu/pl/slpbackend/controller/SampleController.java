@@ -8,7 +8,6 @@ import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/sample") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@RequestMapping("/sample")
 @CrossOrigin(origins = "http://localhost:3000")
 public class SampleController extends AbstractController {
 
@@ -24,52 +23,42 @@ public class SampleController extends AbstractController {
 
     @GetMapping("/list")
     public ResponseEntity<List<SampleDto>> list() {
-        try {
-            List<SampleDto> list = sampleService.selectAll();
-
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(sampleService.selectAll());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return new ResponseEntity<>(sampleService.count(), HttpStatus.OK);
+        return ResponseEntity.ok(sampleService.count());
     }
 
     @GetMapping("/{sampleId}")
     public ResponseEntity<SampleDto> getOne(@PathVariable final Long sampleId) {
-        SampleDto sampleDto = sampleService.selectOne(sampleId);
-        return new ResponseEntity<>(sampleDto, HttpStatus.OK);
+        return ResponseEntity.ok(sampleService.selectOne(sampleId));
     }
 
     @PutMapping("status/{sampleId}/{status}")
     public ResponseEntity<Sample> updateStatus(@PathVariable final Long sampleId, @PathVariable final String status) {
-        return new ResponseEntity<>(sampleService.updateStatus(sampleId, ProgressStatusEnum.convertEnum(status)), HttpStatus.OK);
+        return ResponseEntity.ok(sampleService.updateStatus(sampleId, ProgressStatusEnum.convertEnum(status)));
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody SampleDto sampleDto) throws Exception {
+    public ResponseEntity<Void> add(@RequestBody SampleDto sampleDto) {
         return add(sampleDto, sampleService);
     }
 
     @DeleteMapping("/{sampleId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long sampleId) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable final Long sampleId) {
         return delete(SampleDto.builder().id(sampleId).build(), sampleService);
     }
 
     @PutMapping("/{sampleId}")
-    public ResponseEntity<Void> update(@PathVariable final Long sampleId, @RequestBody SampleDto sampleDto) throws Exception {
+    public ResponseEntity<Void> update(@PathVariable final Long sampleId, @RequestBody SampleDto sampleDto) {
         return edit(sampleDto, sampleService);
     }
 
 
     @PutMapping("list/filtered")
     public ResponseEntity<FilterResponse> filter(@RequestBody FilterRequest request) {
-        return new ResponseEntity<>(sampleService.filter(request), HttpStatus.OK);
+        return ResponseEntity.ok(sampleService.filter(request));
     }
 }

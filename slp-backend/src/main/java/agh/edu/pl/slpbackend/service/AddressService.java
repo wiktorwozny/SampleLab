@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @AllArgsConstructor
 public class AddressService extends AbstractService implements AddressMapper {
+
     private final AddressRepository addressRepository;
 
     public List<AddressDto> selectAll() {
