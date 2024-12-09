@@ -148,7 +148,6 @@ const DictionaryTable = <T extends {}>({
                         </tbody>
                     </table>
 
-                    {/* Use the Pagination Component */}
                     <PaginationDictionary
                         currentPage={currentPage}
                         totalPages={totalPages}
@@ -156,7 +155,7 @@ const DictionaryTable = <T extends {}>({
                     />
                 </>
             )}
-            {/* Resetting page handled here */}
+
             <RowsLimitSelector
                 rowsLimit={rowsLimit}
                 setRowsLimit={(newLimit) => setRowsLimit(newLimit)}

@@ -17,7 +17,7 @@ const PaginationDictionary: React.FC<PaginationProps> = ({currentPage, totalPage
                 ←
             </button>
             <span className="text-gray-700 font-medium">
-                Page {currentPage} of {totalPages}
+                Strona {currentPage} z {totalPages}
             </span>
             <button
                 className="px-3 py-2 bg-gray-200 text-gray-700 rounded-full shadow-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
