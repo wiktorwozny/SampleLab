@@ -153,10 +153,17 @@ public class Config {
                         .laboratory("FCh")
                         .build();
 
+                var indication13 = Indication.builder()
+                        .name("Barwa")
+                        .laboratory("JDr")
+                        .isOrganoleptic(true)
+                        .build();
+
                 Assortment assortment1 = Assortment.builder()
                         .name("Kasza")
                         .group(group1)
-                        .indications(List.of(indication11, indication12))
+                        .indications(List.of(indication11, indication12, indication13))
+                        .organolepticMethod("ZXC-ASD1")
                         .build();
 
                 var indication21 = Indication.builder()
@@ -286,7 +293,93 @@ public class Config {
                         .progressStatus(ProgressStatusEnum.IN_PROGRESS)
                         .build();
 
-                sampleRepository.saveAll(List.of(sample1, sample2, sample3));
+                ReportData[] testReportDataArray = new ReportData[4];
+
+                for (int i = 0; i < testReportDataArray.length; i++) {
+                    testReportDataArray[i] = ReportData.builder()
+                            .manufacturerName("manufacturer1")
+                            .manufacturerAddress(address1)
+                            .supplierName("supplier1")
+                            .supplierAddress(address1)
+                            .sellerName("seller1")
+                            .sellerAddress(address1)
+                            .recipientName("recipient1")
+                            .recipientAddress(address1)
+                            .jobNumber(11)
+                            .mechanism("mechanism1")
+                            .deliveryMethod("deliveryMethod1")
+                            .build();
+                }
+
+                Sample sample4 = Sample.builder()
+                        .code(code1)
+                        .client(client1)
+                        .assortment(assortment1)
+                        .admissionDate(LocalDate.now())
+                        .expirationDate(LocalDate.now().plusYears(3))
+                        .expirationComment("Po otwarciu spożyć w ciągu 5 dni")
+                        .examinationExpectedEndDate(LocalDate.now().plusMonths(3))
+                        .size("500g")
+                        .state("Bez zastrzeżeń")
+                        .analysis(true)
+                        .inspection(inspection1)
+                        .samplingStandard(samplingStandard2)
+                        .reportData(testReportDataArray[0])
+                        .progressStatus(ProgressStatusEnum.DONE)
+                        .build();
+
+                Sample sample5 = Sample.builder()
+                        .code(code1)
+                        .client(client1)
+                        .assortment(assortment1)
+                        .admissionDate(LocalDate.now())
+                        .expirationDate(LocalDate.now().plusYears(3))
+                        .expirationComment("Po otwarciu spożyć w ciągu 5 dni")
+                        .examinationExpectedEndDate(LocalDate.now().plusMonths(3))
+                        .size("500g")
+                        .state("Bez zastrzeżeń")
+                        .analysis(true)
+                        .inspection(inspection1)
+                        .samplingStandard(samplingStandard2)
+                        .reportData(testReportDataArray[1])
+                        .progressStatus(ProgressStatusEnum.DONE)
+                        .build();
+
+                Sample sample6 = Sample.builder()
+                        .code(code1)
+                        .client(client1)
+                        .assortment(assortment1)
+                        .admissionDate(LocalDate.now())
+                        .expirationDate(LocalDate.now().plusYears(3))
+                        .expirationComment("Po otwarciu spożyć w ciągu 5 dni")
+                        .examinationExpectedEndDate(LocalDate.now().plusMonths(3))
+                        .size("500g")
+                        .state("Bez zastrzeżeń")
+                        .analysis(true)
+                        .inspection(inspection1)
+                        .samplingStandard(samplingStandard2)
+                        .reportData(testReportDataArray[2])
+                        .progressStatus(ProgressStatusEnum.DONE)
+                        .build();
+
+                Sample sample7 = Sample.builder()
+                        .code(code1)
+                        .client(client1)
+                        .assortment(assortment1)
+                        .admissionDate(LocalDate.now())
+                        .expirationDate(LocalDate.now().plusYears(3))
+                        .expirationComment("Po otwarciu spożyć w ciągu 5 dni")
+                        .examinationExpectedEndDate(LocalDate.now().plusMonths(3))
+                        .size("500g")
+                        .state("Bez zastrzeżeń")
+                        .analysis(true)
+                        .inspection(inspection1)
+                        .samplingStandard(samplingStandard2)
+                        .reportData(testReportDataArray[3])
+                        .progressStatus(ProgressStatusEnum.DONE)
+                        .build();
+
+                sampleRepository.saveAll(List.of(sample1, sample2, sample3, sample4, sample5, sample6, sample7));
 
                 //examination
                 Examination examination1 = Examination.builder()
@@ -320,7 +413,74 @@ public class Config {
                         .methodStatus("(A)")
                         .build();
 
-                examinationRepository.saveAll(List.of(examination1, examination2));
+                Examination examination3 = Examination.builder()
+                        .sample(sample1)
+                        .indication(indication13)
+                        .signage("oznakowanie")
+                        .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(1))
+                        .endDate(LocalDate.now().plusMonths(2))
+                        .methodStatus("(A)")
+                        .build();
+
+                Examination examination4 = Examination.builder()
+                        .sample(sample4)
+                        .indication(indication11)
+                        .signage("")
+                        .nutritionalValue("wartość odżywcza")
+                        .specification("specyfikacja")
+                        .regulation("rozporządzenie")
+                        .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
+                        .build();
+
+                Examination examination5 = Examination.builder()
+                        .sample(sample5)
+                        .indication(indication11)
+                        .signage("oznakowanie")
+                        .nutritionalValue("")
+                        .specification("specyfikacja")
+                        .regulation("rozporządzenie")
+                        .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
+                        .build();
+
+                Examination examination6 = Examination.builder()
+                        .sample(sample6)
+                        .indication(indication11)
+                        .signage("oznakowanie")
+                        .nutritionalValue("wartość odżywcza")
+                        .specification("")
+                        .regulation("rozporządzenie")
+                        .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
+                        .build();
+
+                Examination examination7 = Examination.builder()
+                        .sample(sample7)
+                        .indication(indication11)
+                        .signage("oznakowanie")
+                        .nutritionalValue("")
+                        .specification("")
+                        .regulation("rozporządzenie")
+                        .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
+                        .build();
+
+                examinationRepository.saveAll(List.of(examination1, examination2, examination3, examination4, examination5, examination6, examination7));
             }
 
             if (userRepository.count() == 0) {
