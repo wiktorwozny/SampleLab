@@ -1,95 +1,45 @@
 package agh.edu.pl.slpbackend.database.backup;
 
 import agh.edu.pl.slpbackend.enums.BackupModeEnum;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
 @Slf4j
-@AllArgsConstructor
 public class BackupService {
 
-    public InputStreamResource exportDatabaseToSQL(final BackupModeEnum backupMode) throws IOException, InterruptedException {
-        String pgDumpPath = "\"C:\\Program Files\\PostgreSQL\\16\\bin\\pg_dump.exe\"";  // Ścieżka do pg_dump
-        String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
-        String port = "5432";
-        String database = "SampleLabDB";
-        String user = "postgres";
-        String password = "12345678";
-        String format = "plain";
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
 
-        // Tworzenie komendy
-        String[] command1 = new String[]{
-                pgDumpPath,
-                "--host=" + host,
-                "--port=" + port,
-                "--username=" + user,
-                "--format=" + format,
-                database
-        };
+    @Value("${spring.datasource.username}")
+    private String dbUsername;
 
-        String[] command2 = new String[]{
-                pgDumpPath,
-                "--host=" + host,
-                "--port=" + port,
-                "--username=" + user,
-                "--format=" + format,
-                "--data-only",
-                database
-        };
+    @Value("${spring.datasource.password}")
+    private String dbPassword;
 
-        ProcessBuilder pb = new ProcessBuilder(BackupModeEnum.FULL_BACKUP.equals(backupMode) ? command1 : command2);
-        pb.environment().put("PGPASSWORD", password);
-        pb.redirectErrorStream(true);
-
-        Process process = pb.start();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (InputStream inputStream = process.getInputStream()) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) != -1) {
-                byteArrayOutputStream.write(buffer, 0, length);
-            }
-        }
-
-        // Czekanie na zakończenie procesu
-        int exitCode = process.waitFor();
-
-        if (exitCode != 0) {
-            throw new IOException("Backup process failed with exit code " + exitCode);
-        }
-
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-
-        return new InputStreamResource(byteArrayInputStream);
-    }
 
     public InputStreamResource exportDatabaseToCSV() throws IOException {
-        String host = "sample-lab-db.ct66gugwuj5h.eu-north-1.rds.amazonaws.com";
-        String port = "5432";
-        String database = "SampleLabDB";
-        String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
-        String user = "postgres";
-        String password = "12345678";
+
+        String url = dbUrl;
+        String user = dbUsername;
+        String password = dbPassword;
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Uzyskiwanie listy tabel
+
             List<String> tableNames = getTableNames(conn);
 
-            // Tworzenie pliku ZIP w pamięci
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             try (ZipOutputStream zos = new ZipOutputStream(byteArrayOutputStream)) {
                 for (String tableName : tableNames) {
@@ -99,7 +49,6 @@ public class BackupService {
 
             System.out.println("All tables have been exported to CSV files and zipped.");
 
-            // Odczyt ZIP do InputStreamResource
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             return new InputStreamResource(byteArrayInputStream);
 
@@ -133,14 +82,12 @@ public class BackupService {
             ZipEntry zipEntry = new ZipEntry(tableName + ".csv");
             zos.putNextEntry(zipEntry);
 
-            // Zapisz nagłówki kolumn
             for (int i = 1; i <= columnCount; i++) {
                 zos.write(rsmd.getColumnName(i).getBytes());
                 if (i < columnCount) zos.write(",".getBytes());
             }
             zos.write("\n".getBytes());
 
-            // Zapisz dane tabeli
             while (rs.next()) {
                 for (int i = 1; i <= columnCount; i++) {
                     String data = rs.getString(i);
@@ -167,17 +114,10 @@ public class BackupService {
 
 
     public InputStreamResource backupExecutor(final BackupModeEnum backupMode) throws IOException, InterruptedException {
-        switch (backupMode) {
-            case FULL_BACKUP, DATA_ONLY -> {
-                return exportDatabaseToSQL(backupMode);
-            }
-            case CSV -> {
-                return exportDatabaseToCSV();
-            }
-            default -> {
-                return null;
-            }
+        if (Objects.requireNonNull(backupMode) == BackupModeEnum.CSV) {
+            return exportDatabaseToCSV();
         }
+        return null;
 
     }
 

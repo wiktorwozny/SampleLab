@@ -7,7 +7,8 @@ import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
 import {getAllSamplingStandard} from "../../../helpers/samplingStandardApi";
 import {ModalSelection} from "../../ui/ModalSelection";
-import {addGroup, updateGroup} from "../../../helpers/groupApi"; // Import modal component
+import {addGroup, updateGroup} from "../../../helpers/groupApi";
+import {StandardButton} from "../../ui/StandardButton"; // Import modal component
 
 interface ProductGroupDictItemProps {
     refresh: () => void;
@@ -164,9 +165,9 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                         {/* Buttons to open modal selection */}
                         {!isView && (
                             <div className="flex space-x-4 mt-4">
-                                <Button variant="primary" onClick={() => setShowSamplingStandardsModal(true)}>
+                                <StandardButton type={"button"} onClick={() => setShowSamplingStandardsModal(true)}>
                                     Wybierz normy pobrania
-                                </Button>
+                                </StandardButton>
                             </div>
                         )}
 
@@ -196,9 +197,9 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         {(isEdit || isAdd) && (
-                            <Button type="submit" variant="primary">
+                            <StandardButton type="submit">
                                 Zapisz
-                            </Button>
+                            </StandardButton>
                         )}
                         <Button variant="secondary" onClick={handleCancel}>
                             Anuluj

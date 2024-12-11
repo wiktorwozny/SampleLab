@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -136,8 +137,15 @@ public class XLSXorganolepticToTblConverter extends XLSXFilesHelper {
     }
 
     public void cleanFiles() throws Exception {
-        Files.delete(Paths.get(modifiedTableXlsxFilePath));
-        Files.delete(Paths.get(docxFilePath));
-    }
+        Path modifiedTablePath = Paths.get(modifiedTableXlsxFilePath);
+        Path docxFilePathObj = Paths.get(docxFilePath);
 
+        if (Files.exists(modifiedTablePath)) {
+            Files.delete(modifiedTablePath);
+        }
+
+        if (Files.exists(docxFilePathObj)) {
+            Files.delete(docxFilePathObj);
+        }
+    }
 }

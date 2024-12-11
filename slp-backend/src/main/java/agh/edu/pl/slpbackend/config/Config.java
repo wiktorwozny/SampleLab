@@ -29,7 +29,7 @@ public class Config {
             final MethodService methodService) {
         return args -> {
             if (groupRepository.count() == 0) {
-                try (InputStream methodStream = getClass().getResourceAsStream("/metody_v2.xlsm")){
+                try (InputStream methodStream = getClass().getResourceAsStream("/metody_v2.xlsm")) {
                     methodService.importMethods(methodStream);
                 }
             }
@@ -266,7 +266,7 @@ public class Config {
                         .inspection(inspection2)
                         .samplingStandard(samplingStandard1)
                         .reportData(reportData2)
-                        .progressStatus(ProgressStatusEnum.TODO)
+                        .progressStatus(ProgressStatusEnum.IN_PROGRESS)
                         .build();
 
                 Sample sample3 = Sample.builder()
@@ -283,7 +283,7 @@ public class Config {
                         .inspection(inspection3)
                         .samplingStandard(samplingStandard2)
                         .reportData(null)
-                        .progressStatus(ProgressStatusEnum.TODO)
+                        .progressStatus(ProgressStatusEnum.IN_PROGRESS)
                         .build();
 
                 sampleRepository.saveAll(List.of(sample1, sample2, sample3));
@@ -314,6 +314,10 @@ public class Config {
                         .specification("specyfikacja")
                         .regulation("rozporządzenie")
                         .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
                         .build();
 
                 examinationRepository.saveAll(List.of(examination1, examination2));
