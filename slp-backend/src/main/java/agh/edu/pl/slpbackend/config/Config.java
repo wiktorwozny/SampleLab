@@ -314,6 +314,10 @@ public class Config {
                         .specification("specyfikacja")
                         .regulation("rozporządzenie")
                         .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
                         .build();
 
                 examinationRepository.saveAll(List.of(examination1, examination2));
