@@ -16,7 +16,7 @@ const formatAddress = (address: number | string | Address): string => {
 };
 
 const columns: Column<Client>[] = [
-    {header: 'ID', accessor: 'id'},
+    {header: 'ID', accessor: 'id', className: 'w-12'},
     {header: 'Nazwa', accessor: 'name'},
     {header: 'Kod WIJHARS', accessor: 'wijharsCode'},
     {
@@ -75,7 +75,11 @@ const ClientDict = () => {
         } catch (err: any) {
             console.log(err)
             if (err?.response?.status === 409) {
-                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+                setAlertDetails({
+                    isAlert: true,
+                    message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane",
+                    type: "error"
+                })
             } else {
                 setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
             }

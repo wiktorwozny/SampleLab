@@ -194,10 +194,11 @@ export interface Column<T> {
     header: string;
     accessor: keyof T | string;
     render?: (value: T[keyof T]) => ReactNode;
+    className?: string;
 }
 
 export type ChangePasswordPayload = {
-    oldPassword: String, 
+    oldPassword: String,
     newPassword: String
 }
 
