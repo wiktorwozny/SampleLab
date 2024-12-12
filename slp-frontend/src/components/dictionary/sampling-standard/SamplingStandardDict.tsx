@@ -10,7 +10,7 @@ import ConfirmPopup from "../../ui/ConfirmPopup";
 
 
 const columns: Column<SamplingStandards>[] = [
-    {header: 'ID', accessor: 'id'},
+    {header: 'ID', accessor: 'id', className: 'w-12'},
     {header: 'Nazwa', accessor: 'name'},
 ];
 
@@ -62,7 +62,11 @@ const SamplingStandardDict = () => {
         } catch (err: any) {
             console.log(err)
             if (err?.response?.status === 409) {
-                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+                setAlertDetails({
+                    isAlert: true,
+                    message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane",
+                    type: "error"
+                })
             } else {
                 setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
             }

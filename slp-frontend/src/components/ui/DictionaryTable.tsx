@@ -108,7 +108,7 @@ const DictionaryTable = <T extends {}>({
                                     <th
                                         scope="col"
                                         key={index}
-                                        className={`text-left ${isSorted ? 'bg-gray-400' : 'bg-gray-300'}`}
+                                        className={`text-left ${isSorted ? 'bg-gray-400' : 'bg-gray-300'} ${column.className ?? ''}`}
                                         onClick={() => handleSort(column.accessor)}
                                     >
                                         {column.header}
@@ -148,7 +148,6 @@ const DictionaryTable = <T extends {}>({
                         </tbody>
                     </table>
 
-                    {/* Use the Pagination Component */}
                     <PaginationDictionary
                         currentPage={currentPage}
                         totalPages={totalPages}
@@ -156,7 +155,7 @@ const DictionaryTable = <T extends {}>({
                     />
                 </>
             )}
-            {/* Resetting page handled here */}
+
             <RowsLimitSelector
                 rowsLimit={rowsLimit}
                 setRowsLimit={(newLimit) => setRowsLimit(newLimit)}

@@ -29,7 +29,7 @@ public class Config {
             final MethodService methodService) {
         return args -> {
             if (groupRepository.count() == 0) {
-                try (InputStream methodStream = getClass().getResourceAsStream("/metody_v2.xlsm")){
+                try (InputStream methodStream = getClass().getResourceAsStream("/metody_v2.xlsm")) {
                     methodService.importMethods(methodStream);
                 }
             }
@@ -274,7 +274,7 @@ public class Config {
                         .inspection(inspection2)
                         .samplingStandard(samplingStandard1)
                         .reportData(reportData2)
-                        .progressStatus(ProgressStatusEnum.TODO)
+                        .progressStatus(ProgressStatusEnum.IN_PROGRESS)
                         .build();
 
                 Sample sample3 = Sample.builder()

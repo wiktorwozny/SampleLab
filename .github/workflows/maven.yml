@@ -1,0 +1,28 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Build with Maven
+      env:
+        ENCRYPTOR_PASSWORD: ${{ secrets.ENCRYPTOR_PASSWORD }}
+      run: |
+        cd slp-backend
+        mvn clean verify -Dspring.config.location=src/test/resources/application.properties
