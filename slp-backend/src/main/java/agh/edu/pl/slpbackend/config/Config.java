@@ -237,7 +237,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(reportData1)
-                        .progressStatus(ProgressStatusEnum.TODO)
+                        .progressStatus(ProgressStatusEnum.DONE)
                         .build();
 
                 Address address2 = Address.builder()
@@ -291,7 +291,7 @@ public class Config {
                         .inspection(inspection3)
                         .samplingStandard(samplingStandard2)
                         .reportData(null)
-                        .progressStatus(ProgressStatusEnum.TODO)
+                        .progressStatus(ProgressStatusEnum.IN_PROGRESS)
                         .build();
 
                 sampleRepository.saveAll(List.of(sample1, sample2, sample3));
@@ -322,9 +322,24 @@ public class Config {
                         .specification("specyfikacja")
                         .regulation("rozporządzenie")
                         .samplesNumber(4)
+                        .result("wynik badania")
+                        .startDate(LocalDate.now().plusMonths(2))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .methodStatus("(A)")
                         .build();
 
-                examinationRepository.saveAll(List.of(examination1, examination2));
+                Examination examination3 = Examination.builder()
+                        .sample(sample1)
+                        .indication(indication13)
+                        .signage("wymagania lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum")
+                        .samplesNumber(4)
+                        .result("wynik badania lorem ipsum lorem ipsum lorem ipsum lorem ipsum")
+                        .startDate(LocalDate.now().plusMonths(1))
+                        .endDate(LocalDate.now().plusMonths(2))
+                        .methodStatus("(A)")
+                        .build();
+
+                examinationRepository.saveAll(List.of(examination1, examination2, examination3));
             }
 
             if (userRepository.count() == 0) {
