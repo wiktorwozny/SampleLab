@@ -20,6 +20,6 @@ public class DataController {
 
     @GetMapping("/filters")
     public ResponseEntity<Filters> getFilters() {
-        return new ResponseEntity<>(dataService.getFilters(), HttpStatus.OK);
+        return ResponseEntity.ok(dataService.getFilters());
     }
 }

@@ -4,7 +4,6 @@ import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SamplingStandardDto;
 import agh.edu.pl.slpbackend.service.dictionary.SamplingStandardService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/sampling-standard") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@RequestMapping("/sampling-standard")
 @CrossOrigin(origins = "http://localhost:3000")
 public class SamplingStandardController extends AbstractController {
 
@@ -20,31 +19,22 @@ public class SamplingStandardController extends AbstractController {
 
     @GetMapping("/list")
     public ResponseEntity<List<SamplingStandardDto>> list() {
-        try {
-            List<SamplingStandardDto> list = samplingStandardService.selectAll();
-
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(samplingStandardService.selectAll());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody SamplingStandardDto samplingStandardDto) throws Exception {
+    public ResponseEntity<Void> add(@RequestBody SamplingStandardDto samplingStandardDto) {
         return add(samplingStandardDto, samplingStandardService);
     }
 
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody SamplingStandardDto samplingStandardDto) throws Exception {
+    public ResponseEntity<Void> edit(@RequestBody SamplingStandardDto samplingStandardDto) {
         return edit(samplingStandardDto, samplingStandardService);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         return delete(SamplingStandardDto.builder().id(id).build(), samplingStandardService);
     }
 }

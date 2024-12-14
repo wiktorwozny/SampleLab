@@ -13,17 +13,11 @@ public class PasswordConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToDatabaseColumn(String password) {
-        if (password == null || password.isEmpty()) {
-            return null;
-        }
         return textEncryptor.encrypt(password);
     }
 
     @Override
     public String convertToEntityAttribute(String password) {
-        if (password == null || password.isEmpty()) {
-            return null;
-        }
         return textEncryptor.decrypt(password);
     }
 }

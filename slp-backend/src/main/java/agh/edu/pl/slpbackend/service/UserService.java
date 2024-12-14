@@ -2,7 +2,6 @@ package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.auth.JwtUtil;
 import agh.edu.pl.slpbackend.dto.UserDto;
-import agh.edu.pl.slpbackend.dto.users.ChangePasswordForAdminRequest;
 import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginResponse;
@@ -75,7 +74,7 @@ public class UserService extends AbstractService implements UserMapper {
         userRepository.save(user);
     }
 
-    public void changePasswordForAdmin(ChangePasswordRequest request, String email) {
+    public void changePasswordByAdmin(ChangePasswordRequest request, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 

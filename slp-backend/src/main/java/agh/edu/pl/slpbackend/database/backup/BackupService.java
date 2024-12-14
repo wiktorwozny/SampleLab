@@ -111,9 +111,8 @@ public class BackupService {
     }
 
 
-    public InputStreamResource backupExecutor() throws IOException, InterruptedException {
+    public InputStreamResource backupExecutor() throws IOException {
         return exportDatabaseToCSV();
-
     }
 
 
