@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.controller.dictionary;
+package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;

@@ -28,7 +28,7 @@ public class ReportDataTest implements ReportDataMapper {
     private SampleRepository sampleRepository;
 
     @Test
-    void getAll() {
+    void get_all() {
         var response = controller.list();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -54,17 +54,15 @@ public class ReportDataTest implements ReportDataMapper {
 
     @Test
     void update() {
+        var reportData = repository.findAll().get(0);
+        var request = toDto(reportData);
         String mechanism = "test";
-
-        var reportData1 = repository.findAll().get(0);
-        var request = toDto(reportData1);
         request.setMechanism(mechanism);
+
         var response = controller.update(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        var reportData2 = repository.findById(reportData1.getId())
-                .orElseThrow();
-        assertThat(reportData2.getMechanism()).isEqualTo(mechanism);
+        assertThat(reportData.getMechanism()).isEqualTo(mechanism);
     }
 
     @Test
@@ -77,7 +75,7 @@ public class ReportDataTest implements ReportDataMapper {
     }
 
     @Test
-    void getBySampleId() {
+    void get_by_sample_id() {
         var sample = sampleRepository.findAll().get(0);
         var response = controller.getReportBySampleId(sample.getId());
 

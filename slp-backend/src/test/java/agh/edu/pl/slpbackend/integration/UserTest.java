@@ -2,6 +2,7 @@ package agh.edu.pl.slpbackend.integration;
 
 import agh.edu.pl.slpbackend.controller.UserController;
 import agh.edu.pl.slpbackend.dto.UserDto;
+import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
 import agh.edu.pl.slpbackend.enums.RoleEnum;
 import agh.edu.pl.slpbackend.exception.AccountAlreadyExistsException;
@@ -27,6 +28,8 @@ public class UserTest {
 
     @Autowired
     private UserRepository repository;
+
+    private static final String WORKER_EMAIL = "worker@gmail.com";
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -59,7 +62,7 @@ public class UserTest {
         var userCount = repository.count();
         var userDto = UserDto.builder()
                 .name("Adam Nowak")
-                .email("worker@gmail.com")
+                .email(WORKER_EMAIL)
                 .role(RoleEnum.WORKER)
                 .build();
 
@@ -70,7 +73,7 @@ public class UserTest {
 
     @Test
     void login() {
-        var loginRequest = new LoginRequest("worker@gmail.com", "worker");
+        var loginRequest = new LoginRequest(WORKER_EMAIL, "worker");
         var response = controller.login(loginRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -95,7 +98,7 @@ public class UserTest {
 
     @Test
     void login_fails_when_wrong_password() {
-        var loginRequest = new LoginRequest("worker@gmail.com", "");
+        var loginRequest = new LoginRequest(WORKER_EMAIL, "");
 
         assertThatThrownBy(() -> controller.login(loginRequest))
                 .isInstanceOf(WrongPasswordException.class);
@@ -103,7 +106,7 @@ public class UserTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getAll() {
+    void get_all() {
         var response = controller.getUsers();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -115,13 +118,13 @@ public class UserTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void delete() {
-        var email = "worker@gmail.com";
-        assertThat(repository.existsByEmail(email)).isTrue();
+        assertThat(repository.existsByEmail(WORKER_EMAIL)).isTrue();
         var count = repository.count();
 
-        controller.deleteUser(email);
+        var response = controller.deleteUser(WORKER_EMAIL);
 
-        assertThat(repository.existsByEmail(email)).isFalse();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(repository.existsByEmail(WORKER_EMAIL)).isFalse();
         assertThat(repository.count()).isEqualTo(count - 1);
     }
 
@@ -129,6 +132,63 @@ public class UserTest {
     @WithMockUser(roles = "ADMIN")
     void delete_fails_when_unknown_email() {
         assertThatThrownBy(() -> controller.deleteUser(""))
+                .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    void change_password() {
+        var user = repository.findByEmail(WORKER_EMAIL)
+                .orElseThrow();
+        var newPassword = "test";
+        var request = new ChangePasswordRequest(user.getPassword(), newPassword);
+
+        var response = controller.changePassword(request, WORKER_EMAIL);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(user.getPassword()).isEqualTo(newPassword);
+    }
+
+    @Test
+    void change_password_fails_when_unknown_email() {
+        var user = repository.findByEmail(WORKER_EMAIL)
+                .orElseThrow();
+        var newPassword = "test";
+        var request = new ChangePasswordRequest(user.getPassword(), newPassword);
+
+        assertThatThrownBy(() -> controller.changePassword(request, ""))
+                .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    void change_password_fails_when_wrong_password() {
+        var newPassword = "test";
+        var request = new ChangePasswordRequest("", newPassword);
+
+        assertThatThrownBy(() -> controller.changePassword(request, WORKER_EMAIL))
+                .isInstanceOf(WrongPasswordException.class);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void change_password_by_admin() {
+        var user = repository.findByEmail(WORKER_EMAIL)
+                .orElseThrow();
+        var newPassword = "test";
+        var request = new ChangePasswordRequest("", newPassword);
+
+        var response = controller.changePasswordByAdmin(request, WORKER_EMAIL);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(user.getPassword()).isEqualTo(newPassword);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void change_password_by_admin_fails_when_unknown_email() {
+        var newPassword = "test";
+        var request = new ChangePasswordRequest("", newPassword);
+
+        assertThatThrownBy(() -> controller.changePasswordByAdmin(request, ""))
                 .isInstanceOf(UserNotFoundException.class);
     }
 }

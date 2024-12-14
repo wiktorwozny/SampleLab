@@ -21,7 +21,7 @@ public class AddressTest {
     private AddressRepository repository;
 
     @Test
-    void getAll() {
+    void get_all() {
         var response = controller.list();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
