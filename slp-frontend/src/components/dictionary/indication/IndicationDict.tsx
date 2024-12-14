@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom";
 import ConfirmPopup from "../../ui/ConfirmPopup";
 
 const columns: Column<Indication>[] = [
-    {header: 'ID', accessor: 'id'},
+    {header: 'ID', accessor: 'id', className: 'w-12'},
     {header: 'Nazwa', accessor: 'name'},
     {header: 'Metoda', accessor: 'method'},
     {header: 'Jednostka', accessor: 'unit'},

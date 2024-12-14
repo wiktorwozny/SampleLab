@@ -38,8 +38,14 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/change-password/{email}")
-    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, @PathVariable String email) {
+    public ResponseEntity<Void> changePasswordForAdmin(@RequestBody ChangePasswordRequest request, @PathVariable String email) {
         userService.changePasswordForAdmin(request, email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, @RequestAttribute String email) {
+        userService.changePassword(request, email);
         return ResponseEntity.ok().build();
     }
 

@@ -10,7 +10,6 @@ import ExaminationForm from "./components/ExaminationForm";
 import Sidebar from "./components/Sidebar";
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
-import BackupView from "./components/BackupView";
 
 import PrivateRoute from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
@@ -73,7 +72,6 @@ function App() {
                                             path="/sample/manageExaminations/:sampleId/newExamination/:examinationId"
                                             element={<ExaminationForm/>}
                                         />
-                                        <Route path="/backup" element={<BackupView/>}/>
                                         <Route path="/dictionary" element={<DictionariesPage/>}/>
                                         <Route path="/dictionary/clientDict" element={<ClientDict/>}/>
                                         <Route path="/dictionary/indicationDict" element={<IndicationDict/>}/>

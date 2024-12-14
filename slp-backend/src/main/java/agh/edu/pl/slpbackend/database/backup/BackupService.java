@@ -1,6 +1,5 @@
 package agh.edu.pl.slpbackend.database.backup;
 
-import agh.edu.pl.slpbackend.enums.BackupModeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -113,11 +111,8 @@ public class BackupService {
     }
 
 
-    public InputStreamResource backupExecutor(final BackupModeEnum backupMode) throws IOException, InterruptedException {
-        if (Objects.requireNonNull(backupMode) == BackupModeEnum.CSV) {
-            return exportDatabaseToCSV();
-        }
-        return null;
+    public InputStreamResource backupExecutor() throws IOException, InterruptedException {
+        return exportDatabaseToCSV();
 
     }
 

@@ -21,21 +21,19 @@ const Sidebar: React.FC<{}> = () => {
         });
     };
 
-    const handleBackup = async (mode: string) => {
+    const handleBackup = async () => {
         if (isLoadingOverlayVisible) return;
         toggleVisibility();
         try {
-            let response = await backup(mode)
+            let response = await backup()
             setAlertDetails({isAlert: true, message: "Archiwizacja danych zakończona poprawnie", type: "success"})
             if (response != null) {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const a = document.createElement('a');
                 a.href = url;
-                if (mode === "CSV") {
-                    a.download = `backup_folder_with_csv_${formatDate(new Date())}.zip`;
-                } else {
-                    a.download = `backup_${formatDate(new Date())}_.sql`;
-                }
+
+                a.download = `backup_folder_with_csv_${formatDate(new Date())}.zip`;
+
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -103,7 +101,7 @@ const Sidebar: React.FC<{}> = () => {
                         <p
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
 
-                            onClick={() => handleBackup('CSV')}
+                            onClick={() => handleBackup()}
                         >
                             Archiwizuj dane
                         </p>
