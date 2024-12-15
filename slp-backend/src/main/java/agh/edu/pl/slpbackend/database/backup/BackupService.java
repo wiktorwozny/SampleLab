@@ -28,7 +28,7 @@ public class BackupService {
     private String dbPassword;
 
 
-    public InputStreamResource exportDatabaseToCSV() throws IOException {
+    private InputStreamResource exportDatabaseToCSV() throws IOException {
 
         String url = dbUrl;
         String user = dbUsername;
@@ -56,7 +56,7 @@ public class BackupService {
         }
     }
 
-    private static List<String> getTableNames(Connection conn) throws SQLException {
+    private List<String> getTableNames(Connection conn) throws SQLException {
         List<String> tableNames = new ArrayList<>();
         DatabaseMetaData metaData = conn.getMetaData();
         try (ResultSet rs = metaData.getTables(null, "public", null, new String[]{"TABLE"})) {
@@ -68,7 +68,7 @@ public class BackupService {
         return tableNames;
     }
 
-    private static void exportTableToCSVInMemory(Connection conn, String tableName, ZipOutputStream zos) {
+    private void exportTableToCSVInMemory(Connection conn, String tableName, ZipOutputStream zos) {
         Statement stmt = null;
         ResultSet rs = null;
         try {
@@ -111,9 +111,8 @@ public class BackupService {
     }
 
 
-    public InputStreamResource backupExecutor() throws IOException, InterruptedException {
+    public InputStreamResource backupExecutor() throws IOException {
         return exportDatabaseToCSV();
-
     }
 
 

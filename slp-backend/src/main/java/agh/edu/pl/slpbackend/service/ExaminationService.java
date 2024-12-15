@@ -24,26 +24,6 @@ public class ExaminationService extends AbstractService implements ExaminationMa
     private final ExaminationRepository examinationRepository;
     private final SampleRepository sampleRepository;
 
-    public List<ExaminationDto> selectAll() {
-        List<Examination> examinationList = examinationRepository.findAll();
-        return examinationList.stream().map(this::toDto).collect(Collectors.toList());
-    }
-
-    public void insertExaminationResults(Long examinationId, ExaminationDto updatedExaminationDto) {
-        final Examination updatedExamination = toModel(updatedExaminationDto);
-
-        Examination existingExamination = examinationRepository.getReferenceById(examinationId);
-        existingExamination.setResult(updatedExamination.getResult());
-        existingExamination.setStartDate(updatedExamination.getStartDate());
-        existingExamination.setEndDate(updatedExamination.getEndDate());
-        existingExamination.setMethodStatus(updatedExamination.getMethodStatus());
-        existingExamination.setUncertainty(updatedExamination.getUncertainty());
-        existingExamination.setLod(updatedExaminationDto.getLod());
-        existingExamination.setLoq(updatedExaminationDto.getLoq());
-
-        examinationRepository.save(existingExamination);
-    }
-
     public List<ExaminationDto> selectExaminationsForSample(final Long sampleId) {
         List<Examination> examinations = examinationRepository.findBySampleId(sampleId);
         return examinations.stream().map(this::toDto).collect(Collectors.toList());

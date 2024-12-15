@@ -5,7 +5,6 @@ import agh.edu.pl.slpbackend.dto.AssortmentDto;
 import agh.edu.pl.slpbackend.service.dictionary.AssortmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,30 +20,23 @@ public class AssortmentController extends AbstractController {
 
     @GetMapping("/list")
     public ResponseEntity<List<AssortmentDto>> list() {
-        try {
-            List<AssortmentDto> list = assortmentService.selectAll();
-
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(assortmentService.selectAll());
     }
 
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody @Valid AssortmentDto assortmentDto) throws Exception {
+    public ResponseEntity<Void> add(@RequestBody AssortmentDto assortmentDto) {
         return add(assortmentDto, assortmentService);
     }
 
     @PutMapping("/update")
     public ResponseEntity<Void> edit(@RequestBody @Valid AssortmentDto assortmentDto) throws Exception {
+    public ResponseEntity<Void> edit(@RequestBody AssortmentDto assortmentDto) {
         return edit(assortmentDto, assortmentService);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         return delete(AssortmentDto.builder().id(id).build(), assortmentService);
     }
 }

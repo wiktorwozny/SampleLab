@@ -5,7 +5,6 @@ import agh.edu.pl.slpbackend.dto.CodeDto;
 import agh.edu.pl.slpbackend.service.dictionary.CodeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,30 +20,21 @@ public class CodeController extends AbstractController {
 
     @GetMapping("/list")
     public ResponseEntity<List<CodeDto>> list() {
-        try {
-            List<CodeDto> list = codeService.selectAll();
-
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(codeService.selectAll());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody @Valid CodeDto codeDto) throws Exception {
+    public ResponseEntity<Void> add(@RequestBody @Valid CodeDto codeDto) {
         return add(codeDto, codeService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody @Valid CodeDto codeDto) throws Exception {
+    public ResponseEntity<Void> edit(@RequestBody @Valid CodeDto codeDto) {
         return edit(codeDto, codeService);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         return delete(CodeDto.builder().id(id).build(), codeService);
     }
 }

@@ -2,11 +2,9 @@ package agh.edu.pl.slpbackend.controller.dictionary;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.InspectionDto;
-import agh.edu.pl.slpbackend.model.Inspection;
 import agh.edu.pl.slpbackend.service.dictionary.InspectionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/inspection") //TODO odpowiedni rooting jeszcze nie wiem XDD
+@RequestMapping("/inspection")
 @CrossOrigin(origins = "http://localhost:3000")
 public class InspectionController extends AbstractController {
 
@@ -22,30 +20,21 @@ public class InspectionController extends AbstractController {
 
     @GetMapping("/list")
     public ResponseEntity<List<InspectionDto>> list() {
-        try {
-            List<InspectionDto> list = inspectionService.selectAll();
-
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(inspectionService.selectAll());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Inspection> add(@RequestBody @Valid InspectionDto inspectionDto) throws Exception {
-        return new ResponseEntity<>(add(inspectionDto, inspectionService).getStatusCode());
+    public ResponseEntity<Void> add(@RequestBody @Valid InspectionDto inspectionDto) {
+        return add(inspectionDto, inspectionService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody @Valid InspectionDto inspectionDto) throws Exception {
+    public ResponseEntity<Void> edit(@RequestBody @Valid InspectionDto inspectionDto) {
         return edit(inspectionDto, inspectionService);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         return delete(InspectionDto.builder().id(id).build(), inspectionService);
     }
 }

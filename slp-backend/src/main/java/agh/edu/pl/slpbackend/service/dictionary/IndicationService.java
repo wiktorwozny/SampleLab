@@ -1,6 +1,8 @@
 package agh.edu.pl.slpbackend.service.dictionary;
 
+import agh.edu.pl.slpbackend.dto.AssortmentDto;
 import agh.edu.pl.slpbackend.dto.IndicationDto;
+import agh.edu.pl.slpbackend.exception.DataDependencyException;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.IndicationMapper;
 import agh.edu.pl.slpbackend.model.Indication;
@@ -11,6 +13,7 @@ import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,7 +64,10 @@ public class IndicationService extends AbstractService implements IndicationMapp
     @Override
     public void delete(IModel model) {
         final IndicationDto indicationDto = (IndicationDto) model;
-        indicationRepository.deleteById(indicationDto.getId());
+        try {
+            indicationRepository.deleteById(indicationDto.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DataDependencyException();
+        }
     }
-
 }

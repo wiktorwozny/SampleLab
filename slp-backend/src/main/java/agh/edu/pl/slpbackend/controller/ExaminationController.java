@@ -1,4 +1,4 @@
-package agh.edu.pl.slpbackend.controller.dictionary;
+package agh.edu.pl.slpbackend.controller;
 
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
@@ -19,7 +19,7 @@ public class ExaminationController extends AbstractController {
     private final ExaminationService examinationService;
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody ExaminationDto examinationDto) throws Exception {
+    public ResponseEntity<Void> add(@RequestBody ExaminationDto examinationDto) {
         return add(examinationDto, examinationService);
     }
 
@@ -36,12 +36,12 @@ public class ExaminationController extends AbstractController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> insertExaminationResults(@RequestBody ExaminationDto updatedExaminationDto) throws Exception {
+    public ResponseEntity<Void> insertExaminationResults(@RequestBody ExaminationDto updatedExaminationDto) {
         return edit(updatedExaminationDto, examinationService);
     }
 
     @DeleteMapping("/delete/{examinationId}")
-    public ResponseEntity<Void> deleteExamination(@PathVariable final Long examinationId) throws Exception {
+    public ResponseEntity<Void> deleteExamination(@PathVariable final Long examinationId) {
         return delete(ExaminationDto.builder().id(examinationId).build(), examinationService);
     }
 

@@ -40,14 +40,6 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
         }
         return toDto(reportData);
     }
-//    @Override
-//    public ResponseEntity<?> insert(IModel model) {
-//        final ReportDataDto reportDataDto = (ReportDataDto) model;
-//        final ReportData reportData = toModel(reportDataDto);
-//        final ReportData saveResult = reportDataRepository.save(reportData);
-//
-//        return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
-//    }
 
     @Override
     public Object insert(IModel model) {
