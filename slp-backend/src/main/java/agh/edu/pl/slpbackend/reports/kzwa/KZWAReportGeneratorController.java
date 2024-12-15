@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,7 @@ public class KZWAReportGeneratorController {
 
     private final KZWAReportGeneratorService kzwaReportGeneratorService;
 
+    @PreAuthorize("hasRole('WORKER')")
     @GetMapping("/kzwa-report/{sampleId}")
     public ResponseEntity<InputStreamResource> generate(@PathVariable final Long sampleId) {
         InputStreamResource resource = kzwaReportGeneratorService.generateReport(sampleId);

@@ -6,6 +6,7 @@ import {Dropdown, Modal} from "react-bootstrap";
 import ConfirmPopup from "./ui/ConfirmPopup";
 import {AlertContext} from "../contexts/AlertsContext";
 import ChangePasswordFormAdminForm from "./ChangePasswordForAdminForm";
+import { RoleEnumDesc } from "../utils/enums";
 
 const UserList = () => {
     const [userList, setUserList] = useState<User[]>([])
@@ -80,7 +81,7 @@ const UserList = () => {
                     </td>
                     <td>{user.email}</td>
                     <td>{user.name}</td>
-                    <td>{user.role === "WORKER" ? "Pracownik" : "Admin"}</td>
+                    <td>{RoleEnumDesc.find(role => role.value === user.role)?.label}</td>
                 </tr>
             ))}
             </tbody>

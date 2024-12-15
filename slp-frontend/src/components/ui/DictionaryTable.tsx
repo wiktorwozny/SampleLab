@@ -131,8 +131,8 @@ const DictionaryTable = <T extends {}>({
 
                                         <Dropdown.Menu>
                                             <Dropdown.Item onClick={() => onView(item)}>Szczegóły</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => onEdit(item)}>Edycja</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => onDelete(item)}>Usuń</Dropdown.Item>
+                                            {localStorage.getItem('role') !== 'INTERN' && <Dropdown.Item onClick={() => onEdit(item)}>Edycja</Dropdown.Item>}
+                                            {localStorage.getItem('role') !== 'INTERN' && <Dropdown.Item onClick={() => onDelete(item)}>Usuń</Dropdown.Item>}
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </td>

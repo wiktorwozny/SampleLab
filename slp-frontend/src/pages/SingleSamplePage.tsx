@@ -149,23 +149,23 @@ const SingleSamplePage = () => {
         </Div>
 
         <div className="flex justify-center w-3/4 p-3 gap-2">
-            <StandardButton type="button" onClick={() => {
+            {localStorage.getItem('role') !== 'INTERN' && <StandardButton type="button" onClick={() => {
                 navigate(`/sample/addReportData/${sampleId}`)
-            }}>Dodaj dodatkowe informacje</StandardButton>
+            }}>Dodaj dodatkowe informacje</StandardButton>}
             <StandardButton type="button" onClick={() => {
                 navigate(`/sample/manageExaminations/${sampleId}`)
             }}>Zarządzaj badaniami</StandardButton>
-            <StandardButton type="button" onClick={() => {
+            {localStorage.getItem('role') !== 'INTERN' && <StandardButton type="button" onClick={() => {
                 navigate(`/sample/edit/${sampleId}`)
-            }}>Edytuj próbkę</StandardButton>
-            <Dropdown>
+            }}>Edytuj próbkę</StandardButton>}
+            {localStorage.getItem('role') !== 'INTERN' && <Dropdown>
                 <Dropdown.Toggle
                     disabled={sample?.progressStatus !== ProgressStateEnum.DONE}
                     variant="primary"
                     id="dropdown-basic"
                     className="p-2 rounded self-center text-white border-0"
                     style={{
-                        backgroundColor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(229, 231, 235)' : 'rgb(14, 165, 233)',  // Grey when disabled, blue otherwise
+                        backgroundColor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(209, 213, 219)' : 'rgb(14, 165, 233)',
                         color: sample?.progressStatus !== ProgressStateEnum.DONE ? 'rgb(107, 114, 128)' : 'white',
                         cursor: sample?.progressStatus !== ProgressStateEnum.DONE ? 'not-allowed' : 'pointer',
                         pointerEvents: sample?.progressStatus !== ProgressStateEnum.DONE ? 'none' : 'auto'
@@ -178,10 +178,10 @@ const SingleSamplePage = () => {
                     <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F4")}>Raport F-4</Dropdown.Item>
                     <Dropdown.Item onClick={() => generateReport(Number(sampleId), "F5")}>Raport F-5</Dropdown.Item>
                 </Dropdown.Menu>
-            </Dropdown>
-            <StandardButton type="button" className="!bg-red-500 hover:!bg-red-600" onClick={() => {
+            </Dropdown>}
+            {localStorage.getItem('role') !== 'INTERN' && <StandardButton type="button" className="!bg-red-500 hover:!bg-red-600" onClick={() => {
                 setIsPopupOpen(true);
-            }}>Usuń próbkę</StandardButton>
+            }}>Usuń próbkę</StandardButton>}
         </div>
 
         <ConfirmPopup

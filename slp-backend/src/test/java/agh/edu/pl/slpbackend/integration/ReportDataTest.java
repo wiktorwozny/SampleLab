@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,6 +40,7 @@ public class ReportDataTest implements ReportDataMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void add() {
         var count = repository.count();
 
@@ -53,6 +55,7 @@ public class ReportDataTest implements ReportDataMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void update() {
         var reportData = repository.findAll().get(0);
         var request = toDto(reportData);
@@ -66,6 +69,7 @@ public class ReportDataTest implements ReportDataMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void delete() {
         var reportData = repository.findAll().get(0);
         var response = controller.delete(reportData.getId());

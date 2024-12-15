@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class ProductGroupTest implements ProductGroupMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void add() {
         var count = repository.count();
 
@@ -50,6 +52,7 @@ public class ProductGroupTest implements ProductGroupMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void update() {
         var group = repository.findAll().get(0);
         String name = "test";

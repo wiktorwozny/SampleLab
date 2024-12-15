@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class SampleTest implements SampleMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void add() {
         var count = repository.count();
 
@@ -54,6 +56,7 @@ public class SampleTest implements SampleMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void update() {
         var sample = repository.findAll().get(0);
         var request = toDto(sample);
@@ -84,6 +87,7 @@ public class SampleTest implements SampleMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void update_status() {
         var sample = repository.findAll().get(0);
         var response = controller.updateStatus(sample.getId(), "IN_PROGRESS");
@@ -98,6 +102,7 @@ public class SampleTest implements SampleMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void delete() {
         var sample = repository.findAll().get(0);
         var response = controller.delete(sample.getId());

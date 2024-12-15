@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,6 +22,7 @@ public class ReportTest {
     private SampleReportGeneratorController sampleReportController;
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_KZWA_report() {
         var response = KZWAReportController.generate(1L);
 
@@ -28,18 +30,21 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_KZWA_report_fails_when_unknown_sample_id() {
         assertThatThrownBy(() -> KZWAReportController.generate(34895L))
                 .isInstanceOf(SampleNotFoundException.class);
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_sample_report_fails_when_unknown_sample_id() {
         assertThatThrownBy(() -> sampleReportController.generate(34895L, ""))
                 .isInstanceOf(SampleNotFoundException.class);
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F4_report0() {
         var response = sampleReportController.generate(1L, "F4");
 
@@ -47,6 +52,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F5_report0() {
         var response = sampleReportController.generate(1L, "F5");
 
@@ -54,6 +60,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F4_report1() {
         var response = sampleReportController.generate(4L, "F4");
 
@@ -61,6 +68,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F4_report2() {
         var response = sampleReportController.generate(5L, "F4");
 
@@ -68,6 +76,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F4_report3() {
         var response = sampleReportController.generate(6L, "F4");
 
@@ -75,6 +84,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F4_report4() {
         var response = sampleReportController.generate(7L, "F4");
 
@@ -82,6 +92,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F5_report1() {
         var response = sampleReportController.generate(4L, "F5");
 
@@ -89,6 +100,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F5_report2() {
         var response = sampleReportController.generate(5L, "F5");
 
@@ -96,6 +108,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F5_report3() {
         var response = sampleReportController.generate(6L, "F5");
 
@@ -103,6 +116,7 @@ public class ReportTest {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void generate_F5_report4() {
         var response = sampleReportController.generate(7L, "F5");
 

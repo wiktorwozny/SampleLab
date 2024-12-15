@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +35,7 @@ public class CodeTest implements CodeMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void add() {
         var code = CodeDto.builder()
                 .id("test")
@@ -45,6 +47,7 @@ public class CodeTest implements CodeMapper {
     }
 
     @Test
+    @WithMockUser(roles = "WORKER")
     void update() {
         var code = repository.findAll().get(0);
         var request = toDto(code);

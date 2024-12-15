@@ -6,6 +6,7 @@ import agh.edu.pl.slpbackend.service.dictionary.SamplingStandardService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +24,20 @@ public class SamplingStandardController extends AbstractController {
         return ResponseEntity.ok(samplingStandardService.selectAll());
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody @Valid SamplingStandardDto samplingStandardDto) {
         return add(samplingStandardDto, samplingStandardService);
     }
 
 
+    @PreAuthorize("hasRole('WORKER')")
     @PutMapping("/update")
     public ResponseEntity<Void> edit(@RequestBody @Valid SamplingStandardDto samplingStandardDto) {
         return edit(samplingStandardDto, samplingStandardService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return delete(SamplingStandardDto.builder().id(id).build(), samplingStandardService);

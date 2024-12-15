@@ -119,7 +119,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                 {!isLoading && numberOfPages > 0 && <table className="table table-hover table-bordered cursor-pointer">
                     <thead>
                     <tr>
-                        <th></th>
+                        {localStorage.getItem('role') !== 'INTERN' && <th></th>}
                         <th scope="col" className={activeColumn === 'id' ? '!bg-gray-400' : '!bg-gray-300'}
                             onClick={() => updateSortParams("id")}>ID
                         </th>
@@ -148,7 +148,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         <tr
                             key={sample.id} onClick={() => navigate(`/sample/${sample.id}`)}
                         >
-                            <td
+                            {localStorage.getItem('role') !== 'INTERN' && <td
                                 style={{padding: 5, textAlign: 'center', width: 35, height: 35}}
                                 onClick={(e) => e.stopPropagation()}>
                                 <input
@@ -158,7 +158,7 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                                     onClick={(e) => e.stopPropagation()}
                                     style={{width: '80%', height: '80%'}}
                                 />
-                            </td>
+                            </td>}
                             <td>{sample.id}</td>
                             <td>{sample.code}</td>
                             <td>{sample.group}</td>
@@ -171,14 +171,14 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                 </table>}
                 <div className="flex flex-row justify-between items-center w-full">
 
-                    <DisableButton type="button" disabled={selectedSamplesIds.length === 0} onClick={(e) => {
+                    {localStorage.getItem('role') !== 'INTERN' && <DisableButton type="button" disabled={selectedSamplesIds.length === 0} onClick={(e) => {
                         e.stopPropagation();
                         const encoded = encodeURIComponent(JSON.stringify(selectedSamplesIds));
                         navigate(`/protocolReportData/${encoded}`);
                     }
                     }>
                         Wprowadź dodatkowe dane
-                    </DisableButton>
+                    </DisableButton>}
 
                     <div className="flex flex-row justify-center items-center w-full">
                         <div className="mr-5">Pokaż: <input className="w-10 border" type="number"
@@ -198,10 +198,6 @@ const SampleList: React.FC<any> = ({selectedFilters}) => {
                         <MdKeyboardDoubleArrowRight className="bg-gray-200"
                                                     onClick={() => updatePageNumber(numberOfPages - 1)}/>
                     </div>
-
-                    <button className="opacity-0 px-3 py-1 rounded" style={{cursor: 'default'}}>
-                        Wprowadź dodatkowe dane
-                    </button>
                 </div>
                 <br/>
             </div>

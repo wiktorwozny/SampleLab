@@ -125,11 +125,12 @@ const AssortmentDict = () => {
         <div className="w-full">
             <Title message={'Asortymenty'}/>
 
+            {localStorage.getItem('role') !== 'INTERN' && 
             <div className="w-full justify-content-between flex mb-2">
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
                 </StandardButton>
-            </div>
+            </div>}
 
             <DictionaryTable<Assortment>
                 columns={columns}

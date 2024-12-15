@@ -1,7 +1,9 @@
 import NoPermitionPage from "../pages/NoPermitionPage";
 
-const PrivateRoute = ({children}:any):any => {
+export const AdminRoute = ({children}:any):any => {
     return (localStorage.getItem('role') === 'ADMIN' ? <>{children}</>:<NoPermitionPage/>)
 }
 
-export default PrivateRoute;
+export const WorkerRoute = ({children}:any):any => {
+    return (localStorage.getItem('role') !== 'INTERN' ? <>{children}</>:<NoPermitionPage/>)
+}
