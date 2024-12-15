@@ -13,12 +13,12 @@ public abstract class AbstractController {
     }
 
     protected ResponseEntity<Void> edit(final IModel model, final AbstractService service) {
-        service.insert(model);
+        service.update(model);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     protected ResponseEntity<Void> delete(final IModel model, final AbstractService service) {
-        service.insert(model);
+        service.delete(model);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
