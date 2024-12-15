@@ -1,6 +1,6 @@
 package agh.edu.pl.slpbackend.dto;
 
-import agh.edu.pl.slpbackend.enums.RoleEnum;
+import agh.edu.pl.slpbackend.enums.Role;
 import agh.edu.pl.slpbackend.model.User;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
@@ -20,5 +20,5 @@ public class UserDto implements IModel {
 
     private String name;
     private String email;
-    private RoleEnum role;
+    private Role role;
 }

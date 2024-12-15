@@ -132,7 +132,7 @@ const Sidebar: React.FC<{}> = () => {
 
                             onClick={() => navigate('/admin-panel')}
                         >
-                            Lista Użytkowników
+                            Lista użytkowników
                         </a>
                     </li>)}
                     <li className="my-2">

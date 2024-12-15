@@ -5,7 +5,7 @@ import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
 import agh.edu.pl.slpbackend.dto.filters.Filters;
 import agh.edu.pl.slpbackend.dto.filters.SummarySample;
-import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
+import agh.edu.pl.slpbackend.enums.ProgressStatus;
 import agh.edu.pl.slpbackend.mapper.SampleMapper;
 import agh.edu.pl.slpbackend.repository.SampleRepository;
 import jakarta.transaction.Transactional;
@@ -89,12 +89,12 @@ public class SampleTest implements SampleMapper {
         var response = controller.updateStatus(sample.getId(), "IN_PROGRESS");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(sample.getProgressStatus()).isEqualTo(ProgressStatusEnum.IN_PROGRESS);
+        assertThat(sample.getProgressStatus()).isEqualTo(ProgressStatus.IN_PROGRESS);
 
         response = controller.updateStatus(sample.getId(), "DONE");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(sample.getProgressStatus()).isEqualTo(ProgressStatusEnum.DONE);
+        assertThat(sample.getProgressStatus()).isEqualTo(ProgressStatus.DONE);
     }
 
     @Test

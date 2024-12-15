@@ -1,7 +1,7 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.ExaminationDto;
-import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
+import agh.edu.pl.slpbackend.enums.ProgressStatus;
 import agh.edu.pl.slpbackend.mapper.ExaminationMapper;
 import agh.edu.pl.slpbackend.model.Examination;
 import agh.edu.pl.slpbackend.model.Sample;
@@ -68,7 +68,7 @@ public class ExaminationService extends AbstractService implements ExaminationMa
             completed = (examination.getResult() != null && !examination.getResult().isEmpty());
         }
 
-        sample.setProgressStatus(completed ? ProgressStatusEnum.DONE : ProgressStatusEnum.IN_PROGRESS);
+        sample.setProgressStatus(completed ? ProgressStatus.DONE : ProgressStatus.IN_PROGRESS);
 
         sampleRepository.save(sample);
     }

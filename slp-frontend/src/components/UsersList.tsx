@@ -51,7 +51,7 @@ const UserList = () => {
             <thead>
             <tr>
                 <th className="w-20">Akcja</th>
-                <th scope={"col"} className="text-left">Email</th>
+                <th scope={"col"} className="text-left">Adres e-mail</th>
                 <th scope={"col"} className="text-left">Imię i nazwisko</th>
                 <th scope={"col"} className="text-left">Rola</th>
             </tr>

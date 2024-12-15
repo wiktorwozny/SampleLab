@@ -4,7 +4,7 @@ import agh.edu.pl.slpbackend.controller.UserController;
 import agh.edu.pl.slpbackend.dto.UserDto;
 import agh.edu.pl.slpbackend.dto.users.ChangePasswordRequest;
 import agh.edu.pl.slpbackend.dto.users.LoginRequest;
-import agh.edu.pl.slpbackend.enums.RoleEnum;
+import agh.edu.pl.slpbackend.enums.Role;
 import agh.edu.pl.slpbackend.exception.AccountAlreadyExistsException;
 import agh.edu.pl.slpbackend.exception.UserNotFoundException;
 import agh.edu.pl.slpbackend.exception.WrongPasswordException;
@@ -37,7 +37,7 @@ public class UserTest {
         var userDto = UserDto.builder()
                 .name("Adam Nowak")
                 .email("nowak@gmail.com")
-                .role(RoleEnum.WORKER)
+                .role(Role.WORKER)
                 .build();
         var response = controller.register(userDto);
 
@@ -63,7 +63,7 @@ public class UserTest {
         var userDto = UserDto.builder()
                 .name("Adam Nowak")
                 .email(WORKER_EMAIL)
-                .role(RoleEnum.WORKER)
+                .role(Role.WORKER)
                 .build();
 
         assertThatThrownBy(() -> controller.register(userDto))

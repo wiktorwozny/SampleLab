@@ -1,7 +1,7 @@
 package agh.edu.pl.slpbackend.config;
 
-import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
-import agh.edu.pl.slpbackend.enums.RoleEnum;
+import agh.edu.pl.slpbackend.enums.ProgressStatus;
+import agh.edu.pl.slpbackend.enums.Role;
 import agh.edu.pl.slpbackend.model.*;
 import agh.edu.pl.slpbackend.repository.*;
 import agh.edu.pl.slpbackend.service.MethodService;
@@ -236,7 +236,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(reportData1)
-                        .progressStatus(ProgressStatusEnum.DONE)
+                        .progressStatus(ProgressStatus.DONE)
                         .build();
 
                 Address address2 = Address.builder()
@@ -273,7 +273,7 @@ public class Config {
                         .inspection(inspection2)
                         .samplingStandard(samplingStandard1)
                         .reportData(reportData2)
-                        .progressStatus(ProgressStatusEnum.IN_PROGRESS)
+                        .progressStatus(ProgressStatus.IN_PROGRESS)
                         .build();
 
                 Sample sample3 = Sample.builder()
@@ -290,7 +290,7 @@ public class Config {
                         .inspection(inspection3)
                         .samplingStandard(samplingStandard2)
                         .reportData(null)
-                        .progressStatus(ProgressStatusEnum.IN_PROGRESS)
+                        .progressStatus(ProgressStatus.IN_PROGRESS)
                         .build();
 
                 ReportData[] testReportDataArray = new ReportData[4];
@@ -325,7 +325,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(testReportDataArray[0])
-                        .progressStatus(ProgressStatusEnum.DONE)
+                        .progressStatus(ProgressStatus.DONE)
                         .build();
 
                 Sample sample5 = Sample.builder()
@@ -342,7 +342,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(testReportDataArray[1])
-                        .progressStatus(ProgressStatusEnum.DONE)
+                        .progressStatus(ProgressStatus.DONE)
                         .build();
 
                 Sample sample6 = Sample.builder()
@@ -359,7 +359,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(testReportDataArray[2])
-                        .progressStatus(ProgressStatusEnum.DONE)
+                        .progressStatus(ProgressStatus.DONE)
                         .build();
 
                 Sample sample7 = Sample.builder()
@@ -376,7 +376,7 @@ public class Config {
                         .inspection(inspection1)
                         .samplingStandard(samplingStandard2)
                         .reportData(testReportDataArray[3])
-                        .progressStatus(ProgressStatusEnum.DONE)
+                        .progressStatus(ProgressStatus.DONE)
                         .build();
 
                 sampleRepository.saveAll(List.of(sample1, sample2, sample3, sample4, sample5, sample6, sample7));
@@ -485,21 +485,27 @@ public class Config {
 
             if (userRepository.count() == 0) {
                 User admin = User.builder()
-                        .name("admin")
+                        .name("Maciej Nowak")
                         .email("admin@gmail.com")
                         .password("admin")
-                        .role(RoleEnum.ADMIN)
+                        .role(Role.ADMIN)
                         .build();
 
                 User worker = User.builder()
-                        .name("worker")
+                        .name("Jan Kowalski")
                         .email("worker@gmail.com")
                         .password("worker")
-                        .role(RoleEnum.WORKER)
+                        .role(Role.WORKER)
                         .build();
 
+                User intern = User.builder()
+                        .name("Piotr Stoch")
+                        .email("intern@gmail.com")
+                        .password("intern")
+                        .role(Role.INTERN)
+                        .build();
 
-                userRepository.saveAll(List.of(admin, worker));
+                userRepository.saveAll(List.of(admin, worker, intern));
             }
         };
     }

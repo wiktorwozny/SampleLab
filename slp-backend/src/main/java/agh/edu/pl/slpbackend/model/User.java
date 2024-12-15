@@ -1,7 +1,7 @@
 package agh.edu.pl.slpbackend.model;
 
 import agh.edu.pl.slpbackend.converter.PasswordConverter;
-import agh.edu.pl.slpbackend.enums.RoleEnum;
+import agh.edu.pl.slpbackend.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,5 +34,5 @@ public class User implements Serializable {
     @Convert(converter = PasswordConverter.class)
     private String password;
 
-    private RoleEnum role;
+    private Role role;
 }

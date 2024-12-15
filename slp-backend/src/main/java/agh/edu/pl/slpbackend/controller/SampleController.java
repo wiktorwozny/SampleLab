@@ -4,7 +4,7 @@ import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.dto.filters.FilterRequest;
 import agh.edu.pl.slpbackend.dto.filters.FilterResponse;
-import agh.edu.pl.slpbackend.enums.ProgressStatusEnum;
+import agh.edu.pl.slpbackend.enums.ProgressStatus;
 import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class SampleController extends AbstractController {
 
     @PutMapping("status/{sampleId}/{status}")
     public ResponseEntity<Sample> updateStatus(@PathVariable final Long sampleId, @PathVariable final String status) {
-        return ResponseEntity.ok(sampleService.updateStatus(sampleId, ProgressStatusEnum.convertEnum(status)));
+        return ResponseEntity.ok(sampleService.updateStatus(sampleId, ProgressStatus.convertEnum(status)));
     }
 
     @PostMapping("/save")
