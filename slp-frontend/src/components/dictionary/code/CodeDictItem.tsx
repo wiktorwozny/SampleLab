@@ -7,6 +7,7 @@ import {Modal} from "react-bootstrap";
 import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
 import {StandardButton} from "../../ui/StandardButton";
+import {handleApiError} from "../../../utils/handleApiError";
 
 interface CodeDictItemProps {
     refresh: () => void;
@@ -56,9 +57,11 @@ const CodeDictItem: React.FC<CodeDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
-            console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
@@ -71,7 +74,10 @@ const CodeDictItem: React.FC<CodeDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})

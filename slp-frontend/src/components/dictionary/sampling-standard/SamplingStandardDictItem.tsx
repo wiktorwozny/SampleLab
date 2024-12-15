@@ -7,6 +7,7 @@ import {FormLabel} from "../../ui/Labels";
 import {Input} from "../../ui/Input";
 import {addSamplingStandard, updateSamplingStandard} from "../../../helpers/samplingStandardApi";
 import {StandardButton} from "../../ui/StandardButton";
+import {handleApiError} from "../../../utils/handleApiError";
 
 interface SamplingStandardDictItemProps {
     refresh: () => void;
@@ -56,9 +57,11 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
-            console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
@@ -71,9 +74,11 @@ const SamplingStandardDictItem: React.FC<SamplingStandardDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
-            console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };

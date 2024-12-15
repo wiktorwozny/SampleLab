@@ -37,7 +37,15 @@ const AlertComponent = ({isToken = true}: any) => {
             }
         >
             <AlertTitle>{alertDetails.type === "success" ? "Sukces" : "Błąd"}</AlertTitle>
-            {alertDetails.message}
+            <div className='text-left'>
+                {alertDetails.message.split('\n').map((line, index) => (
+                    <span key={index}>
+                    {line}
+                        <br/>
+                </span>
+                ))}
+            </div>
+
         </Alert>
     </Collapse>)
 }

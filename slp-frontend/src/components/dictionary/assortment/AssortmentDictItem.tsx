@@ -11,6 +11,7 @@ import {Assortment, Indication, ProductGroup} from "../../../utils/types";
 import IndicationForAssortmentDictItem from "./IndicationForAssortmentDictItem";
 import {FaTrashCan} from "react-icons/fa6";
 import {StandardButton} from "../../ui/StandardButton";
+import {handleApiError} from "../../../utils/handleApiError";
 
 interface AssortmentDictItemProps {
     refresh: () => void;
@@ -67,9 +68,15 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                     setAlertDetails({isAlert: true, message: "Edytowano definicję", type: "success"});
                     refresh();
                     handleClose();
+                    resetForm();
                 }
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
             });
+
         } catch (err) {
+
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
         }
     };
@@ -77,7 +84,6 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
     const handleAdd = (formData: any) => {
         formData.indications = selectedIndicationList;
         formData.group = selectedProductGroup;
-        console.log(formData);
         try {
             addAssortment(formData).then((response) => {
                 if (response.status === 201 || response.status === 200) {
@@ -85,6 +91,8 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
             });
         } catch (err) {
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"});
@@ -97,7 +105,7 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
         } else {
             handleAdd(formData);
         }
-        resetForm();
+
     };
 
     const handleCancel = () => {
@@ -142,16 +150,27 @@ const AssortmentDictItem: React.FC<AssortmentDictItemProps> = ({
                         </div>
                         <FormLabel>Nazwa</FormLabel>
                         <Input type="text" disabled={isView}
-                               placeholder="Nazwa" {...register("name", {required: true})} />
-                        {errors.name && <p className="text-red-600">{`${errors.name.message}`}</p>}
+                               placeholder="Nazwa" {...register("name", {
+                            required: {
+                                value: true,
+                                message: "Pole wymagane"
+                            }
+                        })} />
+                        {errors.name && errors.name.message &&
+                            <p className="text-red-600">{`${errors.name.message}`}</p>}
 
                         <FormLabel>Metoda organoleptyczna</FormLabel>
                         <Input type="text" disabled={isView}
-                               placeholder="Metoda organoleptyczna" {...register("organolepticMethod", {required: true})} />
-                        {errors.organolepticMethod && <p className="text-red-600">{`${errors.organolepticMethod.message}`}</p>}
+                               placeholder="Metoda organoleptyczna" {...register("organolepticMethod", {
+                            required: {
+                                value: true,
+                                message: "Pole wymagane"
+                            }
+                        })} />
+                        {errors.organolepticMethod && errors.organolepticMethod.message &&
+                            <p className="text-red-600">{`${errors.organolepticMethod.message}`}</p>}
 
                         <FormLabel>Grupa</FormLabel>
-                        {/* Używamy SearchableDropdown z przekazanymi danymi */}
                         <SearchableDropdown
                             options={productGroupList}
                             selectedOption={selectedProductGroup?.id || null}

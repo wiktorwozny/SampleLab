@@ -4,6 +4,7 @@ import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.InspectionDto;
 import agh.edu.pl.slpbackend.model.Inspection;
 import agh.edu.pl.slpbackend.service.dictionary.InspectionService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,12 @@ public class InspectionController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Inspection> add(@RequestBody InspectionDto inspectionDto) throws Exception {
-        return new ResponseEntity<>(add(inspectionDto, inspectionService).getStatusCode()); //TODO nie wiem, trzeba przetestować
+    public ResponseEntity<Inspection> add(@RequestBody @Valid InspectionDto inspectionDto) throws Exception {
+        return new ResponseEntity<>(add(inspectionDto, inspectionService).getStatusCode());
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody InspectionDto inspectionDto) throws Exception {
+    public ResponseEntity<Void> edit(@RequestBody @Valid InspectionDto inspectionDto) throws Exception {
         return edit(inspectionDto, inspectionService);
     }
 

@@ -8,6 +8,7 @@ import {FormLabel} from "../../ui/Labels";
 import {AddressController} from "../../ui/AddressController";
 import {addClient, updateClient} from "../../../helpers/clientApi";
 import {StandardButton} from "../../ui/StandardButton";
+import {handleApiError} from "../../../utils/handleApiError";
 
 interface ClientDictItemProps {
     refresh: () => void;
@@ -61,7 +62,9 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+            });
         } catch (err) {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
@@ -76,7 +79,10 @@ const ClientDictItem: React.FC<ClientDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
             console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})

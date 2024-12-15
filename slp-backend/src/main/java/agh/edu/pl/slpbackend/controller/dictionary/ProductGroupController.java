@@ -4,6 +4,7 @@ import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupDto;
 import agh.edu.pl.slpbackend.dto.productGroup.ProductGroupSaveDto;
 import agh.edu.pl.slpbackend.service.dictionary.ProductGroupService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,12 @@ public class ProductGroupController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody ProductGroupSaveDto productGroupSaveDto) throws Exception {
+    public ResponseEntity<Void> add(@RequestBody @Valid ProductGroupSaveDto productGroupSaveDto) throws Exception {
         return add(productGroupSaveDto, productGroupService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody ProductGroupSaveDto productGroupSaveDto) throws Exception {
+    public ResponseEntity<Void> edit(@RequestBody @Valid ProductGroupSaveDto productGroupSaveDto) throws Exception {
         return edit(productGroupSaveDto, productGroupService);
     }
 

@@ -8,6 +8,9 @@ import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,14 +32,18 @@ public class AssortmentDto implements IModel, Serializable {
     private Long id;
 
     @ModelFieldName("name")
+    @NotBlank(message = "Pole [Nazwa] nie może być puste")
     private String name;
 
     @ModelFieldName("group")
+    @NotNull(message = "Pole [Grupa] nie może być puste")
     private ProductGroup group;
 
     @ModelFieldName("indications")
+    @NotEmpty(message = "Lista [Oznaczenia] nie może być puste")
     private List<Indication> indications;
 
     @ModelFieldName("organolepticMethod")
+    @NotBlank(message = "Pole [Metoda organoleptyczna] nie może być puste")
     private String organolepticMethod;
 }
