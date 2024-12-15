@@ -24,14 +24,12 @@ public class AssortmentController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody @Valid AssortmentDto assortmentDto) throws Exception {
-    public ResponseEntity<Void> add(@RequestBody AssortmentDto assortmentDto) {
+    public ResponseEntity<Void> add(@RequestBody @Valid AssortmentDto assortmentDto) {
         return add(assortmentDto, assortmentService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody @Valid AssortmentDto assortmentDto) throws Exception {
-    public ResponseEntity<Void> edit(@RequestBody AssortmentDto assortmentDto) {
+    public ResponseEntity<Void> edit(@RequestBody @Valid AssortmentDto assortmentDto) {
         return edit(assortmentDto, assortmentService);
     }
 
