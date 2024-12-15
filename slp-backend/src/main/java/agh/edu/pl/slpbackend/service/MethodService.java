@@ -9,13 +9,16 @@ import agh.edu.pl.slpbackend.repository.ProductGroupRepository;
 import agh.edu.pl.slpbackend.repository.SamplingStandardRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class MethodService {
@@ -28,6 +31,7 @@ public class MethodService {
 
     @Transactional
     public void importMethods(InputStream inputStream) throws IOException {
+        log.info("importMethods");
         try (Workbook workbook = new XSSFWorkbook(inputStream)) {
 
             Sheet groupListSheet = workbook.getSheet("grupy");

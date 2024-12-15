@@ -25,11 +25,13 @@ public class ExaminationService extends AbstractService implements ExaminationMa
     private final SampleRepository sampleRepository;
 
     public List<ExaminationDto> selectExaminationsForSample(final Long sampleId) {
+        log.info("select examination for sample");
         List<Examination> examinations = examinationRepository.findBySampleId(sampleId);
         return examinations.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     public ExaminationDto selectById(final Long id) {
+        log.info("select examination by id");
         final Examination examination = examinationRepository.findById(id).orElseThrow();
         return toDto(examination);
     }
@@ -37,7 +39,7 @@ public class ExaminationService extends AbstractService implements ExaminationMa
 
     @Override
     public Object insert(IModel model) {
-
+        log.info("insert examination");
         final ExaminationDto examinationDto = (ExaminationDto) model;
         final Examination examination = toModel(examinationDto);
         final Object res = examinationRepository.save(examination);
@@ -49,6 +51,7 @@ public class ExaminationService extends AbstractService implements ExaminationMa
 
     @Override
     public Object update(IModel model) {
+        log.info("update examination");
         final ExaminationDto examinationDto = (ExaminationDto) model;
         final Examination examination = toModel(examinationDto);
 
@@ -75,6 +78,7 @@ public class ExaminationService extends AbstractService implements ExaminationMa
 
     @Override
     public void delete(IModel model) {
+        log.info("delete examination");
         final ExaminationDto examinationDto = (ExaminationDto) model;
         final Examination examination = toModel(examinationDto);
         examinationRepository.deleteById(examination.getId());

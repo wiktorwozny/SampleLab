@@ -19,6 +19,8 @@ public class AddressService implements AddressMapper {
     private final AddressRepository addressRepository;
 
     public List<AddressDto> selectAll() {
+        log.info("select all address");
+
         List<Address> addressesList = addressRepository.findAll();
         return addressesList.stream().map(this::toDto).collect(Collectors.toList());
     }

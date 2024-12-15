@@ -28,28 +28,33 @@ public class SamplingStandardService extends AbstractService implements Sampling
     private final ProductGroupRepository groupRepository;
 
     public List<SamplingStandardDto> selectAll() {
+        log.info("select all sampling standards");
+
         final List<SamplingStandard> samplingStandardList = samplingStandardRepository.findAll();
         return samplingStandardList.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert sampling standard");
         final SamplingStandardDto dto = (SamplingStandardDto) model;
         return samplingStandardRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
+        log.info("update sampling standard");
         final SamplingStandardDto dto = (SamplingStandardDto) model;
         return samplingStandardRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        log.info("delete sampling standard");
         final SamplingStandardDto dto = (SamplingStandardDto) model;
         SamplingStandard samplingStandard = samplingStandardRepository.findById(dto.getId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        for (ProductGroup group: samplingStandard.getGroups()) {
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        for (ProductGroup group : samplingStandard.getGroups()) {
             group.getSamplingStandards().remove(samplingStandard);
             groupRepository.save(group);
         }

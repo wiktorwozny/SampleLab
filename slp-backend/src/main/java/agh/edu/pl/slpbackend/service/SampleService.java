@@ -35,11 +35,15 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
 
 
     public List<SampleDto> selectAll() {
+        log.info("select all samples");
+
         List<Sample> sampleList = sampleRepository.findAll();
         return sampleList.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     public SampleDto selectOne(Long id) {
+        log.info("select sample by id");
+
         final Sample sample = sampleRepository.findById(id)
                 .orElseThrow(SampleNotFoundException::new);
         return toDto(sample);
@@ -47,6 +51,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert sample");
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
         sample.setProgressStatus(ProgressStatusEnum.IN_PROGRESS);
@@ -55,6 +60,7 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
 
     @Override
     public Object update(IModel model) {
+        log.info("update sample");
         final SampleDto sampleDto = (SampleDto) model;
         final Sample sample = toModel(sampleDto);
         return sampleRepository.save(sample);
@@ -68,12 +74,14 @@ public class SampleService extends AbstractService implements SampleMapper, Indi
 
     @Override
     public void delete(IModel model) {
+        log.info("delete sample");
         final SampleDto sampleDto = (SampleDto) model;
         final Long id = sampleDto.getId();
         sampleRepository.deleteById(id);
     }
 
     public FilterResponse filter(FilterRequest request) {
+        log.info("filter request");
         Specification<Sample> specification = hasFieldIn(List.of("code", "id"), request.filters().codes())
                 .and(hasFieldIn(List.of("client", "name"), request.filters().clients()))
                 .and(hasFieldIn(List.of("assortment", "group", "name"), request.filters().groups()))

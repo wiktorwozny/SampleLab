@@ -23,6 +23,7 @@ public class CodeService extends AbstractService implements CodeMapper {
     private final CodeRepository codeRepository;
 
     public List<CodeDto> selectAll() {
+        log.info("select all code");
         List<Code> codeList = codeRepository.findAll();
         return codeList.stream().map(this::toDto).collect(Collectors.toList());
     }
@@ -30,18 +31,21 @@ public class CodeService extends AbstractService implements CodeMapper {
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert code");
         final CodeDto dto = (CodeDto) model;
         return codeRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
+        log.info("update code");
         final CodeDto dto = (CodeDto) model;
         return codeRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        log.info("delete code");
         final CodeDto dto = (CodeDto) model;
         try {
             codeRepository.deleteById(dto.getId());

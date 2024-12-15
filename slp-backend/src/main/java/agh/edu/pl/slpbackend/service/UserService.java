@@ -14,10 +14,12 @@ import agh.edu.pl.slpbackend.repository.UserRepository;
 import agh.edu.pl.slpbackend.service.iface.AbstractService;
 import agh.edu.pl.slpbackend.service.iface.IModel;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserService extends AbstractService implements UserMapper {
@@ -27,6 +29,7 @@ public class UserService extends AbstractService implements UserMapper {
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert user");
         final UserDto userDto = (UserDto) model;
         if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new AccountAlreadyExistsException();
@@ -42,6 +45,7 @@ public class UserService extends AbstractService implements UserMapper {
 
     @Override
     public void delete(IModel model) {
+        log.info("delete user");
         final UserDto userDto = (UserDto) model;
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(UserNotFoundException::new);
@@ -50,6 +54,7 @@ public class UserService extends AbstractService implements UserMapper {
     }
 
     public LoginResponse login(LoginRequest request) {
+        log.info("login user");
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -63,6 +68,7 @@ public class UserService extends AbstractService implements UserMapper {
     }
 
     public void changePassword(ChangePasswordRequest request, String email) {
+        log.info("change password");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -75,6 +81,7 @@ public class UserService extends AbstractService implements UserMapper {
     }
 
     public void changePasswordByAdmin(ChangePasswordRequest request, String email) {
+        log.info("change password by admin");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -83,6 +90,7 @@ public class UserService extends AbstractService implements UserMapper {
     }
 
     public List<User> getAllUsers() {
+        log.info("get all users");
         return userRepository.findAll();
     }
 }

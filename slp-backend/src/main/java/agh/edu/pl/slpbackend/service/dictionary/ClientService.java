@@ -23,6 +23,7 @@ public class ClientService extends AbstractService implements ClientMapper {
     private final ClientRepository clientRepository;
 
     public List<ClientDto> selectAll() {
+        log.info("select all client");
         List<Client> clientList = clientRepository.findAll();
         return clientList.stream().map(this::toDto).collect(Collectors.toList());
     }
@@ -30,18 +31,21 @@ public class ClientService extends AbstractService implements ClientMapper {
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert client");
         final ClientDto dto = (ClientDto) model;
         return clientRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
+        log.info("update client");
         final ClientDto dto = (ClientDto) model;
         return clientRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        log.info("delete client");
         final ClientDto dto = (ClientDto) model;
         try {
             clientRepository.deleteById(dto.getId());
