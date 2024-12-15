@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller.dictionary;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.AssortmentDto;
 import agh.edu.pl.slpbackend.service.dictionary.AssortmentService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,12 @@ public class AssortmentController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody AssortmentDto assortmentDto) {
+    public ResponseEntity<Void> add(@RequestBody @Valid AssortmentDto assortmentDto) {
         return add(assortmentDto, assortmentService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody AssortmentDto assortmentDto) {
+    public ResponseEntity<Void> edit(@RequestBody @Valid AssortmentDto assortmentDto) {
         return edit(assortmentDto, assortmentService);
     }
 

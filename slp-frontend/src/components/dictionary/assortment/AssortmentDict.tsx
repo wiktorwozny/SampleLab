@@ -10,7 +10,7 @@ import AssortmentDictItem from "./AssortmentDictItem";
 import Title from "../../ui/Title";
 
 const columns: Column<Assortment>[] = [
-    {header: 'ID', accessor: 'id'},
+    {header: 'ID', accessor: 'id', className: 'w-12'},
     {header: 'Nazwa', accessor: 'name'},
     {header: 'Metoda organoleptyczna', accessor: 'organolepticMethod'},
     {
@@ -79,7 +79,11 @@ const AssortmentDict = () => {
         } catch (err: any) {
             console.log(err)
             if (err?.response?.status === 409) {
-                setAlertDetails({isAlert: true, message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane", type: "error"})
+                setAlertDetails({
+                    isAlert: true,
+                    message: "Nie można usunąć rekordu, ponieważ zależą od niego inne dane",
+                    type: "error"
+                })
             } else {
                 setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
             }
@@ -160,4 +164,4 @@ const AssortmentDict = () => {
     )
 
 }
-export default AssortmentDict
+export default AssortmentDict;

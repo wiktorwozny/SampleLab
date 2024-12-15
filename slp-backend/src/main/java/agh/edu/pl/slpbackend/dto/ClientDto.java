@@ -7,6 +7,8 @@ import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,11 +32,14 @@ public class ClientDto implements IModel, Serializable {
     private Long id;
 
     @ModelFieldName("wijharsCode")
+    @NotBlank(message = "Pole [Kod WIJHARS] nie może być puste")
     private String wijharsCode;
 
     @ModelFieldName("name")
+    @NotBlank(message = "Pole [Nazwa] nie może być puste")
     private String name;
 
     @ModelFieldName("address")
+    @NotNull(message = "Pole [Adres] nie może być puste")
     private Address address;
 }

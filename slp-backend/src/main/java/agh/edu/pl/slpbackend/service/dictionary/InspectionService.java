@@ -23,6 +23,7 @@ public class InspectionService extends AbstractService implements InspectionMapp
     private final InspectionRepository inspectionRepository;
 
     public List<InspectionDto> selectAll() {
+        log.info("select all inspections");
         List<Inspection> inspectionList = inspectionRepository.findAll();
         return inspectionList.stream().map(this::toDto).collect(Collectors.toList());
     }
@@ -30,18 +31,21 @@ public class InspectionService extends AbstractService implements InspectionMapp
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert inspection");
         final InspectionDto dto = (InspectionDto) model;
         return inspectionRepository.save(toModel(dto));
     }
 
     @Override
     public Object update(IModel model) {
+        log.info("update inspection");
         final InspectionDto dto = (InspectionDto) model;
         return inspectionRepository.save(toModel(dto));
     }
 
     @Override
     public void delete(IModel model) {
+        log.info("delete inspection");
         final InspectionDto dto = (InspectionDto) model;
         try {
             inspectionRepository.deleteById(dto.getId());

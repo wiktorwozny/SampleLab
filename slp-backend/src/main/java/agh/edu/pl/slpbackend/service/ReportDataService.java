@@ -1,7 +1,6 @@
 package agh.edu.pl.slpbackend.service;
 
 import agh.edu.pl.slpbackend.dto.ReportDataDto;
-import agh.edu.pl.slpbackend.dto.SampleDto;
 import agh.edu.pl.slpbackend.exception.SampleNotFoundException;
 import agh.edu.pl.slpbackend.mapper.ReportDataMapper;
 import agh.edu.pl.slpbackend.model.ReportData;
@@ -27,15 +26,20 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
     private final SampleRepository sampleRepository;
 
     public List<ReportDataDto> selectAll() {
+        log.info("select all report data");
+
         final List<ReportData> reportDataList = this.reportDataRepository.findAll();
         return reportDataList.stream().map(this::toDto).collect(Collectors.toList());
     }
+
     public ReportDataDto selectBySampleId(Long sampleId) {
+        log.info("select report data by id");
+
         final Sample sample = sampleRepository
                 .findById(sampleId)
                 .orElseThrow(SampleNotFoundException::new);
         final ReportData reportData = sample.getReportData();
-        if(reportData == null){
+        if (reportData == null) {
             return null;
         }
         return toDto(reportData);
@@ -43,7 +47,7 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 
     @Override
     public Object insert(IModel model) {
-
+        log.info("insert report data");
         final ReportDataDto reportDataDto = (ReportDataDto) model;
         Sample sample = sampleRepository.findById(reportDataDto.getSampleId())
                 .orElseThrow(SampleNotFoundException::new);
@@ -56,6 +60,7 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 
     @Override
     public Object update(IModel model) {
+        log.info("update report data");
         final ReportDataDto reportDataDto = (ReportDataDto) model;
         final ReportData reportData = toModel(reportDataDto);
         return reportDataRepository.save(reportData);
@@ -63,10 +68,11 @@ public class ReportDataService extends AbstractService implements ReportDataMapp
 
     @Override
     public void delete(IModel model) {
+        log.info("delete report data");
         final ReportDataDto reportDataDto = (ReportDataDto) model;
         final Long id = reportDataDto.getId();
         Sample sample = sampleRepository.findByReportDataId(id)
-                        .orElseThrow(SampleNotFoundException::new);
+                .orElseThrow(SampleNotFoundException::new);
         sample.setReportData(null);
         reportDataRepository.deleteById(id);
     }

@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller.dictionary;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.InspectionDto;
 import agh.edu.pl.slpbackend.service.dictionary.InspectionService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,12 @@ public class InspectionController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody InspectionDto inspectionDto) {
+    public ResponseEntity<Void> add(@RequestBody @Valid InspectionDto inspectionDto) {
         return add(inspectionDto, inspectionService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody InspectionDto inspectionDto) {
+    public ResponseEntity<Void> edit(@RequestBody @Valid InspectionDto inspectionDto) {
         return edit(inspectionDto, inspectionService);
     }
 

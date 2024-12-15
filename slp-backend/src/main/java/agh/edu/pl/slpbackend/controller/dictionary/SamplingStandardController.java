@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller.dictionary;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.SamplingStandardDto;
 import agh.edu.pl.slpbackend.service.dictionary.SamplingStandardService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +24,13 @@ public class SamplingStandardController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody SamplingStandardDto samplingStandardDto) {
+    public ResponseEntity<Void> add(@RequestBody @Valid SamplingStandardDto samplingStandardDto) {
         return add(samplingStandardDto, samplingStandardService);
     }
 
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody SamplingStandardDto samplingStandardDto) {
+    public ResponseEntity<Void> edit(@RequestBody @Valid SamplingStandardDto samplingStandardDto) {
         return edit(samplingStandardDto, samplingStandardService);
     }
 

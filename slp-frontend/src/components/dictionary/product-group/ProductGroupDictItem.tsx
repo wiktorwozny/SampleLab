@@ -8,7 +8,8 @@ import {Input} from "../../ui/Input";
 import {getAllSamplingStandard} from "../../../helpers/samplingStandardApi";
 import {ModalSelection} from "../../ui/ModalSelection";
 import {addGroup, updateGroup} from "../../../helpers/groupApi";
-import {StandardButton} from "../../ui/StandardButton"; // Import modal component
+import {StandardButton} from "../../ui/StandardButton";
+import {handleApiError} from "../../../utils/handleApiError"; // Import modal component
 
 interface ProductGroupDictItemProps {
     refresh: () => void;
@@ -69,9 +70,11 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
-            console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };
@@ -87,9 +90,11 @@ const ProductGroupDictItem: React.FC<ProductGroupDictItemProps> = ({
                     refresh();
                     handleClose();
                 }
-            })
+            }).catch((error) => {
+                handleApiError(error, handleClose, setAlertDetails, "Nie udało się przetworzyć żądania.");
+                refresh();
+            });
         } catch (err) {
-            console.log(err)
             setAlertDetails({isAlert: true, message: "Wystąpił błąd, spróbuj ponownie później", type: "error"})
         }
     };

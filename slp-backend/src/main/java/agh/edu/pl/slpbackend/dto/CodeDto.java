@@ -6,6 +6,7 @@ import agh.edu.pl.slpbackend.service.iface.annotation.ModelClass;
 import agh.edu.pl.slpbackend.service.iface.annotation.ModelFieldName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,6 @@ public class CodeDto implements IModel, Serializable {
     private String id;
 
     @ModelFieldName("name")
+    @NotBlank(message = "Pole [Nazwa] nie może być puste")
     private String name;
 }

@@ -23,9 +23,15 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({options, selecte
     const selectedOptionName = options.find(option => option.id === selectedOption)?.name || 'Select option';
 
     return (
-        <div className="relative w-full">
-            <div className="border border-gray-300 rounded-md p-2 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <div className="rounded relative w-full">
+            <div
+                className="border border-gray-300 rounded-md p-2 cursor-pointer flex justify-between items-center"
+                onClick={() => setIsOpen(!isOpen)}
+            >
                 <span>{selectedOptionName}</span>
+                <span className={`transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+                ▼
+            </span>
             </div>
 
             {isOpen && (

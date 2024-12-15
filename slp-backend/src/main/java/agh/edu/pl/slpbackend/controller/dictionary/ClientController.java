@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller.dictionary;
 import agh.edu.pl.slpbackend.controller.iface.AbstractController;
 import agh.edu.pl.slpbackend.dto.ClientDto;
 import agh.edu.pl.slpbackend.service.dictionary.ClientService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,12 @@ public class ClientController extends AbstractController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> add(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<Void> add(@RequestBody @Valid ClientDto clientDto) {
         return add(clientDto, clientService);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> edit(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<Void> edit(@RequestBody @Valid ClientDto clientDto) {
         return edit(clientDto, clientService);
     }
 

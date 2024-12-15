@@ -23,6 +23,7 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
     private final AssortmentRepository assortmentRepository;
 
     public List<AssortmentDto> selectAll() {
+        log.info("select all assortment");
         List<Assortment> codeList = assortmentRepository.findAll();
         return codeList.stream().map(this::toDto).collect(Collectors.toList());
     }
@@ -30,18 +31,21 @@ public class AssortmentService extends AbstractService implements AssortmentMapp
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert assortment");
         final AssortmentDto assortmentDto = (AssortmentDto) model;
         return assortmentRepository.save(toModel(assortmentDto));
     }
 
     @Override
     public Object update(IModel model) {
+        log.info("update assortment");
         final AssortmentDto assortmentDto = (AssortmentDto) model;
         return assortmentRepository.save(toModel(assortmentDto));
     }
 
     @Override
     public void delete(IModel model) {
+        log.info("delete assortment");
         final AssortmentDto dto = (AssortmentDto) model;
         try {
             assortmentRepository.deleteById(dto.getId());

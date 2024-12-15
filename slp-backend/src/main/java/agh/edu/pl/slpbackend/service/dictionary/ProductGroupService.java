@@ -28,24 +28,28 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     private final SamplingStandardRepository samplingStandardRepository;
 
     public List<ProductGroupDto> selectAll() {
+        log.info("select all productGroups");
         List<ProductGroup> productGroupList = productGroupRepository.findAll();
         return productGroupList.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
     public Object insert(IModel model) {
+        log.info("insert productGroup");
         final ProductGroupSaveDto dto = (ProductGroupSaveDto) model;
         return productGroupRepository.save(toModel(createObjectToSave(dto)));
     }
 
     @Override
     public Object update(IModel model) {
+        log.info("update productGroup");
         final ProductGroupSaveDto dto = (ProductGroupSaveDto) model;
         return productGroupRepository.save(toModel(createObjectToSave(dto)));
     }
 
     @Override
     public void delete(IModel model) {
+        log.info("delete productGroup");
         final ProductGroupDto dto = (ProductGroupDto) model;
         try {
             productGroupRepository.deleteById(dto.getId());

@@ -51,7 +51,6 @@ const IndicationForAssortmentDictItem: React.FC<IndicationDictItemProps> = ({
     };
 
     const submit = (formData: any) => {
-        console.log(formData);
         addNewIndication(formData);
         handleClose();
         resetForm();
@@ -71,7 +70,8 @@ const IndicationForAssortmentDictItem: React.FC<IndicationDictItemProps> = ({
                     </Modal.Header>
                     <Modal.Body>
                         <div className='flex items-center justify-between'>
-                            <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Oznaczenie organoleptyczne</label>
+                            <label className='form-label text-mb' style={{lineHeight: '1.5rem'}}>Oznaczenie
+                                organoleptyczne</label>
                             <Checkbox
                                 {...register("isOrganoleptic", {})}
                                 checked={isOrganolepticChecked}
@@ -99,11 +99,11 @@ const IndicationForAssortmentDictItem: React.FC<IndicationDictItemProps> = ({
                             placeholder="Metoda"
                             {...register("method", {
                                 required: !isOrganolepticChecked
-                                ? {
-                                    value: true,
-                                    message: "Pole wymagane",
-                                }
-                                : false,
+                                    ? {
+                                        value: true,
+                                        message: "Pole wymagane",
+                                    }
+                                    : false,
                             })}
                             disabled={isOrganolepticChecked}
                         />
