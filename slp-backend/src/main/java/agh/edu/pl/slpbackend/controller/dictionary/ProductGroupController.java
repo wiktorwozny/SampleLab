@@ -7,6 +7,7 @@ import agh.edu.pl.slpbackend.service.dictionary.ProductGroupService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,16 +25,19 @@ public class ProductGroupController extends AbstractController {
         return ResponseEntity.ok(productGroupService.selectAll());
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody @Valid ProductGroupSaveDto productGroupSaveDto) {
         return add(productGroupSaveDto, productGroupService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PutMapping("/update")
     public ResponseEntity<Void> edit(@RequestBody @Valid ProductGroupSaveDto productGroupSaveDto) {
         return edit(productGroupSaveDto, productGroupService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return delete(ProductGroupDto.builder().id(id).build(), productGroupService);

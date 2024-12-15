@@ -108,11 +108,12 @@ const ProductGroupDict = () => {
         <div className="w-full">
             <h1 className="text-center font-bold text-3xl w-full my-3">Grupy produktów</h1>
 
+            {localStorage.getItem('role') !== 'INTERN' &&
             <div className="w-full justify-content-between flex mb-2">
                 <StandardButton className="self-center h-10 ml-2" type={"button"} onClick={handleAdd}>
                     Dodaj nowy
                 </StandardButton>
-            </div>
+            </div>}
 
             <DictionaryTable<ProductGroup>
                 columns={columns}

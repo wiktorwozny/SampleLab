@@ -3,6 +3,7 @@ package agh.edu.pl.slpbackend.controller;
 import agh.edu.pl.slpbackend.service.MethodService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,7 @@ public class MethodController {
 
     private final MethodService methodService;
 
+    @PreAuthorize("hasRole('WORKER')")
     @PostMapping("/import")
     public ResponseEntity<Void> importMethods(@RequestParam("file") MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {

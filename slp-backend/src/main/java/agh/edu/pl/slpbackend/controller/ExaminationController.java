@@ -6,6 +6,7 @@ import agh.edu.pl.slpbackend.service.ExaminationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +36,13 @@ public class ExaminationController extends AbstractController {
         return new ResponseEntity<>(examinationDtos, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PutMapping("/update")
     public ResponseEntity<Void> insertExaminationResults(@RequestBody ExaminationDto updatedExaminationDto) {
         return edit(updatedExaminationDto, examinationService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @DeleteMapping("/delete/{examinationId}")
     public ResponseEntity<Void> deleteExamination(@PathVariable final Long examinationId) {
         return delete(ExaminationDto.builder().id(examinationId).build(), examinationService);

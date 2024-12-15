@@ -146,7 +146,6 @@ const ExaminationForm: FC<{}> = () => {
             }
 
             try {
-                console.log("cipa");
                 console.log(values);
                 let response = await updateExamination(values);
                 console.log(response);
@@ -307,7 +306,7 @@ const ExaminationForm: FC<{}> = () => {
                     <div className='flex justify-center gap-5'>
                         <CancelButton type='button' className='mt-3'
                                       onClick={() => navigate(`/sample/manageExaminations/${sampleId}`)}>Anuluj</CancelButton>
-                        <StandardButton type="submit" className='mt-3 justify-self-end'>Zapisz</StandardButton>
+                        {localStorage.getItem('role') !== 'INTERN' && <StandardButton type="submit" className='mt-3 justify-self-end'>Zapisz</StandardButton>}
                     </div>
                 </div>
 

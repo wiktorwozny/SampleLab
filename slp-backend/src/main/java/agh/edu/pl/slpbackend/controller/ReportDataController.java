@@ -6,6 +6,7 @@ import agh.edu.pl.slpbackend.service.ReportDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,16 +24,19 @@ public class ReportDataController extends AbstractController {
         return ResponseEntity.ok(reportDataService.selectAll());
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody final ReportDataDto reportData) {
         return add(reportData, reportDataService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @DeleteMapping("/{reportDataId}")
     public ResponseEntity<Void> delete(@PathVariable final Long reportDataId) {
         return delete(ReportDataDto.builder().id(reportDataId).build(), reportDataService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody ReportDataDto reportDataDto) {
         return edit(reportDataDto, reportDataService);

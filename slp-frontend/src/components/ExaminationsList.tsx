@@ -105,6 +105,9 @@ const ExaminationsList: FC<{}> = () => {
         setCheckedStates(prevState => {
             const newState = {...prevState};
             if (newState[indicationId]) {
+                if (localStorage.getItem('role') === 'INTERN') {
+                    return prevState;
+                }
                 const confirmed = window.confirm("Czy na pewno? Badanie zostanie usunięte!");
                 if (!confirmed) {
                     return prevState;
@@ -173,12 +176,12 @@ const ExaminationsList: FC<{}> = () => {
                         )}
                     </Div>))
             ))}
-            <StandardButton type='button' className='mt-3' onClick={
+            {localStorage.getItem('role') !== 'INTERN' && <StandardButton type='button' className='mt-3' onClick={
                 (e) => {
                     e.stopPropagation();
                     generateKzwa(Number(sampleId));
                 }
-            }>Generuj KZWA</StandardButton>
+            }>Generuj KZWA</StandardButton>}
             <CancelButton type='button' className='mt-3'
                           onClick={() => navigate(`/sample/${sampleId}`)}>Powrót</CancelButton>
         </div>

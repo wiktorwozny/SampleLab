@@ -11,7 +11,7 @@ import Sidebar from "./components/Sidebar";
 import AlertComponent from './components/AlertComponent';
 import AlertsContext from './contexts/AlertsContext';
 
-import PrivateRoute from './components/PrivateRoute';
+import {AdminRoute, WorkerRoute} from './components/PrivateRoute';
 import CheckIsLogin from './components/CheckIsLogin';
 import ProtocolReportDataForm from "./components/ProtocolReportDataForm";
 import LoginForm from "./components/LoginForm";
@@ -57,9 +57,9 @@ function App() {
                                 <div>
                                     <Routes>
                                         <Route path="/" element={<SampleListPage/>}/>
-                                        <Route path="/addSample" element={<SampleForm/>}/>
+                                        <Route path="/addSample" element={<WorkerRoute><SampleForm/></WorkerRoute>}/>
                                         <Route path="/sample/:sampleId" element={<SingleSamplePage/>}/>
-                                        <Route path="/sample/addReportData/:sampleId" element={<ReportDataForm/>}/>
+                                        <Route path="/sample/addReportData/:sampleId" element={<WorkerRoute><ReportDataForm/></WorkerRoute>}/>
                                         <Route
                                             path="/sample/manageExaminations/:sampleId"
                                             element={<ExaminationsList/>}
@@ -87,24 +87,24 @@ function App() {
                                         <Route
                                             path="/register"
                                             element={
-                                                <PrivateRoute>
+                                                <AdminRoute>
                                                     <RegisterPage/>
-                                                </PrivateRoute>
+                                                </AdminRoute>
                                             }
                                         />
                                         <Route
                                             path="/protocolReportData/:data"
-                                            element={<ProtocolReportDataForm/>}
+                                            element={<WorkerRoute><ProtocolReportDataForm/></WorkerRoute>}
                                         />
                                         <Route path="/changePassword" element={<ChangePasswordForm/>}/>
-                                        <Route path="/sample/edit/:sampleId" element={<SampleForm/>}/>
-                                        <Route path="/importMethods" element={<ImportMethodsForm/>}/>
+                                        <Route path="/sample/edit/:sampleId" element={<WorkerRoute><SampleForm/></WorkerRoute>}/>
+                                        <Route path="/importMethods" element={<WorkerRoute><ImportMethodsForm/></WorkerRoute>}/>
                                         <Route
                                             path="/admin-panel"
                                             element={
-                                                <PrivateRoute>
+                                                <AdminRoute>
                                                     <AdminPage/>
-                                                </PrivateRoute>
+                                                </AdminRoute>
                                             }
                                         />
                                     </Routes>

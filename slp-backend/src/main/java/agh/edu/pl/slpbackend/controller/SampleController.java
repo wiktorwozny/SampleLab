@@ -9,6 +9,7 @@ import agh.edu.pl.slpbackend.model.Sample;
 import agh.edu.pl.slpbackend.service.SampleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,21 +37,25 @@ public class SampleController extends AbstractController {
         return ResponseEntity.ok(sampleService.selectOne(sampleId));
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PutMapping("status/{sampleId}/{status}")
     public ResponseEntity<Sample> updateStatus(@PathVariable final Long sampleId, @PathVariable final String status) {
         return ResponseEntity.ok(sampleService.updateStatus(sampleId, ProgressStatus.convertEnum(status)));
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PostMapping("/save")
     public ResponseEntity<Void> add(@RequestBody SampleDto sampleDto) {
         return add(sampleDto, sampleService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @DeleteMapping("/{sampleId}")
     public ResponseEntity<Void> delete(@PathVariable final Long sampleId) {
         return delete(SampleDto.builder().id(sampleId).build(), sampleService);
     }
 
+    @PreAuthorize("hasRole('WORKER')")
     @PutMapping("/{sampleId}")
     public ResponseEntity<Void> update(@PathVariable final Long sampleId, @RequestBody SampleDto sampleDto) {
         return edit(sampleDto, sampleService);

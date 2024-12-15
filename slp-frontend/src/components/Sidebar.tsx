@@ -70,37 +70,37 @@ const Sidebar: React.FC<{}> = () => {
                             Lista próbek
                         </p>
                     </li>
+                    {localStorage.getItem('role') !== 'INTERN' && (
+                        <li className="my-2">
+                            <p
+                                className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
+                                onClick={() => navigate("/addSample")}
+                            >
+                                Dodaj próbkę
+                            </p>
+                        </li>
+                    )}
                     <li className="my-2">
                         <p
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
-                            onClick={() => navigate("/addSample")}
-                        >
-                            Dodaj próbkę
-                        </p>
-                    </li>
-                    <li className="my-2">
-                        <p
-                            className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
                             onClick={() => navigate('/dictionary')}
                         >
                             Edytuj dane
                         </p>
                     </li>
+                    {localStorage.getItem('role') !== 'INTERN' && (
+                        <li className="my-2">
+                            <p
+                                className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
+                                onClick={() => navigate('/importMethods')}
+                            >
+                                Wczytaj metody
+                            </p>
+                        </li>
+                    )}
                     <li className="my-2">
                         <p
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
-                            onClick={() => navigate('/importMethods')}
-                        >
-                            Wczytaj metody
-                        </p>
-                    </li>
-                    <li className="my-2">
-                        <p
-                            className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
                             onClick={() => handleBackup()}
                         >
                             Archiwizuj dane
@@ -110,7 +110,6 @@ const Sidebar: React.FC<{}> = () => {
                         <li className="my-2">
                             <p
                                 className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
                                 onClick={() => navigate('/register')}
                             >
                                 Zarejestruj użytkownika
@@ -120,7 +119,6 @@ const Sidebar: React.FC<{}> = () => {
                     <li className="my-2">
                         <p
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
                             onClick={() => navigate('/changePassword')}
                         >
                             Zmień hasło
@@ -129,7 +127,6 @@ const Sidebar: React.FC<{}> = () => {
                     {localStorage.getItem('role') === 'ADMIN' && (<li className="my-2">
                         <a
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
                             onClick={() => navigate('/admin-panel')}
                         >
                             Lista użytkowników
@@ -138,7 +135,6 @@ const Sidebar: React.FC<{}> = () => {
                     <li className="my-2">
                         <p
                             className="pl-10 text-white no-underline block p-2.5 rounded cursor-pointer hover:bg-gray-600"
-
                             onClick={() => logout(setAlertDetails)}
                         >
                             Wyloguj
