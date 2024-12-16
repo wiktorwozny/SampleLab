@@ -79,7 +79,7 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void permission_denied() throws ServletException, IOException {
+    void token_with_unauthorized_email() throws IOException {
         String email = "unauthorized";
         String token = jwtUtil.generateToken(email);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
@@ -87,11 +87,11 @@ public class JwtAuthFilterTest {
         JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, myUserDetailsService);
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
-        verify(response).sendError(403, "Permission denied");
+        verify(response).sendError(401, "Invalid token");
     }
 
     @Test
-    void token_expired() throws ServletException, IOException {
+    void token_expired() throws IOException {
         String email = "worker@gmail.com";
         String token = Jwts.builder()
                 .setSubject(email)
