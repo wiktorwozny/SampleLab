@@ -1,7 +1,9 @@
 package agh.edu.pl.slpbackend.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -37,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         try {
             String email = jwtUtil.extractEmail(request);
             UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
@@ -45,11 +47,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             request.setAttribute("email", email);
-            filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             response.sendError(401, "Token expired");
+            return;
         } catch (Exception e) {
             response.sendError(401, "Invalid token");
+            return;
         }
+        filterChain.doFilter(request, response);
     }
 }

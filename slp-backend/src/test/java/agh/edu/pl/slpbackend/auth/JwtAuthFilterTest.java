@@ -79,7 +79,7 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void token_with_unauthorized_email() throws IOException {
+    void token_with_unauthorized_email() throws IOException, ServletException {
         String email = "unauthorized";
         String token = jwtUtil.generateToken(email);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
@@ -91,7 +91,7 @@ public class JwtAuthFilterTest {
     }
 
     @Test
-    void token_expired() throws IOException {
+    void token_expired() throws IOException, ServletException {
         String email = "worker@gmail.com";
         String token = Jwts.builder()
                 .setSubject(email)
