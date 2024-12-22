@@ -28,7 +28,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Getter
     private final RequestMatcher[] publicMatchers = {
             new AntPathRequestMatcher("/error"),
-            new AntPathRequestMatcher("/users/login")
+            new AntPathRequestMatcher("/users/login"),
+            new AntPathRequestMatcher("/v3/api-docs/**"), // Swagger
+            new AntPathRequestMatcher("/swagger-ui/**"),  // Swagger
+            new AntPathRequestMatcher("/swagger-ui.html")
     };
 
     @Override
