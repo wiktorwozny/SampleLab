@@ -31,6 +31,8 @@ public class XLSXFilesHelper {
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
 
+        System.out.println("asdasd");
+
         cellStyle.setWrapText(true);
 
         Font font = workbook.createFont(); // font is always 9 TimesNewRoman, if needed I can make it parametrized
